@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" href="{{url_for('static',filename='css/style.css')}}"/>
+	<link rel="stylesheet" href="{{url_for('static',filename='css/colorpicker.css')}}"/>
+	<link rel="stylesheet" href="{{url_for('static',filename='css/simple-slider.css')}}"/>
+	<link rel="stylesheet" href="{{url_for('static',filename='css/jquery.ui.resizable.css')}}"/>
+	<script type="text/javascript" src="{{url_for('static',filename='js/jquery.js')}}"></script>
+	<script type="text/javascript" src="{{url_for('static',filename='js/stackBlur.js')}}"></script>
+	<script type="text/javascript" src="{{url_for('static',filename='js/app.js')}}"></script>
+	<script type="text/javascript" src="{{url_for('static',filename='js/imageprocessing.js')}}"></script>
+	<script type="text/javascript" src="{{url_for('static',filename='js/perspective.js')}}"></script>
+	<script type="text/javascript" src="{{url_for('static',filename='js/jquery.ui.core.js')}}"></script>
+	<script type="text/javascript" src="{{url_for('static',filename='js/jquery.ui.widget.js')}}"></script>
+	<script type="text/javascript" src="{{url_for('static',filename='js/jquery.ui.mouse.js')}}"></script>
+	<script type="text/javascript" src="{{url_for('static',filename='js/jquery.sortable.js')}}"></script>
+	<script type="text/javascript" src="{{url_for('static',filename='js/jquery.ui.draggable.js')}}"></script>
+	<script type="text/javascript" src="{{url_for('static',filename='js/jquery.ui.resizable.js')}}"></script>
+	<script type="text/javascript" src="{{url_for('static',filename='js/crop.js')}}"></script>
+	<script type="text/javascript" src="{{url_for('static',filename='js/selectsquare.js')}}"></script>
+	<script type="text/javascript" src="{{url_for('static',filename='js/sketch.js')}}"></script>
+	<script type="text/javascript" src="{{url_for('static',filename='js/colorpicker.js')}}"></script>
+	<script type="text/javascript" src="{{url_for('static',filename='js/simple-slider.js')}}"></script>
+	<script type="text/javascript" src="{{url_for('static',filename='js/lasso.js')}}"></script>
+	<script type="text/javascript" src="{{url_for('static',filename='js/eyedropper.js')}}"></script>
+	<script type="text/javascript" src="{{url_for('static',filename='js/transform.js')}}"></script>
+	<script type="text/javascript" src="{{url_for('static',filename='js/saturate.js')}}"></script>
+	<script type="text/javascript" src="{{url_for('static',filename='js/blur.js')}}"></script>
+	<script type="text/javascript" src="{{url_for('static',filename='js/Colorcurve.js')}}"></script>
+	<!--script type="text/javascript" src="{{url_for('static',filename='js/levelhistogram.js')}}"></script-->
+	<title>Imagine Editor</title>
+</head>
+<body>
+	<div class='popupBlock' id='popupBlock'>
+		<div class='popupHeader' id='popupHeader'>New <span class='close' onclick='closePopup()'>x</span></div>
+		<div class="popupContainer">
+			<div class='infoBlock left' id='infoBlock'>
+				
+			</div>
+			<div class="actionBlock left" id='actionBlock'>
+				<button class='popupButton' id='okButton'>Ok</button>
+				<button class='popupButton' onclick='closePopup()'>Cancel</button>
+			</div>
+		</div>
+	</div>
+	<div class="navList" id='Primary'>
+		
+	</div>
+	<nav>
+		<div class='navText'></div>
+		<div class='navText' id="file">File</div>
+		<div class='navText' id="edit">Edit</div>
+		<div class='navText' id='image'>Image</div>
+		<div class='navText'>Layer</div>
+		<div class='navText' id='filters'>Filters</div>
+	</nav>
+	
+	
+	<div class="containerMain">
+		
+	</div>
+	<div class="previewPanel">
+		<div class="row-fluid" style="padding:3px 0">
+			<div class="heading" id="previewHeading">Preview Heading</div>
+			<div class="close" onclick="closePreview()">x</div>
+		</div>
+		<div class="row-fluid">
+			<div class="previewArea left">
+				
+			</div>
+			<div class="actionArea left" id="actionAreaContrastBrightness">
+				<div class="row-fluid">
+					<div class="row-fluid">
+						<label class="left">Change contrast by:</label>
+						<label id='contrastLabel' class="right"></label>
+						<output id='contrastFactor' hidden val=''></output>
+					</div>
+					<div class="row-fluid" style="padding:5px 2px">
+						<input type="text" data-slider-range='0,100' data-slider='true' value="50" data-slider-step="1" data-slider-highlight="false" id='contrastPercent'>
+					</div>
+				</div>
+				<div class="row-fluid" style="margin-top:10px">
+					<div class="row-fluid">
+						<label class="left">Change brightness by:</label>
+						<label id='brightnessLabel' class="right"></label>
+						<output id='brightnessFactor' hidden val=''></output>
+					</div>
+					<div class="row-fluid" style="padding:5px 2px">
+						<input type="text" data-slider-range='0,100' data-slider='true' value="50" data-slider-step="1" data-slider-highlight="false" id='brightnessPercent'>
+					</div>
+				</div>
+				<div class="row-fluid" style="margin-top:10px">
+					<button class='left' id='confirmBrightnessContrast'>Confirm</button>
+					<button class='left' onclick="closePreview()">Cancel</button>
+					<button class='left' onclick="resetPreview()">Reset</button>
+				</div>
+			</div>
+			<div class="actionArea left" id="actionAreaHueSaturation">
+				<div class="row-fluid">
+					<div class="row-fluid">
+						<label class="left">Adjust Hue:</label>
+						<label id='hueLabel' class="right"></label>
+						<output id='hueFactor' hidden val=''></output>
+					</div>
+					<div class="row-fluid" style="padding:5px 2px">
+						<input type="text" data-slider-range='0,100' data-slider='true' value="50" data-slider-step="1" data-slider-highlight="false" id='hueElement'>
+					</div>
+				</div>
+				<div class="row-fluid" style="margin-top:10px">
+					<div class="row-fluid">
+						<label class="left">Change saturation:</label>
+						<label id='saturateLabel' class="right"></label>
+						<output id='saturateFactor' hidden val=''></output>
+					</div>
+					<div class="row-fluid" style="padding:5px 2px">
+						<input type="text" data-slider-range='0,10' data-slider='true' value="1" data-slider-step=".01" data-slider-highlight="true" id='saturateElement'>
+					</div>
+				</div>
+				<div class="row-fluid" style="margin-top:10px">
+					<button class='left' id='confirmHueSaturation'>Confirm</button>
+					<button class='left' onclick="closePreview()">Cancel</button>
+					<button class='left' onclick="resetPreview()">Reset</button>
+				</div>
+			</div>
+			<div class="actionArea left" id="actionAreaBlur">
+				<div class="row-fluid">
+					<div class="row-fluid">
+						<label class="left">Blur Radius:</label>
+						<label id='blurLabel' class="right"></label>
+						<output id='blurFactor' hidden val=''></output>
+					</div>
+					<div class="row-fluid" style="padding:5px 2px">
+						<input type="text" data-slider-range='0,100' data-slider='true' value="0" data-slider-step="1" data-slider-highlight="false" id='blurElement'>
+					</div>
+				</div>
+				<div class="row-fluid" style="margin-top:10px">
+					<button class='left' id='confirmBlur'>Confirm</button>
+					<button class='left' onclick="closePreview()">Cancel</button>
+					<button class='left' onclick="resetPreview()">Reset</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<nav class='panel3'>
+		<div class="row-fluid">
+			<div class="shrinkblock" id='shrink3'> < </div>
+			<div class='row-fluid'>
+				<div class="tools" id='autoSelect'>
+					<img src='{{url_for('static',filename='img/autoselect.png')}}' title="Select"/>
+				</div>
+				<div class="tools" id='marqueue_square'>
+					<span style='width:70%;height:70%;border:1px dashed #bbb;display:block;margin:auto;margin-top:10%;' title='Marqueue'></span>
+				</div>
+				<div class="tools" id='lasso'>
+					<img src='{{url_for('static',filename='img/lasso.png')}}' title="Lasso Tool"/>
+				</div>
+				<div class="tools" id='crop'>
+					<img src='{{url_for('static',filename='img/crop.png')}}' title="Crop Tool"/>
+				</div>
+				<div class="tools" id='eraser'>
+					<img src='{{url_for('static',filename='img/eraser.png')}}' title="Eraser"/>
+				</div>
+				<div class="tools" id='brush'>
+					<img src='{{url_for('static',filename='img/brush.png')}}' title="Brush"/>
+				</div>
+				<div class="tools" id='eyedropper'>
+					<img src='{{url_for('static',filename='img/eyedropper.png')}}' title="Eyedropper"/>
+				</div>
+				<div class="tools" id='transform'>
+					<img src='{{url_for('static',filename='img/transform.png')}}' title="Eyedropper"/>
+				</div>
+				<div class="tools" id='colorPicker'>
+					<span style='width:90%;height:90%;border:1px solid #bbb;display:block;margin:auto;margin-top:10%;background:#fff' title='Foreground Color'></span>
+				</div>
+				<div class="tools" id='preview'>
+					<img src='{{url_for('static',filename='img/preview.png')}}' title="Preview"/>
+				</div>
+			</div>
+		</div>
+		<div id='transformPanel'></div>
+	</nav>
+
+	<nav class='panel4'>
+		<div class="row-fluid">
+			<div class="layersBlock">
+				<div class="row-fluid">
+					<div class="heading left">Layers</div>
+					<img class="right icon12" id='DeleteLayers' src='{{url_for('static',filename='img/clearlog.png')}}' title="Delete Layer">
+				</div>
+				<ul class="layersBody" id="LayersBody">
+					
+				</ul>
+			</div>
+		</div>
+	</nav>
+	<nav class='panel2'>
+		<div class="row-fluid" id='thumbActions'>
+			
+		</div>
+		<input type="file" id="imageFile" hidden onchange="openFile()" />
+		<div class="brushDetails">
+			<div class="row-fluid">
+				<label class="left" id='brushHeading' style="font-size:11px">Brush Details</label>
+				<div class="close" onclick='closeBrush()' style="margin:0" title='Close Brush Panel'>x</div>
+			</div>
+			<div class="row-fluid">
+				<div class="row-fluid">
+					<label class="left">Size:</label>
+					<label id='sizeLabel' class="right"></label>
+				</div>
+				<input type="text" data-slider-range='1,500' data-slider='true' value="10" data-slider-highlight="true" id='brushSize'>
+			</div>
+			<div class="row-fluid">
+				<div class="row-fluid">
+					<label class="left">Feather:</label>
+					<label id='featherLabel' class="right"></label>
+				</div>
+				<input type="text" data-slider-range='0,100' data-slider='true' value="10" data-slider-highlight="true" id='blurRadius'>
+			</div>
+			<div class="row-fluid" style="border-top:1px solid #444;margin-top:10px">
+				<div class="row-fluid">
+					<label class="left">Brush Type:</label>
+					<label id='brushType' class="right">Circle</label>
+				</div>
+				<div class="row-fluid  brushType">
+					<div class="brushThumb" id='roundsoftbrush'><img src='{{url_for('static',filename='img/roundsoft.png')}}'/></div>
+					<div class="brushThumb" id='roundhardbrush'><img src='{{url_for('static',filename='img/roundhard.png')}}'/></div>
+					<div class="brushThumb" id='buttbrush'><img src='{{url_for('static',filename='img/block.png')}}'/></div>
+					<div class="brushThumb" id='spraybrush'><img src='{{url_for('static',filename='img/spray.png')}}'/></div>	
+				</div>
+			</div>
+		</div>
+	</nav>
+	<div class="previewLessOptions">
+		<div class="heading" id='PreviewLessHeading'>Options go here
+			<div class="close" title="Close Brush Panel" style="margin:0" onclick="closePreviewLess()">x</div>
+		</div>
+		<div class="previewLessBody">
+			<div id='sepiaTone'>
+				<div class="row-fluid">
+					<label class="left">Current Tone:</label>
+					<div id='sepiaTonePalet'></div>
+				</div>
+				<div class="row-fluid">
+					<div class="row-fluid">
+						<label class="left">Red:&nbsp;</label>
+						<label id='redSepiaLabel' class="left"></label>
+						<div id="redIcon" class="right" style="width:16px;height:16px;display:block;background:rgb(255,0,0)"></div>
+						<output id='redSepiaFactor' hidden val=''></output>
+					</div>
+					<input type="text" data-slider-range='0,255' data-slider='true' value="255" data-slider-highlight="true" id='redSepiaValue'>
+				</div>
+				<div class="row-fluid">
+					<div class="row-fluid">
+						<label class="left">Green:&nbsp;</label>
+						<label id='greenSepiaLabel' class="left"></label>
+						<div id="greenIcon" class="right" style="width:16px;height:16px;display:block;background:rgb(0,240,0)"></div>
+						<output id='greenSepiaFactor' hidden val=''></output>
+					</div>
+					<input type="text" data-slider-range='0,255' data-slider='true' value="240" data-slider-highlight="true" id='greenSepiaValue'>
+				</div>
+				<div class="row-fluid">
+					<div class="row-fluid">
+						<label class="left">Blue:&nbsp;</label>
+						<label id='blueSepiaLabel' class="left"></label>
+						<div id="blueIcon" class="right" style="width:16px;height:16px;display:block;background:rgb(0,0,192)"></div>
+						<output id='blueSepiaFactor' hidden val=''></output>
+					</div>
+					<input type="text" data-slider-range='0,255' data-slider='true' value="192" data-slider-highlight="true" id='blueSepiaValue'>
+				</div>
+				<div class="row-fluid">
+					<button id='OkSepia' class="left">Ok</button>
+					<button onclick="closePreviewLess()" class="left">Cancel</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class='CurvesPreview'>
+		<div class="row-fluid">
+			<label class="left">Curves</label>
+			<div class="close" title="Close Curves" style="margin:0" onclick="closeCurves()">x</div>
+		</div>
+		<div class="row-fluid">
+			<div class="row-fluid curvesPanel">
+				<canvas id="selectorR" height="128" width="128"></canvas>
+      			<canvas id="selectorG" height="128" width="128"></canvas>
+      			<canvas id="selectorB" height="128" width="128"></canvas>
+			</div>
+			<div class="row-fluid">
+				<button onclick='confirmCurves()'>Confirm</button>
+				<button onclick='closeCurves()'>Cancel</button>
+			</div>
+		</div>
+	</div>
+	<div class="LayerOperations">
+		<div class="row-fluid">
+			<label class="left">Layer Style</label>
+			<div class="close" title="Close Curves" style="margin:0" onclick="closeLayerStyle()">x</div>
+		</div>
+		<div class='LeftPanel left'>
+			<canvas style='width:90%;margin:auto;height:auto;background:#505050' id='layerOpsPreview'></canvas>
+			<div class="row-fluid">
+				<ul>
+					<li class='layerOpts active' id='blendingOptions'>Blending Options</li>
+					<li class='layerOpts' id='bevelEmboss'>Bevel & Emboss</li>
+					<li class='layerOpts' id='stroke'>Stroke</li>
+					<li class='layerOpts' id='innerShadow'>Inner Shadow</li>
+					<li class='layerOpts' id='innerGlow'>Inner Glow</li>
+					<li class='layerOpts' id='colorOverlay'>Color Overlay</li>
+					<li class='layerOpts' id='gradientOverlay'>Gradient Overlay</li>
+					<li class='layerOpts' id='dropShadow'>Drop Shadow</li>
+					<li class='layerOpts' id='outerGlow'>Outer Glow</li>
+				</ul>
+			</div>
+		</div>
+		<div class="RightPanel left">
+			<div id='blendingOptionsPanel'>
+				<div class="row-fluid">
+					<label>Blend Mode</label>
+					<select id='modeSelections' style="font-size:12px;" onchange='SetCompositeMode()'>
+						<option value="normal" selected>Normal</option>
+						<option value="multiply">Multiply</option>
+						<option value="overlay">Overlay</option>
+						<option value="screen">Screen</option>
+						<option value="softlight">Soft Light</option>
+						<option value="hardlight">Hard Light</option>
+					</select>
+				</div>
+				<div class="row-fluid" style="margin-top:10px">
+					<label class="left">Blend Opacity:&nbsp;</label>
+					<label id='blendOpacityLabel' class="left"></label>
+					<output id='blendOpacityFactor' hidden val=''></output>
+				</div>
+				<input type="text" data-slider-range='0,100' data-slider='true' value="100" data-slider-highlight="true" id='blendOpacity'>
+			</div>
+			<div class="row-fluid" style="margin-top:10px">
+				<button onclick='setBlendMode()' class='left'>Confirm</button>
+				<button onclick='closeLayerStyle()' class='left'>Cancel</button>
+			</div>
+		</div>
+		
+	</div>
+	<div class='previewOutput' hidden style='z-index:10000'>
+		<div class="close" title="Close Curves" style="margin:0" onclick="closePreviewBlock()">x</div>
+		<canvas id='previewOutput' style='z-index:10000'></canvas>
+	</div>
+</body>
+</html>
