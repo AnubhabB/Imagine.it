@@ -1,10 +1,4 @@
 function cropBase(){// variables
- /*  delete window.temp_canvas;
-    $("#temp_canvas").remove();
-    $(".containerMain").off();
-    $("#Canvas"+currentIndex).off();
-    delete window.temp_canvas;
-    $("#crop_canvas").remove();*/
     cleanCanv();
     var canvas, ctx;
     var image;
@@ -69,7 +63,7 @@ function cropBase(){// variables
         image = layers[indX];
 
         //create temp canvas
-        $(".containerMain").append("<canvas id='crop_canvas' width="+$("#Canvas"+indX).width()+" height="+$("#Canvas"+indX).height()+"></canvas>");
+        $(".containerMain").append("<canvas id='crop_canvas' width="+$("#Canvas"+indX).attr("width")+" height="+$("#Canvas"+indX).attr("height")+"></canvas>");
         $("#crop_canvas").css("position","absolute").css('margin-left',($(window).innerWidth() - $("#Canvas"+indX).width())/3 +"px").css("margin-top",($(window).innerHeight() - $("#Canvas"+indX).height())/3 +"px").css("display","block").css("z-index",2000);
 
         // creating canvas and context objects

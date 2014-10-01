@@ -27,6 +27,7 @@
 	<script type="text/javascript" src="{{url_for('static',filename='js/saturate.js')}}"></script>
 	<script type="text/javascript" src="{{url_for('static',filename='js/blur.js')}}"></script>
 	<script type="text/javascript" src="{{url_for('static',filename='js/Colorcurve.js')}}"></script>
+	<script type="text/javascript" src="{{url_for('static',filename='js/zoominout.js')}}"></script>
 	<!--script type="text/javascript" src="{{url_for('static',filename='js/levelhistogram.js')}}"></script-->
 	<title>Imagine Editor</title>
 </head>
@@ -51,8 +52,9 @@
 		<div class='navText' id="file">File</div>
 		<div class='navText' id="edit">Edit</div>
 		<div class='navText' id='image'>Image</div>
-		<div class='navText'>Layer</div>
+		<div class='navText' id='layer'>Layer</div>
 		<div class='navText' id='filters'>Filters</div>
+		<div class='navText' id='about'>About</div>
 	</nav>
 	
 	
@@ -146,35 +148,38 @@
 		<div class="row-fluid">
 			<div class="shrinkblock" id='shrink3'> < </div>
 			<div class='row-fluid'>
-				<div class="tools" id='autoSelect'>
-					<img src='{{url_for('static',filename='img/autoselect.png')}}' title="Select"/>
+				<div class="tools" id='autoSelect' title="Move (M)">
+					<img src='{{url_for('static',filename='img/autoselect.png')}}'/>
 				</div>
-				<div class="tools" id='marqueue_square'>
-					<span style='width:70%;height:70%;border:1px dashed #bbb;display:block;margin:auto;margin-top:10%;' title='Marqueue'></span>
+				<div class="tools" id='marqueue_square'  title='Marqueue (S)'>
+					<span style='width:70%;height:70%;border:1px dashed #bbb;display:block;margin:auto;margin-top:10%;'></span>
 				</div>
-				<div class="tools" id='lasso'>
-					<img src='{{url_for('static',filename='img/lasso.png')}}' title="Lasso Tool"/>
+				<div class="tools" id='lasso'  title="Lasso Tool (L)">
+					<img src='{{url_for('static',filename='img/lasso.png')}}'/>
 				</div>
-				<div class="tools" id='crop'>
-					<img src='{{url_for('static',filename='img/crop.png')}}' title="Crop Tool"/>
+				<div class="tools" id='crop' title="Crop Tool (C)">
+					<img src='{{url_for('static',filename='img/crop.png')}}'/>
 				</div>
-				<div class="tools" id='eraser'>
-					<img src='{{url_for('static',filename='img/eraser.png')}}' title="Eraser"/>
+				<div class="tools" id='eraser'  title="Eraser (E)">
+					<img src='{{url_for('static',filename='img/eraser.png')}}'/>
 				</div>
-				<div class="tools" id='brush'>
-					<img src='{{url_for('static',filename='img/brush.png')}}' title="Brush"/>
+				<div class="tools" id='brush'  title="Brush (B)">
+					<img src='{{url_for('static',filename='img/brush.png')}}'/>
 				</div>
-				<div class="tools" id='eyedropper'>
-					<img src='{{url_for('static',filename='img/eyedropper.png')}}' title="Eyedropper"/>
+				<div class="tools" id='eyedropper'  title="Eyedropper (I)">
+					<img src='{{url_for('static',filename='img/eyedropper.png')}}'/>
 				</div>
-				<div class="tools" id='transform'>
-					<img src='{{url_for('static',filename='img/transform.png')}}' title="Eyedropper"/>
+				<div class="tools" id='transform' title="Transform (T)">
+					<img src='{{url_for('static',filename='img/transform.png')}}'/>
 				</div>
-				<div class="tools" id='colorPicker'>
-					<span style='width:90%;height:90%;border:1px solid #bbb;display:block;margin:auto;margin-top:10%;background:#fff' title='Foreground Color'></span>
+				<div class="tools" id='zoom'  title="Zoom, click alt to Zoom Out (Z)">
+					<img src='{{url_for('static',filename='img/zoom.png')}}'/>
 				</div>
-				<div class="tools" id='preview'>
-					<img src='{{url_for('static',filename='img/preview.png')}}' title="Preview"/>
+				<div class="tools" id='colorPicker' title='Foreground Color'>
+					<span style='width:90%;height:90%;border:1px solid #bbb;display:block;margin:auto;margin-top:10%;background:#fff'></span>
+				</div>
+				<div class="tools" id='preview'  title="Preview (P)">
+					<img src='{{url_for('static',filename='img/preview.png')}}'/>
 				</div>
 			</div>
 		</div>
@@ -186,6 +191,7 @@
 			<div class="layersBlock">
 				<div class="row-fluid">
 					<div class="heading left">Layers</div>
+					<div class="right" id="layersMinnimize" title="Minnimize Layers">&nbsp;>>&nbsp;</div>
 					<img class="right icon12" id='DeleteLayers' src='{{url_for('static',filename='img/clearlog.png')}}' title="Delete Layer">
 				</div>
 				<ul class="layersBody" id="LayersBody">
@@ -193,6 +199,9 @@
 				</ul>
 			</div>
 		</div>
+	</nav>
+	<nav class="panel4min" title="Maximize Layers">
+		<img src='{{url_for('static',filename='img/layers.png')}}'/>
 	</nav>
 	<nav class='panel2'>
 		<div class="row-fluid" id='thumbActions'>

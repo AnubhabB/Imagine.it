@@ -12,7 +12,7 @@ Catch: tried separating move but somee conflict with event handelling
 function draw(elemId,action){
     cleanCanv();
     var indX = currentIndex;
-    $(".containerMain").append("<canvas id='temp_canvas' width="+$("#Canvas"+indX).width()+" height="+$("#Canvas"+indX).height()+"></canvas>");
+    $(".containerMain").append("<canvas id='temp_canvas' width="+$("#Canvas"+indX).attr("width")+" height="+$("#Canvas"+indX).attr("height")+"></canvas>");
     $("#temp_canvas").css("position","absolute").css('margin-left',($(window).innerWidth() - $("#Canvas"+indX).width())/3 +"px").css("margin-top",($(window).innerHeight() - $("#Canvas"+indX).height())/3 +"px").css("display","block").css("z-index",1000);
 
     var layerTempId = $(".selected").attr('id');

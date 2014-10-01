@@ -1,9 +1,10 @@
 from application import app
 from flask import Flask, render_template, jsonify, redirect, url_for, request
 from werkzeug import secure_filename
-import simplejson
+#import simplejson
+import random
 import base64
-from model import enhance
+from .model import enhance
 from datetime import datetime
 
 ALLOWED_EXTENSIONS = ['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif']
@@ -15,10 +16,10 @@ def indexfunction():
 @app.route("/sync",methods=['POST'])
 def sync():
 	if request.method == 'POST':
-		f = request.files['file[]']
-
-		f.save('/var/www/imagine/application/static/img/uploads/'+secure_filename(f.filename))
-	return jsonify({'name':secure_filename(f.filename)})
+		f    = request.files['file[]']
+		rand = str(random.randrange(100000,999999))
+		f.save('/var/www/imagine/application/static/img/uploads/'+rand+"_"+secure_filename(f.filename))
+	return jsonify({'name':rand+"_"+secure_filename(f.filename),'session':rand})
 
 
 @app.route("/syncState",methods=['POST'])

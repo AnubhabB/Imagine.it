@@ -11,6 +11,9 @@ html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockq
 *{
 	margin: none;
 	padding: none;
+	-webkit-user-select:none;
+	-moz-user-select:none;
+	user-select:none;
 }
 body{
 	width:100%;
@@ -201,6 +204,24 @@ nav.panel4 .layersBlock{
 
 nav.panel4 .layersBlock .heading,.previewPanel .heading{
 	font-size: 10px;
+}
+nav.panel4 #layersMinnimize:hover{
+	cursor:pointer;
+	background: #333;
+}
+nav.panel4min{
+	display: none;
+	position: fixed;
+	opacity:0;
+	top:66px;
+	cursor: pointer;
+	overflow: hidden;
+}
+nav.panel4min img{
+	width:70%;
+	height: auto;
+	display: block;
+	margin: auto;
 }
 nav.panel4 .layersBlock .layersBody{
 	background: #444;

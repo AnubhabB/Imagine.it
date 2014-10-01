@@ -1,4 +1,5 @@
-var layers = new Array();
+var session       = 'null';
+var layers        = new Array();
 var currentIndex  = 0;
 var toolSelected  = "";
 var actionTaken   = false;
@@ -10,13 +11,15 @@ var sprayDensity  = 50;
 var transformType = 'resize';
 var baseWidth, baseHeight;
 var globalTop, globalLeft;
-var actionComplete = true;
-var zIndX = 200;
-var createcanvas = true;
-var canvaslist = 0;
+var actionComplete= true;
+var zIndX         = 200;
+var createcanvas  = true;
+var canvaslist    = 0;
 var compositeOps  = [];
 var globalAlphaVal= [];
-
+var globalZoom    = 0;
+var shiftKey      = false;
+var multiLayerSelect = false;
 
 $(function(){
 
@@ -184,18 +187,22 @@ $(function(){
 			$(".navList").css('left',$(this).offset().left+"px").css("display","block");
 			switch(this.id){
 				case 'file':
-					$(".navList").html("<ul><li id='newFile' onclick='newFile()'>New</li><li id='openFile' onclick='$(\"#imageFile\").click()'>Open</li><li id='save' onclick='saveFinal()'>Save</li><li id='exit'>Exit</li></ul>");
+					$(".navList").html("<ul><!--li id='newFile' onclick='newFile()'>New</li--><li id='openFile' onclick='$(\"#imageFile\").click()'>Open (O)</li><li id='save' onclick='saveFinal()'>Save (Space)</li><li id='exit'>Exit</li></ul>");
 				break;
 				case 'edit':
 					$(".navList").html("<ul><li id=''>Adjustments</li><li id=''>Image Size</li><li id='exit'>Canvas Size</li></ul>");
 				break;
 				case 'image':
-					//alert("Image");
 					$(".navList").html("<ul><li id='imageAdjustments' onclick='imageAdjustmentOptions()'>Adjustments</li><li id='openFile'>Image Size</li><li id='exit'>Canvas Size</li></ul>");
 				break;
 				case 'filters':
-					//alert("Image");
 					$(".navList").html("<ul><li id='sharpen' onclick='Sharpen()'>Sharpen</li><li id='blur' onclick='Blur()'>Blur</li><li id='sepia' onclick='getSepia()'>Sepia</li><li id='blacknwhite' onclick='blackWhite()'>Black n White</li></ul>");
+				break;
+				case 'about':
+					$(".navList").html("<ul><li>v 0.1(Alpha)</li><li>To Do</li><li>Credits</li><li>Help</li><li>Known Issues</li><li>Lisence</li></ul>");
+				break;
+				case 'layer':
+					$(".navList").html("<ul><li onclick='addNewLayer(\"transparent\")'>New Layer</li><li onclick='addNewLayer(\"fill\")'>New Fill Layer</li><li>Delete Layers</li><li>Merge Layers</li><li>Duplicate Layers</li><li onclick='drawPreview(\"mergevisible\")'>Merge Visible</li><li>New Adjustment Layer</li></ul>");
 				break;
 			}
 		}
@@ -316,16 +323,22 @@ PANEL 2 Operations END
 	$(window).on("contextmenu",function(e){
 		var mousePosX = e.clientX;
 		var mousePosY = e.clientY;
-		switch(toolSelected){
-			case 'eraser':
-				$(".brushDetails").css('top',e.clientY+"px").css('left',e.clientX+"px").css("display","block");
-			break;
-			case 'draw':
-				$(".brushDetails").css('top',e.clientY+"px").css('left',e.clientX+"px").css("display","block");
-			break;
-			default:
-				console.log("Context Menu Default Case");
-			break;
+		if(multiLayerSelect == false){
+			switch(toolSelected){
+				case 'eraser':
+					$(".brushDetails").css('top',e.clientY+"px").css('left',e.clientX+"px").css("display","block");
+				break;
+				case 'draw':
+					$(".brushDetails").css('top',e.clientY+"px").css('left',e.clientX+"px").css("display","block");
+				break;
+				default:
+					console.log("Context Menu Default Case");
+				break;
+			}
+		}else{
+			$(".contextMenu").remove();
+			$(".containerMain").append("<div class='contextMenu'><ul><li onclick='multiSelectContext(\"merge\")'>Merge Selected Layers</li><li onclick='multiSelectContext(\"mergevisible\")'>Merge Visible</li><li onclick='multiSelectContext(\"duplicate\")'>Duplicate Layers</li><li onclick='multiSelectContext(\"delete\")'>Delete Layers</li><li id='clearSelection'>Clear Selection</li></ul></div>");
+      		$(".contextMenu").css("top",mousePosY).css("left",mousePosX).css("z-index",5000);
 		}
 
 		return false;
@@ -335,6 +348,40 @@ PANEL 2 Operations END
 /*************************************************
 	LAYER - PANEL 4
 **************************************************/
+	//Position Panel4
+	$(".panel4").css("left",($(window).innerWidth() - $(".panel4").width()-10 +"px"));
+	var panel4width = $(".panel4").width();
+	$("#layersMinnimize").click(function(){
+		$(".panel4").animate({
+			left  : ($(".panel4").offset().left+$(".panel4").width()-30)+"px",
+			width :"30px",
+			height:"30px",
+			opacity:0
+		},200);
+		$(".panel4min").css("width",0).css("height",0).css("display","block").css("left",$(window).innerWidth() - 30 - 10 +"px").animate({
+			opacity: 1,
+			width  : "30px",
+			height : "30px"
+		},200,function(){
+			$(".panel4").css("display","none");
+		});
+	});
+	$(".panel4min").click(function(){
+		$(".panel4").css("display","block").css("left",$(window).innerWidth()+"px").animate({
+			width : panel4width+"px",
+			height:"auto",
+			left  : (($(window).innerWidth() - panel4width -10 +"px")),
+			opacity:1
+		},200);
+		$(".panel4min").animate({
+			opacity:0,
+			width:0,
+			height:0
+		},200,function(){
+			$(".panel4min").css("display","none");
+		});
+	});
+
 	$('#LayersBody').sortable({
 	    items: ':not(#layers0)'
 	});
@@ -345,19 +392,22 @@ PANEL 2 Operations END
 	});
 
 	$('#LayersBody').dblclick(function(){
-		$(".LayerOperations").css("display","block");
-		if(globalAlphaVal[currentIndex]==undefined)
-			var gval = 100;
-		else
-			var gval = globalAlphaVal[currentIndex]*100;
-		$("#blendOpacity[data-slider]").simpleSlider("setValue",gval);
+		if($(".selected").length ==1){
+			if(canvaslist>0){
+				$(".LayerOperations").css("display","block");
+				if(globalAlphaVal[currentIndex]==undefined)
+					var gval = 100;
+				else
+					var gval = globalAlphaVal[currentIndex]*100;
+				$("#blendOpacity[data-slider]").simpleSlider("setValue",gval);
 
-		if(compositeOps[currentIndex] == undefined)
-			$("#modeSelections").val("normal");
-		else
-			$("#modeSelections").val(compositeOps[currentIndex]);
-		LayerOperations();
-
+				if(compositeOps[currentIndex] == undefined)
+					$("#modeSelections").val("normal");
+				else
+					$("#modeSelections").val(compositeOps[currentIndex]);
+				LayerOperations();
+			}
+		}
 	});
 
 /***********************************************
@@ -365,6 +415,103 @@ PANEL 2 Operations END
 ***********************************************/
 	$( ".CurvesPreview" ).draggable({cancel: ".curvesPanel"});
 	$(".previewOutput").draggable();
+
+
+/****************
+Shortcut key handellers
+New Layer = N
+Eraser    = E Y
+Transform = T
+Brush     = B
+Select    = S
+Eyedropper= I
+Zoom      = Z
+Preview   = P
+Save/ Dld = Space
+Duplicate Layer = D
+Crop      = C
+Open file = O
+Move/ Autoselect = M
+Text tool = W
+*****************/
+	$(document).on("keypress",function(e){
+		if(canvaslist > 0){
+				if(toolSelected !== "text"){
+					console.log(e.keyCode);
+					switch(e.keyCode){
+						case 32:
+							console.log("Save n Download")
+							saveFinal();
+						break;
+						case 101:
+							$(".tools#eraser").click();
+						break;
+						case 98:
+							$(".tools#brush").click();
+						break;
+						case 115:
+							$(".tools#marqueue_square").click();
+						break;
+						case 105:
+							$(".tools#eyedropper").click();
+						break;
+						case 111:
+							$("#imageFile").click();
+						break;
+						case 112:
+							$(".tools#preview").click();
+						break;
+						case 116:
+							$(".tools#transform").click();
+						break;
+						case 109:
+							$(".tools#autoSelect").click();
+						break;
+						case 100:
+							console.log("Duplicate Layer");
+						break;
+						case 99:
+							$(".tools#crop").click();
+						break;
+						case 87:
+							console.log("To do Text Tool");
+						break;
+						case 108:
+							$(".tools#lasso").click();
+						break;
+						case 110:
+							addNewLayer("transparent");
+						break;
+						default:
+							console.log("Do nothing from keypress");
+						break;
+					}
+				}
+				else{
+					console.log("To Do Text Tool");
+				}
+		}
+	});
+/**********************END SIMPLE KEY PRESS EVENNT**********************/
+/*******************************
+Status of Shift key now
+Status of Alt key now : not working
+********************************/
+    $(document).on("keydown",function(evt){
+    	if(evt.keyCode == 16){
+    		shiftKey = true;
+    	}
+    });
+    $(document).on("keyup",function(evt){
+    	if(evt.keyCode == 16){
+    		shiftKey = false;
+    	}/*
+    	if(evt.keyCode == 18){
+    		altKey = false;
+    		//console.log(shiftKey);
+    	}*/
+    });
+/***************END SHIFT KEY STATUS***********/
 });
 
 
@@ -479,7 +626,7 @@ function SetCompositeMode(){
 //Set the final preview to a preview image
 function setBlendMode(){
 	$(".LayerOperations").css("display","none");
-	drawPreview();
+	drawPreview("preview");
 }
 
 /******************
@@ -491,9 +638,7 @@ function openFile(){
 	formdata = false;
 	if(window.FormData){
 		formdata = new FormData();
-	}/*
-	if(canvaslist == 0)
-		canvaslist++*/
+	}
 	formdata.append("file[]",imagefile);
 	$.ajax({
 		type: 'POST',
@@ -503,6 +648,7 @@ function openFile(){
 		contentType: false,
 		success:function(response){
 				createcanvas = true;
+				session      = response.session;
 				layers[canvaslist] = new Image();
 				layers[canvaslist].onload = function(){
 					if(createcanvas)
@@ -542,8 +688,6 @@ function drawCanvas(sourceImage,width,height){
 		}else{
 			var widthN = width;
 			var heightN= height;
-/*			$(".containerMain").append("<canvas id='Canvas0' height='"+heightN+"' width='"+widthN+"' style='background:url(static/img/bg.jpg);z-index:"+(200+canvaslist)+"'></canvas>").css("display","block");*/
-			/*$("#Canvas0").css("position","absolute").css('margin-left',($(window).innerWidth() - widthN)/3 +"px").css("margin-top",($(window).innerHeight() - heightN)/3 +"px").css("display","block");*/
 		}
 
 		$(".containerMain").append("<canvas id='Canvas"+canvaslist+"' height='"+heightN+"' width='"+widthN+"' style='background:url(static/img/bg.jpg);z-index:"+(200+canvaslist)+"'></canvas>").css("display","block");
@@ -558,15 +702,9 @@ function drawCanvas(sourceImage,width,height){
 		}
 		var left,top;
 		ctx.drawImage(layers[canvaslist],0,0);
-		layers[canvaslist].l   = left;
-		layers[canvaslist].t    = top;
-		layers[canvaslist].w  = widthN;
-		layers[canvaslist].h = heightN;
-		//console.log(layers[canvaslist].l+" "+layers[canvaslist].t+" "+layers[canvaslist].w+" "+layers[canvaslist].h+" this");
 		canvaslist++;
 		composeLayers();
-		drawPreview();
-
+		resize("set");
 }
 /**************************END DRAW CANVAS************************/
 /*****************************************************************/
@@ -600,18 +738,28 @@ function composeLayers(){
 	$("#layer"+(canvaslist-1)).addClass('selected');
 	currentIndex = canvaslist-1;
 	$(".layerEach").click(function(){
-		$(".layerEach").removeClass("selected");
-		$("#"+this.id).addClass("selected");
-		var oldIndex = currentIndex;
-		currentIndex = parseInt((this.id).replace("layer",""));
-		if(document.getElementById("Canvas"+oldIndex)!=null){
-			document.getElementById("Canvas"+oldIndex).onmousedown = null;		//console.log(currentIndex);
-			document.getElementById("Canvas"+oldIndex).onmouseup = null;		//console.log(currentIndex);
-			document.getElementById("Canvas"+oldIndex).onmousemove = null;		//console.log(currentIndex);
+		if(shiftKey == false){
+			multiLayerSelect = false;
+			$(".layerEach").removeClass("selected");
+			$("#"+this.id).addClass("selected");
+			var oldIndex = currentIndex;
+			currentIndex = parseInt((this.id).replace("layer",""));
+			if(document.getElementById("Canvas"+oldIndex)!=null){
+				document.getElementById("Canvas"+oldIndex).onmousedown = null;
+				document.getElementById("Canvas"+oldIndex).onmouseup = null;
+				document.getElementById("Canvas"+oldIndex).onmousemove = null;
+			}
+			//ACTIVATE ACTION
+			var tempAction = toolSelected;
+			toolsActivate(tempAction);
+		}else{
+			cleanCanv();
+			multiLayerSelect = true;
+			$("#"+this.id).addClass("selected");
+			toolSelected = "";
+			currentIndex = null;
+			$(".tools").removeClass("active");
 		}
-		//ACTIVATE ACTION
-		var tempAction = toolSelected;
-		toolsActivate(tempAction);
 	});
 	//LAYER REORDER
 	$('#LayersBody').sortable({
@@ -783,6 +931,28 @@ function redoCanvasOrder(){
 /*****************END LAYER REORDER**************
 *************************************************/
 
+/***************************************************
+function resize()
+resize all layers based global zoom
+****************************/
+function resize(action){
+	if(action == "set"){
+		var windowWidth    = $(window).innerWidth() - 200;
+		var windowHeight   = $(window).innerWidth();
+		if(canvaslist>0){
+			for(var i=0;i<canvaslist;i++){
+				if($("#Canvas"+i).attr("width") > windowWidth){
+					var originalHeight  = $("#Canvas"+i).attr("height");
+					var originalWidth   = $("#Canvas"+i).attr("width");
+					var calculateHeight = originalHeight/originalWidth * windowWidth;
+					var calculateXpos   = ($(window).innerWidth() - windowWidth)/2;
+					var calculateYpos   = ($(window).innerHeight() - windowHeight)/5;
+					$("#Canvas"+i).css("width",windowWidth+"px").css("height",calculateHeight+"px").css("left",calculateXpos+"px").css("top","120px");
+				}
+			}
+		}
+	}
+}
 
 function imageAdjustmentOptions(){
 	//alert(.css("display"));
@@ -858,6 +1028,8 @@ Author Anubhab
 ***************/
 
 function toolsActivate(tool){
+	console.log("called"+multiLayerSelect);
+	if(multiLayerSelect == false){
 		var idref = tool;
 		if(idref=='colorPicker'){
 
@@ -915,9 +1087,17 @@ function toolsActivate(tool){
 							$(".previewOutput").hide();
 							$(".tools").removeClass("active");
 						}else{
-							drawPreview();
+							drawPreview("preview");
 							$(".previewOutput").show();
 						}
+					break;
+					case 'zoom':
+						toolSelected = "zoom";
+						$("canvas").css("cursor","-webkit-zoom-in");
+						if(shiftKey){
+							$("canvas").css("cursor","-webkit-zoom-out");
+						}
+						zoomInOut();
 					break;
 					default:
 						console.log("Nothing to do");
@@ -929,6 +1109,9 @@ function toolsActivate(tool){
 				alert("Please add some layers before selecting a tool");
 			}
 		}
+	}else{
+		alert("This action is not permitted");	
+	}
 }
 
 
@@ -939,6 +1122,8 @@ function cleanCanv(){
     $(".containerMain").off();
     $("#crop_canvas").remove();
     $("#Canvas"+currentIndex).off();
+    $(".navList").css("display","none");
+    resize("set");
     //saveState();
 }
 
@@ -1150,7 +1335,7 @@ function loadpreviewCurves(){
 	var indX = currentIndex;
     
 	if($("#Canvas"+currentIndex).length !== 0){
-		$(".containerMain").append("<canvas id='temp_canvas' width="+$("#Canvas"+indX).width()+" height="+$("#Canvas"+indX).height()+"></canvas>");
+		$(".containerMain").append("<canvas id='temp_canvas' width="+$("#Canvas"+indX).attr("width")+" height="+$("#Canvas"+indX).attr("height")+"></canvas>");
     	$("#temp_canvas").css("position","absolute").css('margin-left',($(window).innerWidth() - $("#Canvas"+indX).width())/3 +"px").css("margin-top",($(window).innerHeight() - $("#Canvas"+indX).height())/3 +"px").css("display","block").css("z-index",1000);
 		var tempCanv = document.getElementById("Canvas"+currentIndex);
 		//var tempCtx  = tempCanv.getContext('2d');
@@ -1165,9 +1350,6 @@ function loadpreviewCurves(){
 
 		prevwImg.onload = function(){
 			var hgth = this.height/this.width * widthO;
-			/*$("#temp_canvas").attr("height",hgth);
-			$("#temp_canvas").attr("width",widthO);
-			*///prevwCtx.drawImage(tempCanv,0,0,width,hgth);
 			prevwCtx.drawImage(tempCanv,0,0);
 			try{
 				Filter.Init(prevwImg,prevwCtx);
@@ -1197,48 +1379,161 @@ function confirmCurves(){
 	$("#temp_canvas").css("z-index",zIndX);
 	$("#temp_canvas").attr("id","Canvas"+currentIndex);
 	cleanCanv();
+	resize("set");
 }
 
 
 /*****************************************
 DRAW PREVIEW
 ****************************************/
-function drawPreview(){
+function drawPreview(action){
+	/*if(action == "mergevisible"){
+		if($(".selected").length() <= 1){
+			alert("O")
+			action = preview;
+		}
+	}*/
+	cleanCanv();
 	var canvPreview = document.getElementById("previewOutput");
 	var ctxPreview  = canvPreview.getContext('2d');
-	var hFact    = $("#Canvas0").height();
-	var wFact    = $("#Canvas0").width();
+	var hFact    = $("#Canvas0").attr("height");
+	var wFact    = $("#Canvas0").attr("width");
 	$("#previewOutput").attr("width",wFact).attr("height",hFact)
 	$(".previewOutput").css("left","60px").css("bottom","10px");
-	for(z=canvaslist+1;z>=1;z--){
-		if($("#layer"+(z-1)).length != 0){
-			var id    = $(".layersBody li:nth-child("+z+")").attr("id");
-			id        = id.replace("layer","");
-			if($("#Canvas"+id).css("display")=='block'){
-				var canvas = document.getElementById("Canvas"+id);
-				/*ctxTmp = canvas.getContext('2d');*/
-				var composite = compositeOps[id];
-				var alpha     = globalAlphaVal[id];
-				//alert(compositeOps[id]);
-				if(composite == undefined)
+	if(action == "preview" || action == "mergevisible"){
+		for(z=canvaslist+1;z>=1;z--){
+			if($("#layer"+(z-1)).length != 0){
+				try{
+					var id    = $(".layersBody li:nth-child("+z+")").attr("id");
+					console.log("Troubled Id: "+id);
+					id        = id.replace("layer","");
+					if($("#Canvas"+id).css("display")=='block'){
+						var canvas = document.getElementById("Canvas"+id);
+						var composite = compositeOps[id];
+						var alpha     = globalAlphaVal[id];
+						if(composite == undefined)
+							composite = 'normal';
+						if(globalAlphaVal == undefined)
+							alpha =1
+						ctxPreview.globalCompositeOperation = composite;
+						ctxPreview.globalAlpha = alpha;
+						ctxPreview.drawImage(canvas,0,0,wFact,hFact);
+						composite = 'normal';
+						alpha =1;
+						ctxPreview.globalCompositeOperation = 'source-atop';
+						ctxPreview.globalAlpha = 1;
+						if(action == "mergevisible"){
+							if(z!==0){
+								$("#layer"+z).remove();
+								$("#Canvas"+z).remove();
+							}
+						}
+					}		
+				}catch(error){
+					console.log(error);
+				}
+			}
+		}
+		var currentUrl = canvPreview.toDataURL();
+		if(action == "mergevisible"){
+			var cnvs = document.getElementById("Canvas0");
+			var ctxt = cnvs.getContext('2d');
+			var img  = new Image();
+			img.onload = function(){
+				ctxt.drawImage(img,0,0,$("#Canvas0").attr("width"),$("#Canvas0").attr("height"));	
+			}
+			img.src = currentUrl;
+			
+		}
+	}else if(action == "mergeselected"){
+		if($(".selected").length > 1){
+			//alert("Merge selected");
+
+			var selectedLayers = new Array();
+			$(".selected").each(function(){
+				var id = (this.id).replace("layer","");
+				$("#layer"+id).remove();
+				selectedLayers.push(id);
+			});
+			$(".containerMain").append("<canvas id='temp_canvas' width="+$("#Canvas0").attr("width")+" height="+$("#Canvas0").attr("height")+" style='position:absolute;width:"+$("#Canvas0").width()+"px;height:"+$("#Canvas0").height()+"px;margin-top:"+($(window).innerHeight() - $("#Canvas0").height())/3+"px;margin-left:"+($(window).innerWidth() - $("#Canvas0").width())/3 +"px;z-index:"+$("#Canvas"+selectedLayers[0]).css("z-index")+"'></canvas>");
+			var cnvTmp = document.getElementById("temp_canvas");
+			var ctxTmp = cnvTmp.getContext('2d');
+			for(var i = selectedLayers.length-1;i >= 0; i--){
+				console.log("now at "+selectedLayers[i]);
+				var id = selectedLayers[i];
+				if($("#Canvas"+id).css("display")!='none'){
+					console.log(id);
+					var canvas = document.getElementById("Canvas"+id);
+					var composite = compositeOps[id];
+					var alpha     = globalAlphaVal[id];
+					if(composite == undefined)
+						composite = 'normal';
+					if(globalAlphaVal == undefined)
+						alpha =1
+					ctxTmp.globalCompositeOperation = composite;
+					ctxTmp.globalAlpha = alpha;
+					ctxTmp.drawImage(canvas,0,0,wFact,hFact);
 					composite = 'normal';
-				if(globalAlphaVal == undefined)
-					alpha =1
-				ctxPreview.globalCompositeOperation = composite;
-				ctxPreview.globalAlpha = alpha;
-				ctxPreview.drawImage(canvas,0,0,wFact,hFact);
-				composite = 'normal';
-				alpha =1;
-				ctxPreview.globalCompositeOperation = 'source-atop';
-				ctxPreview.globalAlpha = 1;
-				//ctxPrev.clearRect(canvas,0,0,$("#layerOpsPreview").width(),hFact);
-			}		
+					alpha =1;
+					ctxTmp.globalCompositeOperation = 'source-atop';
+					ctxTmp.globalAlpha = 1;
+					$("#Canvas"+id).remove();
+				}
+			}
+			$("#temp_canvas").attr("id","Canvas"+selectedLayers[selectedLayers.length-1]);
+			composeLayers();
+			canvaslist = canvaslist - selectedLayers.length +1;
+		}else{
+			alert("Operation Not Permitted, please select more than one layer");
 		}
 	}
-	var currentUrl = canvPreview.toDataURL();
 }
 
 function closePreviewBlock(){
 	$(".previewOutput").hide();
 	$(".tools").removeClass("active");
+}
+
+
+/********************
+Context menu for multiple selection
+********************/
+function multiSelectContext(action){
+	$(".contextMenu").remove();
+	//alert(action);
+	switch(action){
+		case "mergevisible":
+			drawPreview("mergevisible");
+		break;
+		case "merge":
+			drawPreview("mergeselected");
+		break;
+	}
+}
+
+/***************************************************
+LAYER OPERATIONS
+from Layers Panel1
+*************************************************/
+function addNewLayer(type){
+	$(".navList").css("display","none");
+	if(canvaslist > 0){
+		switch(type){
+			case 'transparent':
+				$(".containerMain").append("<canvas id='Canvas"+canvaslist+"' width="+$("#Canvas0").attr('width')+" height="+$('#Canvas0').attr('height')+" style='width:"+$("#Canvas0").width()+"px;height:"+$("#Canvas0").height()+"px;z-index:"+(200+canvaslist)+";position:absolute;margin-left:"+($(window).innerWidth() - $("#Canvas0").width())/3 +"px;margin-top:"+($(window).innerHeight() - $("#Canvas0").height())/3 +"px;'></canvas>");
+				canvaslist++;
+			break;
+			case 'fill':
+				$(".containerMain").append("<canvas id='Canvas"+canvaslist+"' width="+$("#Canvas0").attr('width')+" height="+$('#Canvas0').attr('height')+" style='width:"+$("#Canvas0").width()+"px;height:"+$("#Canvas0").height()+"px;z-index:"+(200+canvaslist)+";position:absolute;margin-left:"+($(window).innerWidth() - $("#Canvas0").width())/3 +"px;margin-top:"+($(window).innerHeight() - $("#Canvas0").height())/3 +"px;'></canvas>");
+				var cnvs  = document.getElementById("Canvas"+canvaslist);
+				var cntxt = cnvs.getContext('2d');
+				cntxt.fillStyle = foregroundColor;
+				cntxt.fillRect(0,0,$("#Canvas"+canvaslist).attr("width"),$("#Canvas"+canvaslist).attr("height"));
+				canvaslist++;
+			break;
+		}
+		composeLayers();
+	}else{
+		alert("Please add some images before proceeding");
+	}
 }

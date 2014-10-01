@@ -1,13 +1,4 @@
 function lasso(elemId){
-   /*delete window.temp_canvas;
-    $("#temp_canvas").remove();
-    $(".containerMain").off();
-    $("#Canvas"+currentIndex).off();
-    delete window.temp_canvas;
-    $("#crop_canvas").remove();
-    var action = 'draw';
-    $(".containerMain").off();
-    $("#Canvas"+currentIndex).off();*/
     cleanCanv();
     var action = 'draw';
 
@@ -24,7 +15,7 @@ function lasso(elemId){
     canvW       = $("#"+elementId).width();
     canvH       = $("#"+elementId).height();
 
-    $(".containerMain").append("<canvas id='temp_canvas' style='position:fixed;z-index:500;display:block' width="+canvW+" height="+canvH+"></canvas>");
+    $(".containerMain").append("<canvas id='temp_canvas' style='position:fixed;z-index:500;display:block' width="+$("#Canvas0").attr("width")+" height="+$("#Canvas0").attr("height")+"></canvas>");
     $("#temp_canvas").css('top',correctTop+'px').css('left',correctLeft+'px');
 
     tempel = document.getElementById("temp_canvas");
