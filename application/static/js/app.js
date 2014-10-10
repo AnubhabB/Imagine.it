@@ -184,7 +184,10 @@ $(function(){
 	//GENERIC DROPDOWN 
 	$(".navText").click(function(){
 		if($(".navList").css("display")=='none'){
-			$(".navList").css('left',$(this).offset().left+"px").css("display","block");
+			$(".navList").css({
+				'left' : $(this).offset().left+"px",
+				"display","block"
+			});
 			switch(this.id){
 				case 'file':
 					$(".navList").html("<ul><!--li id='newFile' onclick='newFile()'>New</li--><li id='openFile' onclick='$(\"#imageFile\").click()'>Open (O)</li><li id='save' onclick='saveFinal()'>Save (Space)</li><li id='exit'>Exit</li></ul>");
@@ -326,10 +329,18 @@ PANEL 2 Operations END
 		if(multiLayerSelect == false){
 			switch(toolSelected){
 				case 'eraser':
-					$(".brushDetails").css('top',e.clientY+"px").css('left',e.clientX+"px").css("display","block");
+					$(".brushDetails").css({
+						'top'    :e.clientY+"px",
+						'left'   :e.clientX+"px",
+						"display":"block"
+					});
 				break;
 				case 'draw':
-					$(".brushDetails").css('top',e.clientY+"px").css('left',e.clientX+"px").css("display","block");
+					$(".brushDetails").css({
+						'top'    :e.clientY+"px",
+						'left'   :e.clientX+"px",
+						"display":"block"
+					});
 				break;
 				default:
 					console.log("Context Menu Default Case");
@@ -338,7 +349,11 @@ PANEL 2 Operations END
 		}else{
 			$(".contextMenu").remove();
 			$(".containerMain").append("<div class='contextMenu'><ul><li onclick='multiSelectContext(\"merge\")'>Merge Selected Layers</li><li onclick='multiSelectContext(\"mergevisible\")'>Merge Visible</li><li onclick='multiSelectContext(\"duplicate\")'>Duplicate Layers</li><li onclick='multiSelectContext(\"delete\")'>Delete Layers</li><li id='clearSelection'>Clear Selection</li></ul></div>");
-      		$(".contextMenu").css("top",mousePosY).css("left",mousePosX).css("z-index",5000);
+      		$(".contextMenu").css({
+      			"top"    :mousePosY,
+      			"left"   :mousePosX,
+      			"z-index":5000
+      		});
 		}
 
 		return false;
@@ -353,12 +368,17 @@ PANEL 2 Operations END
 	var panel4width = $(".panel4").width();
 	$("#layersMinnimize").click(function(){
 		$(".panel4").animate({
-			left  : ($(".panel4").offset().left+$(".panel4").width()-30)+"px",
-			width :"30px",
-			height:"30px",
-			opacity:0
+			left    : ($(".panel4").offset().left+$(".panel4").width()-30)+"px",
+			width   :"30px",
+			height  :"30px",
+			opacity :0
 		},200);
-		$(".panel4min").css("width",0).css("height",0).css("display","block").css("left",$(window).innerWidth() - 30 - 10 +"px").animate({
+		$(".panel4min").css({
+			"width":0,
+			"height":0,
+			"display":"block",
+			"left":$(window).innerWidth() - 30 - 10 +"px"
+		}).animate({
 			opacity: 1,
 			width  : "30px",
 			height : "30px"
@@ -367,10 +387,13 @@ PANEL 2 Operations END
 		});
 	});
 	$(".panel4min").click(function(){
-		$(".panel4").css("display","block").css("left",$(window).innerWidth()+"px").animate({
-			width : panel4width+"px",
-			height:"auto",
-			left  : (($(window).innerWidth() - panel4width -10 +"px")),
+		$(".panel4").css({
+			"display":"block",
+			"left"   :$(window).innerWidth()+"px"
+		}).animate({
+			width   : panel4width+"px",
+			height  :"auto",
+			left    : (($(window).innerWidth() - panel4width -10 +"px")),
 			opacity:1
 		},200);
 		$(".panel4min").animate({
@@ -693,7 +716,12 @@ function drawCanvas(sourceImage,width,height){
 		$(".containerMain").append("<canvas id='Canvas"+canvaslist+"' height='"+heightN+"' width='"+widthN+"' style='background:url(static/img/bg.jpg);z-index:"+(200+canvaslist)+"'></canvas>").css("display","block");
 		var mainC = document.getElementById("Canvas"+canvaslist);
 		var ctx = mainC.getContext("2d");
-		$("#Canvas"+canvaslist).css("position","absolute").css('margin-left',($(window).innerWidth() - widthN)/3 +"px").css("margin-top",($(window).innerHeight() - heightN)/3 +"px").css("display","block");
+		$("#Canvas"+canvaslist).css({
+			"position"    :"absolute",
+			"margin-left" :($(window).innerWidth() - widthN)/3 +"px",
+			"margin-top"  :($(window).innerHeight() - heightN)/3 +"px",
+			"display","block"
+		});
 		if(canvaslist==0){
 			$("#Canvas"+canvaslist).css("overflow","hidden");
 		}
@@ -772,10 +800,18 @@ function composeLayers(){
 		var indexId = parseInt((this.id).replace('showHide',""));
 		if($("#Canvas"+indexId).css("display")=='block'){
 			$("#Canvas"+indexId).css("display","none");
-			$("#showHide"+indexId).css("background","url(static/img/hide.png)").css("background-size","24px 24px").css("background-repeat","no-repeat");
+			$("#showHide"+indexId).css({
+				"background"       :"url(static/img/hide.png)"),
+				"background-size"  :"24px 24px",
+				"background-repeat":"no-repeat"
+			});
 		}else{
 			$("#Canvas"+indexId).css("display","block");
-			$("#showHide"+indexId).css("background","url(static/img/eye.png)").css("background-size","24px 24px").css("background-repeat","no-repeat");
+			$("#showHide"+indexId).css({
+				"background"       :"url(static/img/eye.png)",
+				"background-size"  :"24px 24px",
+				"background-repeat":"no-repeat"
+			});
 		}
 	})
 }
@@ -790,7 +826,11 @@ function composeLayers(){
 /*********************************************************/
 
 function closeBrush(){
-	$(".brushDetails").css("display","none").css("left","2px").css("top","66px");
+	$(".brushDetails").css({
+		"display":"none",
+		"left","2px",
+		"top","66px"
+	});
 }
 
 function brushThumbClicked(){
