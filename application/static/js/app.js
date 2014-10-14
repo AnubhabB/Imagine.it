@@ -186,7 +186,7 @@ $(function(){
 		if($(".navList").css("display")=='none'){
 			$(".navList").css({
 				'left' : $(this).offset().left+"px",
-				"display","block"
+				"display":"block"
 			});
 			switch(this.id){
 				case 'file':
@@ -720,7 +720,7 @@ function drawCanvas(sourceImage,width,height){
 			"position"    :"absolute",
 			"margin-left" :($(window).innerWidth() - widthN)/3 +"px",
 			"margin-top"  :($(window).innerHeight() - heightN)/3 +"px",
-			"display","block"
+			"display":"block"
 		});
 		if(canvaslist==0){
 			$("#Canvas"+canvaslist).css("overflow","hidden");
@@ -801,7 +801,7 @@ function composeLayers(){
 		if($("#Canvas"+indexId).css("display")=='block'){
 			$("#Canvas"+indexId).css("display","none");
 			$("#showHide"+indexId).css({
-				"background"       :"url(static/img/hide.png)"),
+				"background"       :"url(static/img/hide.png)",
 				"background-size"  :"24px 24px",
 				"background-repeat":"no-repeat"
 			});
@@ -828,8 +828,8 @@ function composeLayers(){
 function closeBrush(){
 	$(".brushDetails").css({
 		"display":"none",
-		"left","2px",
-		"top","66px"
+		"left":"2px",
+		"top":"66px"
 	});
 }
 

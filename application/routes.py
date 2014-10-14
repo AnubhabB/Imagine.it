@@ -41,8 +41,6 @@ def processEnhance():
 		uploadLayer = datetime.now()
 		uploadLayer = ''.join(e for e in str(uploadLayer) if e.isalnum())
 		path = '/var/www/imagine/application/static/img/uploads/'+uploadLayer+'.png'
-		# factorContrast = request.json['contrastFactor']
-		# factorBrightness = request.json['brightnessFactor']
 		imageData = (request.json['imgData']).replace("data:image/png;base64","")
 
 		imagedata = base64.b64decode(imageData)
