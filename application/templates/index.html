@@ -6,8 +6,11 @@
 	<link rel="stylesheet" href="{{url_for('static',filename='css/simple-slider.css')}}"/>
 	<link rel="stylesheet" href="{{url_for('static',filename='css/jquery.ui.resizable.css')}}"/>
 	<script type="text/javascript" src="{{url_for('static',filename='js/jquery.js')}}"></script>
-	<script type="text/javascript" src="{{url_for('static',filename='js/stackBlur.js')}}"></script>
 	<script type="text/javascript" src="{{url_for('static',filename='js/app.js')}}"></script>
+	<script type="text/javascript" src="{{url_for('static',filename='js/toolController.js')}}"></script>
+	<script type="text/javascript" src="{{url_for('static',filename='js/autoSelect.js')}}"></script>
+	<script type="text/javascript" src="{{url_for('static',filename='js/fileOps.js')}}"></script>
+	<script type="text/javascript" src="{{url_for('static',filename='js/stackBlur.js')}}"></script>
 	<script type="text/javascript" src="{{url_for('static',filename='js/imageprocessing.js')}}"></script>
 	<script type="text/javascript" src="{{url_for('static',filename='js/perspective.js')}}"></script>
 	<script type="text/javascript" src="{{url_for('static',filename='js/crop.js')}}"></script>
@@ -41,14 +44,14 @@
 	<div class="navList" id='Primary'>
 		
 	</div>
-	<nav>
+	<nav class='panel1'>
 		<div class='navText'></div>
-		<div class='navText' id="file">File</div>
-		<div class='navText' id="edit">Edit</div>
-		<div class='navText' id='image'>Image</div>
-		<div class='navText' id='layer'>Layer</div>
-		<div class='navText' id='filters'>Filters</div>
-		<div class='navText' id='about'>About</div>
+		<div class='navText' id="file" data-type="nav">File</div>
+		<div class='navText' id="edit" data-type="nav">Edit</div>
+		<div class='navText' id='image' data-type="nav">Image</div>
+		<div class='navText' id='layer' data-type="nav">Layer</div>
+		<div class='navText' id='filters' data-type="nav">Filters</div>
+		<div class='navText' id='about' data-type="nav">About</div>
 	</nav>
 	
 	
@@ -201,7 +204,7 @@
 		<div class="row-fluid" id='thumbActions'>
 			
 		</div>
-		<input type="file" id="imageFile" hidden onchange="openFile()" />
+		<input type="file" id="imageFile" hidden />
 		<div class="brushDetails">
 			<div class="row-fluid">
 				<label class="left" id='brushHeading' style="font-size:11px">Brush Details</label>

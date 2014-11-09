@@ -2,7 +2,8 @@ function move(elemId){
 	//clearing variables
 	$("#Canvas"+currentIndex).off();
 	$("#Canvas"+currentIndex).undelegate();
-	console.log("Autoselect Called at Canvas"+currentIndex);	
+	console.log("Move");
+	/*console.log("Autoselect Called at Canvas"+currentIndex);	
 	delete window.indX, window.toolSel, window.el, window.ctx, window.isDragging;
 	var indX   = currentIndex;
 	var toolSel= toolSelected;
@@ -52,7 +53,7 @@ function move(elemId){
 
     function buildcanvas(){
     	ctx.drawImage(layers[indX],moveYAmount,moveYAmount);
-    }
+    }*/
 
     saveState();
 
