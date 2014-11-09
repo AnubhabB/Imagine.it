@@ -37,12 +37,24 @@ function globalEvents(){
 		fileOps.prototype.openFile();
 	});
 
-/*
-	$("body").on("mousedown",".draggable",function(){
-		console.log(imageLayers);
-		console.log("Before drag",imageLayers[currentIndex]);
-		
-	});*/
+	
+	$('#colorPicker').ColorPicker({
+		color: '#ffffff',
+		onShow: function (colpkr) {
+			$(colpkr).fadeIn(500);
+			return false;
+		},
+		onHide: function (colpkr) {
+			$(colpkr).fadeOut(500);
+			return false;
+		},
+		onChange: function (hsb, hex, rgb) {
+			$('#colorPicker span').css('backgroundColor', 'rgba('+rgb.r+','+rgb.g+','+rgb.b+',1)');
+			foregroundColor = 'rgba('+rgb.r+','+rgb.g+','+rgb.b+',1)';
+			//console.log(foregroundColor);
+		}
+	});
+
 }
 
 init.prototype.toolsActivate = function(tool) {
