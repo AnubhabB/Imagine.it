@@ -197,12 +197,12 @@ nav.panel4{
 	left:81%;
 	top:66px;
 }
-nav.panel4 .layersBlock{
+nav.panel4 .layersBlock,nav.panel4 .historyBlock{
 	padding:5px;
 	font-size: 11px;
 }
 
-nav.panel4 .layersBlock .heading,.previewPanel .heading{
+nav.panel4 .layersBlock .heading,nav.panel4 .historyBlock .heading,.previewPanel .heading{
 	font-size: 10px;
 }
 nav.panel4 #layersMinnimize:hover{
@@ -223,7 +223,7 @@ nav.panel4min img{
 	display: block;
 	margin: auto;
 }
-nav.panel4 .layersBlock .layersBody{
+nav.panel4 .layersBlock .layersBody,nav.panel4 .historyBlock .historyBody{
 	background: #444;
 	display: block;
 	overflow: auto;

@@ -15,10 +15,84 @@ $(function(){
 });
 
 function init(){
-	globalEvents();
+	init.prototype.globalEvents();
 }
 
-function globalEvents(){
+
+init.prototype.panel3Adjustments = function() {
+	/*******************************************************************
+	LEFT HAND SIDE TOOL WINDOW - Referred to as Panel3
+*******************************************************************/
+
+	//CLOSE PANEL 3
+	$("#shrink3").click(function(){
+		if($(".panel3").css("left")=='0px'){
+			$(".panel3").animate({
+				left:-20,
+				paddingRight:'1px'
+			},200,function(){
+				$("#shrink3").html(" > ");
+			});
+		}else{
+			$(".panel3").animate({
+				left:0,
+				paddingRight:'5px'
+			},200,function(){
+				$("#shrink3").html(" < ");
+			});
+		}	
+	});
+	//END CLOSE-PANEL3
+};
+
+init.prototype.panel4Adjustments = function() {
+	/*************************************************
+	LAYER - PANEL 4
+**************************************************/
+	//Position Panel4
+	$(".panel4").css("left",($(window).innerWidth() - $(".panel4").width()-10 +"px"));
+	var panel4width = $(".panel4").width();
+	$("#layersMinnimize").click(function(){
+		$(".panel4").animate({
+			left    : ($(".panel4").offset().left+$(".panel4").width()-30)+"px",
+			width   :"30px",
+			height  :"30px",
+			opacity :0
+		},200);
+		$(".panel4min").css({
+			"width":0,
+			"height":0,
+			"display":"block",
+			"left":$(window).innerWidth() - 30 - 10 +"px"
+		}).animate({
+			opacity: 1,
+			width  : "30px",
+			height : "30px"
+		},200,function(){
+			$(".panel4").css("display","none");
+		});
+	});
+	$(".panel4min").click(function(){
+		$(".panel4").css({
+			"display":"block",
+			"left"   :$(window).innerWidth()+"px"
+		}).animate({
+			width   : panel4width+"px",
+			height  :"auto",
+			left    : (($(window).innerWidth() - panel4width -10 +"px")),
+			opacity:1
+		},200);
+		$(".panel4min").animate({
+			opacity:0,
+			width:0,
+			height:0
+		},200,function(){
+			$(".panel4min").css("display","none");
+		});
+	});
+};
+
+init.prototype.globalEvents = function(){
 	$("nav.panel1").on("click",".navText",function(el){
 		var id = this.id;
 		toolController(id,"navText");
@@ -55,6 +129,9 @@ function globalEvents(){
 			//console.log(foregroundColor);
 		}
 	});
+
+	init.prototype.panel4Adjustments();
+	init.prototype.panel3Adjustments();
 
 }
 
