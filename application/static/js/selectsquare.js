@@ -277,8 +277,6 @@ Steps:
 function getResults(ctx,image,theSelectionX,theSelectionY,theSelectionW,theSelectionH,action) {
     var x = currentIndex.length;
     var indX = currentIndex;
-    //console.log(indX+' '+currentIndex);
-    //alert(action);
     if(x>1 || x==0){
         alert("Operation not permitted");
     }else{
@@ -358,7 +356,6 @@ function getResults(ctx,image,theSelectionX,theSelectionY,theSelectionW,theSelec
         }
     }
         $("#temp_canvas").remove();
-        //saveState();
         toolSelected = '';
         $(".tools").removeClass("active");
         $(".contextMenu").remove();
