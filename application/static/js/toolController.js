@@ -33,6 +33,9 @@ toolController.prototype.toolSelection = function(navElem){
 			case "marqueue_square":
 				marqueue_square();
 			break;
+			case "lasso":
+				lasso();
+			break;
 			case "preview":
 				if($(".previewOutput").is(":visible")){
 					$(".previewOutput").hide();

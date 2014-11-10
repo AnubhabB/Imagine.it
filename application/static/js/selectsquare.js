@@ -2,7 +2,7 @@
 *
 *
 Author Anubhab
-August 2015
+August 2014
 Developed Heavily on existing libraries
 Function: Paint, Erase, Move
 Catch: tried separating move but somee conflict with event handelling
@@ -10,13 +10,7 @@ Catch: tried separating move but somee conflict with event handelling
 ****************/
 
 function marqueue_square(){// variables
-/*   delete window.temp_canvas;
-    $("#temp_canvas").remove();
-    $(".containerMain").off();
-    $("#Canvas"+currentIndex).off();
-    delete window.temp_canvas;
-    $("#crop_canvas").remove();*/
-    //cleanCanv();
+
     var canvas, ctx;
     var image;
     var iMouseX, iMouseY = 1;
@@ -307,7 +301,6 @@ function getResults(ctx,image,theSelectionX,theSelectionY,theSelectionW,theSelec
                     cntx.clearRect(theSelectionX,theSelectionY,theSelectionW,theSelectionH);
             break;
             default:
-                console.log(action);
                 var currentCanvas = "Canvas"+indX;
                 var zInd= $("#Canvas"+indX).css('z-index'); 
                 var cnv = document.getElementById(currentCanvas);
@@ -336,14 +329,20 @@ function getResults(ctx,image,theSelectionX,theSelectionY,theSelectionW,theSelec
                     if((theSelectionY+theSelectionH) >imageLayers[canvaslist].height)
                         sh = theSelectionH - ((theSelectionY+theSelectionH) -imageLayers[canvaslist].height);
                     cntx.drawImage(imageLayers[canvaslist].imageObj, theSelectionX, theSelectionY, sw, sh, 0, 0, sw, sh);
+                    imageLayers[canvaslist].alpha = 1;
+                    imageLayers[canvaslist].blendmode = 'source-over';
+                    imageLayers[canvaslist].identity  = "Canvas"+canvaslist;
+                    imageLayers[canvaslist].height    = $("#Canvas"+canvaslist).height();
+                    imageLayers[canvaslist].width    = $("#Canvas"+canvaslist).width();
+                    imageLayers[canvaslist].left    = $("#Canvas"+canvaslist).offset().left;
+                    imageLayers[canvaslist].top    = $("#Canvas"+canvaslist).offset().top;
+                    
                     if(action == "cut")
                         ctxTemp.clearRect(theSelectionX,theSelectionY,sw,sh);
                     canvaslist++;
                     currentIndex = canvaslist-1;
                     imageLayers[currentIndex].width = sw;
                     imageLayers[currentIndex].height = sh;
-                    //console.log(sw+" gettinng the heights "+sh);
-                    //layers[currentIndex] = 
                     
                     fileOps.prototype.composeLayers();
                 }

@@ -1,6 +1,22 @@
-function lasso(elemId){
-    cleanCanv();
-    var action = 'draw';
+/*****************
+*
+Author Anubhab
+November 2014
+*
+1. Create full scale empty temp_canvas
+2. On mousedown push points to array
+3. Draw dotted selection line
+4. Get leftmost, topmost, rightmost, bottommost points
+5. If any of the above points is greater than the source canvas redraw the canvas with new size
+6. Case stoke or fill simply fill, case clear simply clear selection with destination-out, case layer via create new canvas of appropriate size
+7. Delete temp canvas
+*
+*
+************/
+
+function lasso(){
+    //cleanCanv();
+    /*var action = 'draw';
 
     var layerTempId = $(".selected").attr('id');
     var tempElement = null;
@@ -9,7 +25,7 @@ function lasso(elemId){
     var el,tempel, ctx = null,tempctx=null, isDrawing=false, correctLeft, correctTop, isDragging=false,prevX,prevY,currentX,currentY,canW=null,canH=null;
     el = document.getElementById("Canvas"+currentIndex);
     ctx = el.getContext('2d');
-    isDrawing = null;
+    var isDrawing = false;
     correctLeft = $("#"+elementId).offset().left;
     correctTop  = $("#"+elementId).offset().top;
     canvW       = $("#"+elementId).width();
@@ -85,6 +101,14 @@ function lasso(elemId){
     };
     tempel.oncontextmenu = function(e){
       return false;
+    }*/
+
+    $("#temp_canvas").remove();
+    var isDrawing = false;
+    if(currentIndex.length > 1 || currentIndex.length == 0){
+      alert("Action not permitted - "+currentIndex.length+" layer(s) selected");
+    }else{
+      var points = [];
     }
 
 }
