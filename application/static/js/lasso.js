@@ -103,17 +103,108 @@ function lasso(){
       return false;
     }*/
 
+    $("#temp_canvas").off("mousedown").off("mouseup").off("mousemove");
     $("#temp_canvas").remove();
     var isDrawing = false;
     if(currentIndex.length > 1 || currentIndex.length == 0){
       alert("Action not permitted - "+currentIndex.length+" layer(s) selected");
     }else{
-      var points = [];
+      var points = [], startX, startY, endX, endY;
+      var tempW = $("#Canvas0").attr("width");
+      var tempH = $("#Canvas0").attr("height");
+      var tempL = $("#Canvas0").offset().left;
+      var tempT = $("#Canvas0").offset().top;
+
+      $(".containerMain").append("<canvas id='temp_canvas' style='position:fixed;z-index:500;display:block;left:"+tempL+"px;top:"+tempT+"px' width="+tempW+" height="+tempH+"></canvas>");
+      var tempCtx = document.getElementById("temp_canvas").getContext("2d");
+      var correctLeft = $("#temp_canvas").offset().left;
+      var correctTop = $("#temp_canvas").offset().top;
+      $("#temp_canvas").on("mousedown",function(ev){
+        $(".contextMenu").remove();
+        isDrawing = true;
+        points.push({ 
+          x: ev.pageX - correctLeft, 
+          y: ev.pageY- correctTop
+        });
+        lasso.prototype.drawSelection(tempCtx, points, 'start');
+      });
+
+      $("#temp_canvas").on("mousemove",function(ev){
+        if(!isDrawing) return;
+
+        $(".contextMenu").remove();
+        points.push({ 
+          x: ev.pageX - correctLeft, 
+          y: ev.pageY- correctTop
+        });
+        lasso.prototype.drawSelection(tempCtx, points, 'move');
+      });
+
+      $("#temp_canvas").on("mouseup",function(ev){
+        isDrawing = false;
+        lasso.prototype.drawSelection(tempCtx, points, 'end');
+        var xpos = ev.clientX - correctLeft;
+        var ypos = ev.clientY - correctTop;
+        lasso.prototype.contextmenu(xpos,ypos, points);
+      });
+
+      $("#temp_canvas").on("contextmenu",function(){
+        return false;
+      });
     }
 
 }
 
-function doLasso(ctx,action){
+lasso.prototype.contextmenu = function(xpos,ypos, points) {
+  $(".contextMenu").remove();
+  $(".containerMain").append("<div class='contextMenu'><ul><li id='layerViaCopy'>Layer Via Copy</li><li id='layerViaCut'>Layer Via Cut</li><li id='fillSelection'>Fill Selection</li><li id='strokeSelection'>Stroke Selection</li><li id='clearSelection'>Clear Selection</li></ul></div>");
+  $(".contextMenu").css({
+    "top": ypos+"px",
+    "left": xpos+"px",
+    "z-index": $("#temp_canvas").css("z-index") + 100
+  });
+
+  $("#layerViaCopy").click(function(){
+      lasso.prototype.doLasso('copy', points);
+  });
+  $("#layerViaCut").click(function(){
+      lasso.prototype.doLasso('cut', points);
+  });
+
+  $("#fillSelection").click(function(){
+      lasso.prototype.doLasso('fill', points);
+  });
+  $("#strokeSelection").click(function(){
+      lasso.prototype.doLasso('stroke', points);
+  });
+  $("#clearSelection").click(function(){
+      lasso.prototype.doLasso('clear', points);
+  });
+};
+
+lasso.prototype.drawSelection = function(tempCtx, points, act){
+  
+  var len = points.length;
+  var ctx = tempCtx;
+  ctx.clearRect(0,0,$("#temp_canvas").width(),$("#temp_canvas").height());
+  ctx.strokeStyle = "#fff";
+  ctx.lineWidth   = .6;
+  ctx.setLineDash([4]);
+
+  ctx.beginPath();
+  ctx.moveTo(points[0].x,points[0].y);
+    for(var i=1;i<len;i++){
+        ctx.lineTo(points[i].x, points[i].y);
+    }
+    if(act == "end"){
+      ctx.lineTo(points[0].x,points[0].y);
+      ctx.closePath();
+    }
+    ctx.stroke();
+}
+
+lasso.prototype.doLasso = function(action, poitns) {
+  // body...TODO
   $(".contextMenu").remove();
   switch(action){
     case 'copy':
