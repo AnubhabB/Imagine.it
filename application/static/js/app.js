@@ -5,7 +5,8 @@ var toolSelected  = "";
 var layers        = [];
 var canvaslist    = 0;
 var shiftKey      = false;
-var toolSelected = '';
+var toolSelected  = '';
+var states        = [];
 
 
 
@@ -63,4 +64,17 @@ init.prototype.toolsActivate = function(tool) {
 
 init.prototype.saveState = function() {
 	// body...
+};
+
+init.prototype.history = function(todo,action) {
+	if(todo == "push"){
+		var data = {'action': action,'statedata':imageLayers};
+		states.push(data);
+	}
+
+	init.prototype.updateHistory();
+};
+
+init.prototype.updateHistory = function() {
+	console.log(states);
 };

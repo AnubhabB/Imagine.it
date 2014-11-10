@@ -144,7 +144,7 @@ function lasso(){
         isDrawing = false;
         lasso.prototype.drawSelection(tempCtx, points, 'end');
         var xpos = ev.clientX - correctLeft;
-        var ypos = ev.clientY - correctTop;
+        var ypos = ev.clientY;
         lasso.prototype.contextmenu(xpos,ypos, points);
       });
 
@@ -180,6 +180,8 @@ lasso.prototype.contextmenu = function(xpos,ypos, points) {
   $("#clearSelection").click(function(){
       lasso.prototype.doLasso('clear', points);
   });
+
+  init.prototype.history("push","Select-custom");
 };
 
 lasso.prototype.drawSelection = function(tempCtx, points, act){
@@ -206,7 +208,11 @@ lasso.prototype.drawSelection = function(tempCtx, points, act){
 lasso.prototype.doLasso = function(action, poitns) {
   // body...TODO
   $(".contextMenu").remove();
-  switch(action){
+  
+  console.log("To do: couldnt do because of internet connection");
+
+
+  /*switch(action){
     case 'copy':
       var indX = currentIndex;
       var canvaslistOld, canvaslistNew;
@@ -287,7 +293,7 @@ lasso.prototype.doLasso = function(action, poitns) {
     default:
       alert("to do");
     break;
-  }
+  }*/
   $("#temp_canvas").remove();
   saveState();
   setTimeout(function(){

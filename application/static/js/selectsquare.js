@@ -4,8 +4,8 @@
 Author Anubhab
 August 2014
 Developed Heavily on existing libraries
-Function: Paint, Erase, Move
-Catch: tried separating move but somee conflict with event handelling
+Function: Square selection
+To Do: Circular selection
 *
 ****************/
 
@@ -63,7 +63,7 @@ function marqueue_square(){// variables
 
         // draw source image
         // and make it darker
-        ctx.fillStyle = 'rgba(0, 0, 0, 0)';
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.01)';
         ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
         // draw selection
@@ -224,6 +224,7 @@ function marqueue_square(){// variables
             }
             theSelection.px = 0;
             theSelection.py = 0;
+            init.prototype.history("push","Select-rectangle");
         });
 
         var contxtC = document.getElementById('temp_canvas');
@@ -288,17 +289,20 @@ function getResults(ctx,image,theSelectionX,theSelectionY,theSelectionW,theSelec
                     
                     cntx.fillStyle = foregroundColor;
                     cntx.fillRect(theSelectionX,theSelectionY,theSelectionW,theSelectionH);
+                    init.prototype.history("push","Selection-Fill");
             break;
             case 'stroke':
                     var cnv = document.getElementById("Canvas"+indX);
                     var cntx = cnv.getContext('2d');
                     cntx.strokeStyle = foregroundColor;
                     cntx.strokeRect(theSelectionX,theSelectionY,theSelectionW,theSelectionH);
+                    init.prototype.history("push","Selection-Stroke");
             break;
             case 'clear':
                     var cnv = document.getElementById("Canvas"+indX);
                     var cntx = cnv.getContext('2d');
                     cntx.clearRect(theSelectionX,theSelectionY,theSelectionW,theSelectionH);
+                    init.prototype.history("push","Selection-Clear");
             break;
             default:
                 var currentCanvas = "Canvas"+indX;
@@ -345,8 +349,10 @@ function getResults(ctx,image,theSelectionX,theSelectionY,theSelectionW,theSelec
                     imageLayers[currentIndex].height = sh;
                     
                     fileOps.prototype.composeLayers();
+                    init.prototype.history("push",action);
                 }
                 imageLayers[canvaslist].imageObj.src = tempSrc;
+
             break;
             
         }

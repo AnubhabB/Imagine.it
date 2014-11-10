@@ -30,18 +30,12 @@ fileOps.prototype.openFile = function() {
 				imageLayers[canvaslist].imageObj.onload = function(){
 					if(createcanvas)
 						fileOps.prototype.drawCanvas(canvaslist,this.width,this.height);
-					createcanvas = false;/*
-					baseHeight = $("#Canvas0").height();
-					baseWidth  = $("#Canvas0").width();
-					globalLeft = $("#Canvas0").offset().left;
-					globalTop = $("#Canvas0").offset().top;
-					createcanvas = false;*/
+					createcanvas = false;
 				}
 				imageLayers[canvaslist].name = response.name;
-				/*layers[canvaslist].name= response.name;*/
+
 				imageLayers[canvaslist].imageObj.src = "static/img/uploads/"+response.name;
 				imageLayers[canvaslist].identity = "Canvas"+canvaslist;
-				/*layers[canvaslist].src = "static/img/uploads/"+response.name;*/
 
 		}
 	});
@@ -89,7 +83,7 @@ fileOps.prototype.drawCanvas = function(index,width,height) {
 		}
 		
 		ctx.drawImage(imageLayers[index].imageObj,0,0);
-
+		init.prototype.history("push","Open");
 		canvaslist++;
 		fileOps.prototype.composeLayers();
 }
@@ -193,10 +187,13 @@ fileOps.prototype.redoCanvasOrder = function() {
 			var id = $(".layersBody li:nth-child("+z+")").attr("id");
 			id     = id.replace("layer","");
 			zInd   = (200+(factor*10));
-			$("#Canvas"+id).css("z-index",zInd);
+			var cnv= "Canvas"+id;
+			$("#"+cnv).css("z-index",zInd);
+			imageLayers[id].order = factor;
 		}
 		factor--;
 	}
+	init.prototype.history("push","Reorder");
  };
 /*****************END LAYER REORDER**************
 *************************************************/
