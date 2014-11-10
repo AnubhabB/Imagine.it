@@ -29,6 +29,9 @@ toolController.prototype.toolSelection = function(navElem){
 				$("#Canvas"+currentIndex).css("cursor","move");
 				AutoSelect();
 			break;
+			case "marqueue_square":
+				marqueue_square();
+			break;
 			case "preview":
 				if($(".previewOutput").is(":visible")){
 					$(".previewOutput").hide();
@@ -37,6 +40,9 @@ toolController.prototype.toolSelection = function(navElem){
 					drawPreview("preview");
 					$(".previewOutput").show();
 				}
+			break;
+			default:
+				console.log("to integrate "+toolSelected);
 			break;
 		}
 		$("#"+navElem).addClass("active");

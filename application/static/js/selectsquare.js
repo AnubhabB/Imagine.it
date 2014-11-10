@@ -16,7 +16,7 @@ function marqueue_square(){// variables
     $("#Canvas"+currentIndex).off();
     delete window.temp_canvas;
     $("#crop_canvas").remove();*/
-    cleanCanv();
+    //cleanCanv();
     var canvas, ctx;
     var image;
     var iMouseX, iMouseY = 1;
@@ -80,11 +80,17 @@ function marqueue_square(){// variables
         // loading source image
         delete window.temp_canvas;
         $("#temp_canvas").remove();
-        image = layers[indX];
+        image = imageLayers[indX].imageObj;
         //create temp canvas
         
         $(".containerMain").append("<canvas id='temp_canvas' width="+$("#Canvas"+indX).width()+" height="+$("#Canvas"+indX).height()+"></canvas>");
-        $("#temp_canvas").css("position","absolute").css('margin-left',($(window).innerWidth() - $("#Canvas"+indX).width())/3 +"px").css("margin-top",($(window).innerHeight() - $("#Canvas"+indX).height())/3 +"px").css("display","block").css("z-index",1000);
+        $("#temp_canvas").css({
+            "position":"fixed",
+            "left"    :$("#Canvas"+indX).offset().left +"px",
+            "top"     :$("#Canvas"+indX).offset().top +"px",
+            "display" :"block",
+            "z-index" : 1000
+        });
         // creating canvas and context objects
         canvas = document.getElementById('temp_canvas');
         ctx = canvas.getContext('2d');
@@ -304,30 +310,38 @@ function getResults(ctx,image,theSelectionX,theSelectionY,theSelectionW,theSelec
                 var tempSrc= cnv.toDataURL();
                 var height = $("#Canvas0").height();
                 var width  = $("#Canvas0").width();
-                layers[canvaslist] = new Image();
-                layers[canvaslist].onload = function(){
+                imageLayers[canvaslist] = {};
+                imageLayers[canvaslist].imageObj = new Image();
+                imageLayers[canvaslist].imageObj.onload = function(){
                     $(".containerMain").append("<canvas id='Canvas"+canvaslist+"' height='"+height+"' width='"+width+"'></canvas>").css("display","block");
                     var mainC = document.getElementById("Canvas"+canvaslist);
                     var cntx = mainC.getContext("2d");
-                    $("#Canvas"+canvaslist).css("position","absolute").css('margin-left',($(window).innerWidth() - width)/3 +"px").css("margin-top",($(window).innerHeight() - height)/3 +"px").css("display","block").css('z-index',parseInt(zInd)+1);
+                    $("#Canvas"+canvaslist).css({
+                        "position":"fixed",
+                        "left"    :$("#Canvas"+indX).offset().left +"px",
+                        "top"     :$("#Canvas"+indX).offset().top +"px",
+                        "display" :"block",
+                        "z-index" : parseInt(zInd)+1
+                    });
+                    //.css("position","absolute").css('margin-left',($(window).innerWidth() - width)/3 +"px").css("margin-top",($(window).innerHeight() - height)/3 +"px").css("display","block").css('z-index',parseInt(zInd)+1);
                     var sw = theSelectionW;
                     var sh = theSelectionH;
-                    if((theSelectionX+theSelectionW) >layers[canvaslist].width)
-                        sw = theSelectionW - (theSelectionX+theSelectionW -layers[canvaslist].width);
-                    if((theSelectionY+theSelectionH) >layers[canvaslist].height)
-                        sh = theSelectionH - ((theSelectionY+theSelectionH) -layers[canvaslist].height);
-                    cntx.drawImage(layers[canvaslist], theSelectionX, theSelectionY, sw, sh, 0, 0, sw, sh);
+                    if((theSelectionX+theSelectionW) >imageLayers[canvaslist].width)
+                        sw = theSelectionW - (theSelectionX+theSelectionW -imageLayers[canvaslist].width);
+                    if((theSelectionY+theSelectionH) >imageLayers[canvaslist].height)
+                        sh = theSelectionH - ((theSelectionY+theSelectionH) -imageLayers[canvaslist].height);
+                    cntx.drawImage(imageLayers[canvaslist].imageObj, theSelectionX, theSelectionY, sw, sh, 0, 0, sw, sh);
                     
                     canvaslist++;
                     currentIndex = canvaslist-1;
-                    layers[currentIndex].w = sw;
-                    layers[currentIndex].h = sh;
-                    console.log(sw+" gettinng the heights "+sh);
+                    imageLayers[currentIndex].width = sw;
+                    imageLayers[currentIndex].height = sh;
+                    //console.log(sw+" gettinng the heights "+sh);
                     //layers[currentIndex] = 
-                    saveState();
-                    composeLayers();
+                    //saveState();
+                    fileOps.prototype.composeLayers();
                 }
-                layers[canvaslist].src = tempSrc;
+                imageLayers[canvaslist].imageObj.src = tempSrc;
             break;
             case 'cut':
                 var currentCanvas = "Canvas"+indX;
@@ -367,7 +381,7 @@ function getResults(ctx,image,theSelectionX,theSelectionY,theSelectionW,theSelec
         }
     }
         $("#temp_canvas").remove();
-        saveState();
+        //saveState();
         $(".tools").removeClass("active");
         $(".contextMenu").remove();
 }
