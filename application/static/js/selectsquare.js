@@ -96,7 +96,10 @@ function marqueue_square(){// variables
         ctx = canvas.getContext('2d');
 
         // create initial selection
-        theSelection = new Selection(50, 50, 50, 50);
+        var lf = $("#temp_canvas").width()/3;
+        var tp = $("#temp_canvas").height()/3;
+        var wd = hg = $("#temp_canvas").height()/3;
+        theSelection = new Selection(lf,tp,wd,hg);
 
         $('#temp_canvas').mousemove(function(e) { // binding mouse move event
             $(".contextMenu").remove();
@@ -282,7 +285,7 @@ function getResults(ctx,image,theSelectionX,theSelectionY,theSelectionW,theSelec
     //console.log(indX+' '+currentIndex);
     //alert(action);
     if(x>1 || x==0){
-
+        alert("Operation not permitted");
     }else{
         switch(action){
             case 'fill':
@@ -303,13 +306,15 @@ function getResults(ctx,image,theSelectionX,theSelectionY,theSelectionW,theSelec
                     var cntx = cnv.getContext('2d');
                     cntx.clearRect(theSelectionX,theSelectionY,theSelectionW,theSelectionH);
             break;
-            case 'copy':
+            default:
+                console.log(action);
                 var currentCanvas = "Canvas"+indX;
                 var zInd= $("#Canvas"+indX).css('z-index'); 
                 var cnv = document.getElementById(currentCanvas);
+                var ctxTemp = cnv.getContext('2d');
                 var tempSrc= cnv.toDataURL();
-                var height = $("#Canvas0").height();
-                var width  = $("#Canvas0").width();
+                var height = theSelectionH;
+                var width  = theSelectionW;
                 imageLayers[canvaslist] = {};
                 imageLayers[canvaslist].imageObj = new Image();
                 imageLayers[canvaslist].imageObj.onload = function(){
@@ -331,57 +336,25 @@ function getResults(ctx,image,theSelectionX,theSelectionY,theSelectionW,theSelec
                     if((theSelectionY+theSelectionH) >imageLayers[canvaslist].height)
                         sh = theSelectionH - ((theSelectionY+theSelectionH) -imageLayers[canvaslist].height);
                     cntx.drawImage(imageLayers[canvaslist].imageObj, theSelectionX, theSelectionY, sw, sh, 0, 0, sw, sh);
-                    
+                    if(action == "cut")
+                        ctxTemp.clearRect(theSelectionX,theSelectionY,sw,sh);
                     canvaslist++;
                     currentIndex = canvaslist-1;
                     imageLayers[currentIndex].width = sw;
                     imageLayers[currentIndex].height = sh;
                     //console.log(sw+" gettinng the heights "+sh);
                     //layers[currentIndex] = 
-                    //saveState();
+                    
                     fileOps.prototype.composeLayers();
                 }
                 imageLayers[canvaslist].imageObj.src = tempSrc;
             break;
-            case 'cut':
-                var currentCanvas = "Canvas"+indX;
-                var zInd= $("#Canvas"+indX).css('z-index'); 
-                var cnv = document.getElementById(currentCanvas);
-                var tempSrc= cnv.toDataURL();
-                var height = $("#Canvas0").height();
-                var width  = $("#Canvas0").width();
-                layers[canvaslist] = new Image();
-                layers[canvaslist].onload = function(){
-                    //$("#Canvas"+indX).remove();
-                    $(".containerMain").append("<canvas id='Canvas"+canvaslist+"' height='"+height+"' width='"+width+"'></canvas>").css("display","block");
-                    var mainC = document.getElementById("Canvas"+canvaslist);
-                    var cntx = mainC.getContext("2d");
-                    $("#Canvas"+canvaslist).css("position","absolute").css('margin-left',($(window).innerWidth() - width)/3 +"px").css("margin-top",($(window).innerHeight() - height)/3 +"px").css("display","block").css('z-index',parseInt(zInd)+1);
-                    var sw = theSelectionW;
-                    var sh = theSelectionH;
-                    if((theSelectionX+theSelectionW) >layers[canvaslist].width)
-                        sw = theSelectionW - (theSelectionX+theSelectionW -layers[canvaslist].width);
-                    if((theSelectionY+theSelectionH) >layers[canvaslist].height)
-                        sh = theSelectionH - ((theSelectionY+theSelectionH) -layers[canvaslist].height);
-                    cntx.drawImage(layers[canvaslist], theSelectionX, theSelectionY, sw, sh, theSelectionX, theSelectionX, sw, sh);
-
-                    canvaslist++;
-                    currentIndex = canvaslist-1;
-                    layers[currentIndex].w = sw;
-                    layers[currentIndex].h = sh;
-                    console.log(sw+" gettinng the heights "+sh);
-                    saveState();
-                    composeLayers();
-                }
-                layers[canvaslist].src = tempSrc;
-                var cnv = document.getElementById("Canvas"+indX);
-                var cntx = cnv.getContext('2d');
-                cntx.clearRect(theSelectionX,theSelectionY,theSelectionW,theSelectionH);
-            break;
+            
         }
     }
         $("#temp_canvas").remove();
         //saveState();
+        toolSelected = '';
         $(".tools").removeClass("active");
         $(".contextMenu").remove();
 }

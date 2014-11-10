@@ -60,3 +60,7 @@ function globalEvents(){
 init.prototype.toolsActivate = function(tool) {
 	toolController.prototype.toolSelection(tool);
 };
+
+init.prototype.saveState = function() {
+	// body...
+};
