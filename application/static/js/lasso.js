@@ -188,6 +188,7 @@ lasso.prototype.drawSelection = function(tempCtx, points, act){
   
   var len = points.length;
   var ctx = tempCtx;
+  
   ctx.clearRect(0,0,$("#temp_canvas").width(),$("#temp_canvas").height());
   ctx.strokeStyle = "#fff";
   ctx.lineWidth   = .6;
@@ -206,31 +207,17 @@ lasso.prototype.drawSelection = function(tempCtx, points, act){
 }
 
 lasso.prototype.doLasso = function(action, points) {
-  $(".contextMenu").remove();
   
-  var orgX0 = $("#Canvas"+currentIndex).offset().left - $("#Canvas0").offset().left;
-  var orgY0 = $("#Canvas"+currentIndex).offset().top - $("#Canvas0").offset().top;
-  var orgX1 = orgX0 + $("#Canvas"+currentIndex).width();
-  var orgY1 = orgY0 + $("#Canvas"+currentIndex).height();
+  $(".contextMenu").remove();
 
-  var minX = points[0].x, minY = points[0].y;
-  var maxX = points[points.length - 1].x, maxY = points[points.length - 1].y;
-  $.each(points,function(k,v){
-    if(points[k].x < minX){
-      minX = points[k].x;
-    }
-    if(points[k].y < minY){
-      minY = points[k].y
-    }
-    if(points[k].x > maxX){
-      maxX = points[k].x;
-    }
-    if(points[k].y > maxY){
-      maxY = points[k].y;
-    }
-  });
+  if(action == 'cut' || action == 'copy')
+    lasso.prototype.lassoCopyCut(action, points);
 
-  if(maxY < orgY0 || maxX < orgX0 ){
+  
+
+
+
+  /*if(maxY < orgY0 || maxX < orgX0 ){
       alert("No Pixels Selected");
   }else if(minX < orgX0 || minY < orgY0 || maxX > orgX1 || maxY > orgY1){
     if(action == "copy" || action == "cut"){
@@ -258,8 +245,8 @@ lasso.prototype.doLasso = function(action, points) {
     console.log(currentIndex);
     var can = document.getElementById("Canvas"+currentIndex);
     var ctx = can.getContext("2d");
-  }
-
+  }*/
+/*
   var corrL = $("#Canvas"+currentIndex).offset().left - $("#Canvas0").offset().left;
   var corrT = $("#Canvas"+currentIndex).offset().top - $("#Canvas0").offset().top;
 
@@ -280,7 +267,7 @@ lasso.prototype.doLasso = function(action, points) {
     }else if(action == "stroke"){
       ctx.stroke();  
     }
-  }
+  }*/
 
   
 
@@ -373,3 +360,113 @@ lasso.prototype.doLasso = function(action, points) {
 
   });*/
 }
+
+lasso.prototype.lassoCopyCut = function(action, points) {
+    
+  var orgX0 = $("#Canvas"+currentIndex).offset().left - $("#Canvas0").offset().left;
+  var orgY0 = $("#Canvas"+currentIndex).offset().top - $("#Canvas0").offset().top;
+  var orgX1 = orgX0 + $("#Canvas"+currentIndex).width();
+  var orgY1 = orgY0 + $("#Canvas"+currentIndex).height();
+
+  var minmax = lasso.prototype.minMax(points);
+
+  var minX = minmax[0];
+  var minY = minmax[1];
+  var maxX = minmax[2];
+  var maxY = minmax[3];
+
+  if(maxY < orgY0 || maxX < orgX0 ){
+      alert("No Pixels Selected");
+  }else if(minX < orgX0 || minY < orgY0 || maxX > orgX1 || maxY > orgY1){
+      //Recreate points
+      var l = points.length;
+      for(var i=1;i<l;i++){
+        if(points[i-1].x < orgX0 ){
+          points[i-1].x = orgX0;
+        }else if(points[i-1].x > orgX1){
+          points[i-1].x = orgX1;
+        }
+        if(points[i-1].y < orgY0 ){
+          points[i-1].y = orgY0;
+        }else if(points[i-1].y > orgY1){
+          points[i-1].y = orgY1;
+        }
+      }
+
+      var newminmax = lasso.prototype.minMax(points);
+      var newminX = newminmax[0];
+      var newminY = newminmax[1];
+      var newmaxX = newminmax[2];
+      var newmaxY = newminmax[3];
+      var newWidth = newmaxX - newminX;
+      var newHeight= newmaxY - newminY;
+
+      if($("#fly_canvas").length == 0)
+        $(".containerMain").append("<canvas id='fly_canvas' width="+newWidth+" height="+newHeight+" style='position:fixed;border:1px solid #ccc;top:"+(newminY+$("#Canvas0").offset().top)+"px;left:"+(newminX+$("#Canvas0").offset().left)+"px;z-index:1000'></canvas>");
+      else
+        alert("WTF");
+
+      var ctx = document.getElementById("fly_canvas").getContext('2d');
+      var drawX = $("#Canvas"+currentIndex).offset().left - $("#fly_canvas").offset().left;
+      var drawY = $("#Canvas"+currentIndex).offset().top - $("#fly_canvas").offset().top;
+
+      //
+      var cnv = document.getElementById("Canvas"+currentIndex);
+      
+      ctx.drawImage(cnv,drawX,drawY);
+
+      var correctX = $("#fly_canvas").offset().left - $("#Canvas0").offset().left;
+      var correctY = $("#fly_canvas").offset().top - $("#Canvas0").offset().top;
+      if(action == "copy"){
+        lasso.prototype.doCanvasAction(ctx,points,correctX,correctY,"destination-in",function(){
+          console.log("Do new Layer addition here");
+        });
+      }
+
+  }else{
+    console.log(currentIndex);
+    var can = document.getElementById("Canvas"+currentIndex);
+    var ctx = can.getContext("2d");
+  }
+
+};
+
+lasso.prototype.minMax = function(points) {
+  
+  var minX = points[0].x, minY = points[0].y;
+  var maxX = points[points.length - 1].x, maxY = points[points.length - 1].y;
+  $.each(points,function(k,v){
+    if(points[k].x < minX){
+      minX = points[k].x;
+    }
+    if(points[k].y < minY){
+      minY = points[k].y
+    }
+    if(points[k].x > maxX){
+      maxX = points[k].x;
+    }
+    if(points[k].y > maxY){
+      maxY = points[k].y;
+    }
+  });
+  var minMaxArray = [minX,minY,maxX,maxY];
+  return minMaxArray;
+};
+
+lasso.prototype.doCanvasAction = function(ctx,points,correctLeft,correctTop,composite,callback) {
+  // body...
+  var len = points.length;
+  ctx.fillStyle = "#fff";
+  ctx.globalCompositeOperation = composite;
+  ctx.beginPath();
+  ctx.moveTo(points[0].x - correctLeft,points[0].y - correctTop);
+  for(var i=1;i<len;i++){
+      ctx.lineTo(points[i-1].x - correctLeft, points[i-1].y - correctTop);
+  }
+  ctx.lineTo(points[0].x - correctLeft,points[0].y - correctTop);
+  ctx.closePath();
+  ctx.fill();
+
+  callback();
+};
+
