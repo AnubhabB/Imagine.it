@@ -205,11 +205,51 @@ lasso.prototype.drawSelection = function(tempCtx, points, act){
     ctx.stroke();
 }
 
-lasso.prototype.doLasso = function(action, poitns) {
+lasso.prototype.doLasso = function(action, points) {
   // body...TODO
   $(".contextMenu").remove();
+  var lX = nX = $("#Canvas"+currentIndex).offset().left - $("#Canvas0").offset().left;
+  var lY = nY = $("#Canvas"+currentIndex).offset().top - $("#Canvas0").offset().top;
+  var lW = lX + $("#Canvas"+currentIndex).width();
+  var lH = lY + $("#Canvas"+currentIndex).height();
+  var minX = points[0].x, minY = points[0].y;
+  var maxX = points[points.length - 1].x, maxY = points[points.length - 1].y;
+  $.each(points,function(k,v){
+    if(points[k].x < minX){
+      minX = points[k].x;
+    }
+    if(points[k].y < minY){
+      minY = points[k].y
+    }
+    if(points[k].x > maxX){
+      maxX = points[k].x;
+    }
+    if(points[k].y > maxY){
+      maxY = points[k].y;
+    }
+  });
+  console.log(minX,minY,maxX,maxY);
+  //Create a new canvas of new size or old size depending on what the selection dimensions are
+  if(minX < lX){
+    lX = minX; //Left offset
+  }
+  if(minY < lY){
+    lY = minY; //Top offset
+  }
+  if(maxX > lW){
+    lW = maxX;
+  }
+  if(maxY > lH){
+    lH = maxY;
+  }
+  var left = nX - minX;
+  var top  = nY - minY;
+  var cnv  = document.getElementById("Canvas"+currentIndex);
+  $(".containerMain").append("<canvas id='pass_by' width="+(lW-lX)+" height="+(lH-lY)+" style='position:fixed;border:1px solid #ccc;left:"+$("#Canvas0").offset().left+"px;top:"+$("#Canvas0").offset().top+"px;z-index:800'></canvas>");
+  var ctx = document.getElementById("pass_by").getContext('2d');
+  ctx.drawImage(cnv,left,top);
+
   
-  console.log("To do: couldnt do because of internet connection");
 
 
   /*switch(action){
@@ -295,8 +335,8 @@ lasso.prototype.doLasso = function(action, poitns) {
     break;
   }*/
   $("#temp_canvas").remove();
-  saveState();
+  /*saveState();
   setTimeout(function(){
 
-  });
+  });*/
 }
