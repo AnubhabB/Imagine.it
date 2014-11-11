@@ -206,12 +206,13 @@ lasso.prototype.drawSelection = function(tempCtx, points, act){
 }
 
 lasso.prototype.doLasso = function(action, points) {
-  // body...TODO
   $(".contextMenu").remove();
-  var lX = nX = $("#Canvas"+currentIndex).offset().left - $("#Canvas0").offset().left;
-  var lY = nY = $("#Canvas"+currentIndex).offset().top - $("#Canvas0").offset().top;
-  var lW = lX + $("#Canvas"+currentIndex).width();
-  var lH = lY + $("#Canvas"+currentIndex).height();
+  
+  var orgX0 = $("#Canvas"+currentIndex).offset().left - $("#Canvas0").offset().left;
+  var orgY0 = $("#Canvas"+currentIndex).offset().top - $("#Canvas0").offset().top;
+  var orgX1 = orgX0 + $("#Canvas"+currentIndex).width();
+  var orgY1 = orgY0 + $("#Canvas"+currentIndex).height();
+
   var minX = points[0].x, minY = points[0].y;
   var maxX = points[points.length - 1].x, maxY = points[points.length - 1].y;
   $.each(points,function(k,v){
@@ -228,31 +229,39 @@ lasso.prototype.doLasso = function(action, points) {
       maxY = points[k].y;
     }
   });
-  console.log(minX,minY,maxX,maxY);
-  //Create a new canvas of new size or old size depending on what the selection dimensions are
-  if(minX < lX || minY < lY || maxX > lW || maxY > lH){
-    //lX = minX; //Left offset
-    //Case of modifying canvas
-    /*
-    if(minY < lY){
-      lY = minY; //Top offset
+
+  if(maxY < orgY0 || maxX < orgX0 ){
+      alert("No Pixels Selected");
+  }else if(minX < orgX0 || minY < orgY0 || maxX > orgX1 || maxY > orgY1){
+    if(action == "copy" || action == "cut"){
+      //alert("Oops! Make selection inside the image, we are working on this");
+      //Recreate points
+      var l = points.length;
+      for(var i=1;i<l;i++){
+        if(points[i-1].x < orgX0 ){
+          points[i-1].x = orgX0;
+        }else if(points[i-1].x > orgX1){
+          points[i-1].x = orgX1;
+        }
+        if(points[i-1].y < orgY0 ){
+          points[i-1].y = orgY0;
+        }else if(points[i-1].y > orgY1){
+          points[i-1].y = orgY1;
+        }
+      }
+      //var  =  
+
+    }else if(action == "fill" || action == "stroke"){
+      //Create New canvas of this size
     }
-    if(maxX > lW){
-      lW = maxX;
-    }
-    if(maxY > lH){
-      lH = maxY;
-    }*/
-    var cnv  = document.getElementById("Canvas"+currentIndex);
-    $(".containerMain").append("<canvas id='pass_by' width="+(lW-lX)+" height="+(lH-lY)+" style='position:fixed;border:1px solid #ccc;left:"+$("#Canvas0").offset().left+"px;top:"+$("#Canvas0").offset().top+"px;z-index:800'></canvas>");
-    var ctx = document.getElementById("pass_by").getContext('2d');
   }else{
     console.log(currentIndex);
     var can = document.getElementById("Canvas"+currentIndex);
     var ctx = can.getContext("2d");
   }
-  var left = nX - minX;
-  var top  = nY - minY;
+
+  var corrL = $("#Canvas"+currentIndex).offset().left - $("#Canvas0").offset().left;
+  var corrT = $("#Canvas"+currentIndex).offset().top - $("#Canvas0").offset().top;
 
   if(action == "stroke" || action == "fill"){
     var len = points.length;
@@ -260,11 +269,11 @@ lasso.prototype.doLasso = function(action, points) {
     ctx.fillStyle = foregroundColor;
     ctx.lineWidth   = 1;
     ctx.beginPath();
-    ctx.moveTo(points[0].x,points[0].y);
+    ctx.moveTo(points[0].x - corrL,points[0].y - corrT);
       for(var i=1;i<len;i++){
-          ctx.lineTo(points[i].x, points[i].y);
+          ctx.lineTo(points[i-1].x - corrL, points[i-1].y - corrT);
       }
-    ctx.lineTo(points[0].x,points[0].y);
+    ctx.lineTo(points[0].x - corrL,points[0].y - corrT);
     ctx.closePath();
     if(action == "fill"){
       ctx.fill();
