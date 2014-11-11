@@ -230,24 +230,48 @@ lasso.prototype.doLasso = function(action, points) {
   });
   console.log(minX,minY,maxX,maxY);
   //Create a new canvas of new size or old size depending on what the selection dimensions are
-  if(minX < lX){
-    lX = minX; //Left offset
-  }
-  if(minY < lY){
-    lY = minY; //Top offset
-  }
-  if(maxX > lW){
-    lW = maxX;
-  }
-  if(maxY > lH){
-    lH = maxY;
+  if(minX < lX || minY < lY || maxX > lW || maxY > lH){
+    //lX = minX; //Left offset
+    //Case of modifying canvas
+    /*
+    if(minY < lY){
+      lY = minY; //Top offset
+    }
+    if(maxX > lW){
+      lW = maxX;
+    }
+    if(maxY > lH){
+      lH = maxY;
+    }*/
+    var cnv  = document.getElementById("Canvas"+currentIndex);
+    $(".containerMain").append("<canvas id='pass_by' width="+(lW-lX)+" height="+(lH-lY)+" style='position:fixed;border:1px solid #ccc;left:"+$("#Canvas0").offset().left+"px;top:"+$("#Canvas0").offset().top+"px;z-index:800'></canvas>");
+    var ctx = document.getElementById("pass_by").getContext('2d');
+  }else{
+    console.log(currentIndex);
+    var can = document.getElementById("Canvas"+currentIndex);
+    var ctx = can.getContext("2d");
   }
   var left = nX - minX;
   var top  = nY - minY;
-  var cnv  = document.getElementById("Canvas"+currentIndex);
-  $(".containerMain").append("<canvas id='pass_by' width="+(lW-lX)+" height="+(lH-lY)+" style='position:fixed;border:1px solid #ccc;left:"+$("#Canvas0").offset().left+"px;top:"+$("#Canvas0").offset().top+"px;z-index:800'></canvas>");
-  var ctx = document.getElementById("pass_by").getContext('2d');
-  ctx.drawImage(cnv,left,top);
+
+  if(action == "stroke" || action == "fill"){
+    var len = points.length;
+    ctx.strokeStyle = foregroundColor;
+    ctx.fillStyle = foregroundColor;
+    ctx.lineWidth   = 1;
+    ctx.beginPath();
+    ctx.moveTo(points[0].x,points[0].y);
+      for(var i=1;i<len;i++){
+          ctx.lineTo(points[i].x, points[i].y);
+      }
+    ctx.lineTo(points[0].x,points[0].y);
+    ctx.closePath();
+    if(action == "fill"){
+      ctx.fill();
+    }else if(action == "stroke"){
+      ctx.stroke();  
+    }
+  }
 
   
 
