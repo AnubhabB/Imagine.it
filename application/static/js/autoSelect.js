@@ -37,6 +37,7 @@ function AutoSelect(){
 			isDragging = false;
 			imageLayers[currentIndex].top = $("#"+id).offset().top;
 			imageLayers[currentIndex].left = $("#"+id).offset().left;
+          	init.prototype.history("push","Nudge");
 		}
 	});
 }

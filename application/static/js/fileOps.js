@@ -144,7 +144,7 @@ fileOps.prototype.composeLayers = function(){
 				"background-repeat":"no-repeat"
 			});
 		}
-	})
+	});
 }
 
 /***********END COMPOSE LAYERS***********/
