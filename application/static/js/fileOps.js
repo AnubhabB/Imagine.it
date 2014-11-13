@@ -199,3 +199,12 @@ fileOps.prototype.redoCanvasOrder = function() {
  };
 /*****************END LAYER REORDER**************
 *************************************************/
+fileOps.prototype.DeleteLayers = function(first_argument) {
+	$("#Canvas"+currentIndex).remove();
+	$("#layer"+currentIndex).remove();
+	delete(imageLayers[currentIndex]);
+	
+	init.prototype.history("push","Delete");
+	fileOps.prototype.composeLayers();
+	console.log(imageLayers);
+};

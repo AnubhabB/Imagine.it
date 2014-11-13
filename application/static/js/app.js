@@ -90,6 +90,10 @@ init.prototype.panel4Adjustments = function() {
 			$(".panel4min").css("display","none");
 		});
 	});
+
+	$("#DeleteLayers").click(function(){
+		fileOps.prototype.DeleteLayers();
+	});
 };
 
 init.prototype.globalEvents = function(){
@@ -156,7 +160,6 @@ init.prototype.updateHistory = function() {
 	$("#history").html("");
 
 	$.each(states,function(k,v){
-		console.log(k,v);
 		$("#history").append("<li class='row-fluid historyEach' id='"+v.action+"_"+k+"'><span class='imgCont left'></span><span class='left'>"+v.action+"</span></li>");
 	});
 
