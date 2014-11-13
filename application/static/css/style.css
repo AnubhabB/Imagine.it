@@ -230,8 +230,10 @@ nav.panel4 .layersBlock .layersBody,nav.panel4 .historyBlock .historyBody{
 	width: 100%;
 	min-height: 100px;
 	height: auto;
+	max-height: 200px;
+	overflow-y: auto;
 }
-nav.panel4 .layersBlock .layersBody .layerEach{
+nav.panel4 .layersBlock .layersBody .layerEach,nav.panel4 .historyBlock .historyBody .historyEach{
 	width:95%;
 	padding:2%;
 	height:30px;
@@ -240,7 +242,14 @@ nav.panel4 .layersBlock .layersBody .layerEach{
 	display: block;
 	cursor: pointer;
 }
-nav.panel4 .layersBlock .layersBody .layerEach:hover,nav.panel4 .layersBlock .layersBody .layerEach.selected{
+nav.panel4 .historyBlock .historyBody .historyEach span.imgCont{
+	width:16px;height: 16px;
+	display: inline-block;
+	border: 1px solid #666;
+	margin-top: 5px;
+	margin-right:5px;
+}
+nav.panel4 .layersBlock .layersBody .layerEach:hover,nav.panel4 .layersBlock .layersBody .layerEach.selected,nav.panel4 .historyBlock .historyBody .historyEach:hover{
 	background:rgba(70,120,180,.3);
 }
 

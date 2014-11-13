@@ -145,6 +145,8 @@ fileOps.prototype.composeLayers = function(){
 			});
 		}
 	});
+
+	$("#LayersBody").scrollTop($("#LayersBody").prop('scrollHeight'));
 }
 
 /***********END COMPOSE LAYERS***********/

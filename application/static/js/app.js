@@ -153,5 +153,12 @@ init.prototype.history = function(todo,action) {
 };
 
 init.prototype.updateHistory = function() {
-	console.log(states);
+	$("#history").html("");
+
+	$.each(states,function(k,v){
+		console.log(k,v);
+		$("#history").append("<li class='row-fluid historyEach' id='"+v.action+"_"+k+"'><span class='imgCont left'></span><span class='left'>"+v.action+"</span></li>");
+	});
+
+	$("#history").scrollTop($("#history").prop('scrollHeight'));
 };
