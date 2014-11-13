@@ -11,11 +11,6 @@ function toolController(navElem,navType){
 			toolController.prototype.editorAction(navElem);
 		break;
 	}
-	/*if($("#"+navElem).attr("data-sec") == "true"){
-		toolController.prototype.composeSecondMenu(navElem);
-	}else{
-		
-	}*/
 }
 
 toolController.prototype.toolSelection = function(navElem){
@@ -35,6 +30,9 @@ toolController.prototype.toolSelection = function(navElem){
 			break;
 			case "lasso":
 				lasso();
+			break;
+			case "crop":
+				crop();
 			break;
 			case "preview":
 				if($(".previewOutput").is(":visible")){
