@@ -250,7 +250,45 @@ crop.prototype.getResults = function(theSelectionX,theSelectionY,theSelectionW,t
   
     $("#cropButton").remove();
     $("#temp_canvas").remove();
-    toolSelected = '';
-    $(".tools").removeClass("active");
-    
+
+    var newX0 = theSelectionX;
+    var newY0 = theSelectionY;
+    var newW  = theSelectionW;
+    var newH  = theSelectionH;
+    var newX1 = theSelectionX + theSelectionW;
+    var newY1 = theSelectionY + theSelectionH;
+    var redrawX0, redrawY0, redrawW, redrawH;
+
+    for(var i=0;i<canvaslist;i++){ //For all canvas
+        if($("#Canvas"+i).length >0){ //Check if available
+            var thisX0 = $("#Canvas"+i).offset().left;
+            var thisY0 = $("#Canvas"+i).offset().top;
+            var thisW  = $("#Canvas"+i).width();
+            var thisH  = $("#Canvas"+i).height();
+            var tisX1  = thisX0 + thisW;
+            var tisY1  = thisY0 + thisH;
+            //First take care of Canvas0
+            //Create new canvas of specific size if greater, else
+            if(i == 0){
+
+                $(".containerMain").append("<canvas id='temp_canvas' width="+newW+" height="+newH+" style='position:fixed'></canvas>");
+                var ctx = document.getElementById('temp_canvas').getContext('2d');
+                var cnv = document.getElementById('Canvas0');
+                
+                var tempX = $("#Canvas0").offset().left - newX0;
+                var tempY = $("#Canvas0").offset().top - newY0;
+                ctx.drawImage(cnv,tempX,tempY);
+                var tempZi= $("#Canvas0").css("z-index");
+                $("#Canvas0").remove();
+                $("#temp_canvas").css({
+                    "z-index": tempZi,
+                    "left"   : ($(window).innerWidth() - $("#temp_canvas").width())/2,
+                    "top"    : ($(window).innerHeight() - $("#temp_canvas").height())/3,
+                    "background": "url(static/img/bg.jpg)"
+                }).attr("id","Canvas0");
+            }
+            fileOps.prototype.layerInfoUpdate(i,$("#Canvas"+i).width(),$("#Canvas"+i).height(),'',$("#Canvas"+i).offset().top,$("#Canvas"+i).offset().left,'',cnv.toDataURL());
+
+        }
+    }
 }

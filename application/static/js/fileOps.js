@@ -59,14 +59,7 @@ fileOps.prototype.drawCanvas = function(index,width,height) {
 		left = ($(window).innerWidth() - widthN)/3;
 		top =  ($(window).innerHeight() - heightN)/2;
 
-
-		imageLayers[index]['width'] = width;
-		imageLayers[index]['height'] = height;
-		imageLayers[index]['left'] = left;
-		imageLayers[index]['top'] = top;
-		imageLayers[index]['blendmode'] = 'source-over';
-		imageLayers[index]['order'] = canvaslist;
-		imageLayers[index]['alpha'] = 1;
+		fileOps.prototype.layerInfoUpdate(index,width,height,1,top,left,"source-over",'');
 
 		$(".containerMain").append("<canvas id='Canvas"+index+"' height='"+heightN+"' width='"+widthN+"' style='background:url(static/img/bg.jpg);z-index:"+(200+canvaslist)+"'></canvas>").css("display","block");
 		var mainC = document.getElementById("Canvas"+index);
@@ -146,7 +139,7 @@ fileOps.prototype.composeLayers = function(){
 		}
 	});
 
-	$("#LayersBody").scrollTop($("#LayersBody").prop('scrollHeight'));
+	//$("#LayersBody").scrollTop($("#LayersBody").prop('scrollHeight'));
 }
 
 /***********END COMPOSE LAYERS***********/
@@ -208,3 +201,22 @@ fileOps.prototype.DeleteLayers = function(first_argument) {
 	fileOps.prototype.composeLayers();
 	console.log(imageLayers);
 };
+
+fileOps.prototype.layerInfoUpdate = function(index,width,height,alpha,top,left,composite,src){
+	if(width !== '')
+		imageLayers[index]['width'] = width;
+	if(height !== '')
+		imageLayers[index]['height'] = height;
+	if(left !== '')
+		imageLayers[index]['left'] = left;
+	if(top !== '')
+		imageLayers[index]['top'] = top;
+	if(composite !== '')
+		imageLayers[index]['blendmode'] = composite;
+	if(canvaslist !== '')
+		imageLayers[index]['order'] = canvaslist;
+	if(alpha !== '')
+		imageLayers[index]['alpha'] = alpha;
+	if(src !== '')
+		imageLayers[index]['src'] = src;
+}
