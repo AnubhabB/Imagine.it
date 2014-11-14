@@ -275,20 +275,26 @@ crop.prototype.getResults = function(theSelectionX,theSelectionY,theSelectionW,t
                 var ctx = document.getElementById('temp_canvas').getContext('2d');
                 var cnv = document.getElementById('Canvas0');
                 
-                var tempX = $("#Canvas0").offset().left - newX0;
-                var tempY = $("#Canvas0").offset().top - newY0;
-                ctx.drawImage(cnv,tempX,tempY);
+                var tempX = $("#Canvas0").offset().left;
+                var tempY = $("#Canvas0").offset().top;
+                ctx.drawImage(cnv,tempX - newX0,tempY - newY0);
                 var tempZi= $("#Canvas0").css("z-index");
                 $("#Canvas0").remove();
                 $("#temp_canvas").css({
                     "z-index": tempZi,
-                    "left"   : ($(window).innerWidth() - $("#temp_canvas").width())/2,
-                    "top"    : ($(window).innerHeight() - $("#temp_canvas").height())/3,
+                    "left"   : newX0,
+                    "top"    : newY0,
                     "background": "url(static/img/bg.jpg)"
                 }).attr("id","Canvas0");
+            }else{
+                //Figure out which part of current canvas falls inside the cropped area, discard rest
+                /*$("#Canvas"+i).css({
+                    "left"  : (thisX0 + newX0)+"px",
+                    "top"   : (thisY0 + newY0)+"px"
+                });*/
             }
             fileOps.prototype.layerInfoUpdate(i,$("#Canvas"+i).width(),$("#Canvas"+i).height(),'',$("#Canvas"+i).offset().top,$("#Canvas"+i).offset().left,'',cnv.toDataURL());
-
+            init.prototype.history("push","Crop");
         }
     }
 }
