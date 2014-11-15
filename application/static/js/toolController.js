@@ -34,6 +34,9 @@ toolController.prototype.toolSelection = function(navElem){
 			case "crop":
 				crop();
 			break;
+			case "eyedropper":
+				eyedropper();
+			break;
 			case "preview":
 				if($(".previewOutput").is(":visible")){
 					$(".previewOutput").hide();
@@ -42,6 +45,9 @@ toolController.prototype.toolSelection = function(navElem){
 					drawPreview("preview");
 					$(".previewOutput").show();
 				}
+			break;
+			case "eraser":
+				sketch(toolSelected);
 			break;
 			default:
 				console.log("to integrate "+toolSelected);

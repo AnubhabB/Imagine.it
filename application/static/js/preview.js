@@ -27,14 +27,12 @@ function drawPreview(action){
 						var alpha     = imageLayers[id].alpha;
 						var correctLeft= imageLayers[id].left - lFact;
 						var correctTop =  imageLayers[id].top - tFact;
-						/*if(composite == undefined)
-							composite = 'normal';*/
+
 						console.log(correctLeft,correctTop);
 						ctxPreview.globalCompositeOperation = composite;
 						ctxPreview.globalAlpha = alpha;
 						ctxPreview.drawImage(canvas,correctLeft,correctTop);
-						//composite = 'normal';
-						alpha =1;
+						
 						ctxPreview.globalCompositeOperation = 'source-over';
 						ctxPreview.globalAlpha = 1;
 						if(action == "mergevisible"){

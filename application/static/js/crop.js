@@ -287,7 +287,7 @@ crop.prototype.getResults = function(theSelectionX,theSelectionY,theSelectionW,t
                     "background": "url(static/img/bg.jpg)"
                 }).attr("id","Canvas0");
             }else{
-                //Figure out which part of current canvas falls inside the cropped area, discard rest
+                //To Do - Figure out which part of current canvas falls inside the cropped area, discard rest
                 /*$("#Canvas"+i).css({
                     "left"  : (thisX0 + newX0)+"px",
                     "top"   : (thisY0 + newY0)+"px"

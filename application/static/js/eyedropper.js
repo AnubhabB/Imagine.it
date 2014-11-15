@@ -20,8 +20,13 @@ function eyedropper(){
     var correctTop  = $("#Canvas0").offset().top;
 
     var indX = currentIndex;
-    $(".containerMain").append("<canvas id='temp_canvas' width="+$("#Canvas"+indX).width()+" height="+$("#Canvas"+indX).height()+"></canvas>");
-    $("#temp_canvas").css("position","absolute").css('margin-left',($(window).innerWidth() - $("#Canvas"+indX).width())/3 +"px").css("margin-top",($(window).innerHeight() - $("#Canvas"+indX).height())/3 +"px").css("display","block").css("z-index",1000);
+    $(".containerMain").append("<canvas id='temp_canvas' width="+$("#Canvas0").width()+" height="+$("#Canvas0").height()+"></canvas>");
+    $("#temp_canvas").css("position","fixed").css({
+        'left':($(window).innerWidth() - $("#Canvas0").width())/3 +"px",
+        'top' :($(window).innerHeight() - $("#Canvas0").height())/3 +"px",
+        'display':'block',
+        'z-index':1000
+    });
     var cnv = document.getElementById('temp_canvas');
     var ctx = cnv.getContext('2d');
      for(z=canvaslist+1;z>=1;z--){
