@@ -9,148 +9,102 @@ Catch: tried separating move but somee conflict with event handelling
 *
 ****************/
 
-function draw(elemId,action){
-    cleanCanv();
-    var indX = currentIndex;
-    $(".containerMain").append("<canvas id='temp_canvas' width="+$("#Canvas"+indX).attr("width")+" height="+$("#Canvas"+indX).attr("height")+"></canvas>");
-    $("#temp_canvas").css("position","absolute").css('margin-left',($(window).innerWidth() - $("#Canvas"+indX).width())/3 +"px").css("margin-top",($(window).innerHeight() - $("#Canvas"+indX).height())/3 +"px").css("display","block").css("z-index",1000);
+function sketch(action){
+  /*
 
-    var layerTempId = $(".selected").attr('id');
-    var elementId = "Canvas"+(layerTempId.replace("layer",""));
+  sketch.prototype.distanceBetween = function(point1, point2) {
+    return Math.sqrt(Math.pow(point2.x - point1.x, 2) + Math.pow(point2.y - point1.y, 2));
+  }
+  sketch.prototype.angleBetween = function(point1, point2) {
+    return Math.atan2( point2.x - point1.x, point2.y - point1.y );
+  }
 
-    var el, ctx = null, isDrawing=false, correctLeft, correctTop, isDragging=false,prevX,prevY,currentX,currentY,ctxTemp = null;
-    var moveXAmount=0;
-    var moveYAmount=0;
-    var canMouseY=0;
-    var canMouseX=0;
-    prevX = 0;
-    prevY = 0;
-    currentX = 0;
-    currentY = 0;
+  var el = document.getElementById('Canvas'+currentIndex);
+  var ctx = el.getContext('2d');
+  ctx.lineJoin = ctx.lineCap = 'round';
+  var cObj = $("#Canvas"+currentIndex); 
+  var corT = cObj.offset().top;
+  var corL = cObj.offset().left;
+  var isDrawing, lastPoint;
+  var brW = 10, sW = 20;
+  var colorStop = (foregroundColor.replace("rgba(","")).replace(")","");
+  colorStop     = colorStop.split(",");
 
+  cObj.on("mousedown",function(e) {
+    isDrawing = true;
+    lastPoint = { x: e.pageX - corL, y: e.pageY - corT };
+  });
 
-    //TARGET CONTEXT
-    elMain = document.getElementById("Canvas"+currentIndex);
-    ctxMain = elMain.getContext('2d');
-    //TEMP CONTEXT
-    el = document.getElementById("temp_canvas");
-    ctx = el.getContext('2d');
+  cObj.on("mousemove",function(e) {
+    if (!isDrawing) return;
+    
+    var currentPoint = { x: e.pageX - corL, y: e.pageY - corT };
+    var dist = sketch.prototype.distanceBetween(lastPoint, currentPoint);
+    var angle = sketch.prototype.angleBetween(lastPoint, currentPoint);
+    
+    for (var i = 0; i < dist; i++) {
+      
+      x = lastPoint.x + (Math.sin(angle) * i);
+      y = lastPoint.y + (Math.cos(angle) * i);
+      
+      var radgrad = ctx.createRadialGradient(x,y,brW,x,y,sW);
+      radgrad.addColorStop(0, foregroundColor);
+      radgrad.addColorStop(0.5, 'rgba('+colorStop[0]+','+colorStop[1]+','+colorStop[2]+',0.5)');
+      radgrad.addColorStop(1, 'rgba('+colorStop[0]+','+colorStop[1]+','+colorStop[2]+',0)');
+      
+      ctx.fillStyle = radgrad;
+      ctx.fillRect(x-sW, y-sW, sW*2, sW*2);
+    }
+    
+    lastPoint = currentPoint;
+  });
 
+  cObj.on("mouseup",function(){
+    isDrawing = false;
+  });*/
+  var points = [], isDrawing = false, ctx, cnv, corL, corT, cvRef, oldln= 0, newln = 0;
+  cnv = document.getElementById('Canvas'+currentIndex);
+  cvRef = $("#Canvas"+currentIndex)
+  ctx = cnv.getContext('2d');
+  corL= cvRef.offset().left;
+  corT= cvRef.offset().top;
+  
+  cvRef.on("mousedown",function(e){
+    isDrawing = true;
+    points.push({ x: e.pageX - corL, y: e.pageY - corT });
+    //sketch.prototype.render(points,action, cnv, ctx);
+  });
 
-    isDrawing;
-    correctLeft = $("#"+elementId).offset().left;
-    correctTop  = $("#"+elementId).offset().top;
-    el.onmousedown = function(e) {
-      $(".actionButton").remove();
-      if(action != 'move'){
-        isDrawing = true;
-        if(brushType!=='spray'){
-            ctx.lineWidth = brushWidth;
-            ctxMain.lineWidth = brushWidth;
-            ctx.lineJoin = ctx.lineCap = 'round';
-            ctxMain.lineJoin = ctx.lineCap = 'round';
-            ctx.shadowBlur = featherWidth;
-            ctxMain.shadowBlur = featherWidth;
-            ctx.shadowColor = foregroundColor;
-            ctxMain.shadowColor = foregroundColor;
-            ctx.strokeStyle = foregroundColor;
-            ctxMain.strokeStyle = foregroundColor;
-            ctx.moveTo(e.clientX-correctLeft, e.clientY- correctTop);
-            ctxMain.moveTo(e.clientX-correctLeft, e.clientY- correctTop);
-          }else{
-            ctx.lineJoin = ctx.lineCap = 'round';
-            ctxMain.lineJoin = ctxMain.lineCap = 'round';
-            clientX = e.clientX;
-            clientY = e.clientY;
-            
-            timeout = setTimeout(function draw() {
-              for (var i = sprayDensity; i--; ) {
-                var angle = getRandomFloat(0, Math.PI * 2);
-                var radius = getRandomFloat(0, 30);
-                ctx.globalAlpha = Math.random();
-                ctxMain.globalAlpha = Math.random();
-                ctx.fillStyle = foregroundColor;
-                ctxMain.fillStyle = foregroundColor;
-                ctx.fillRect(
-                  clientX + radius * Math.cos(angle),
-                  clientY + radius * Math.sin(angle), 
-                  getRandomFloat(1, 2), getRandomFloat(1, 2));
-                ctxMain.fillRect(
-                  clientX + radius * Math.cos(angle),
-                  clientY + radius * Math.sin(angle), 
-                  getRandomFloat(1, 2), getRandomFloat(1, 2));
-              }
-              if (!timeout) return;
-              timeout = setTimeout(draw, 50);
-            }, 50);
-          }
-      }else if(action == 'move'){
-        canMouseX=parseInt(e.clientX-correctLeft);
-        canMouseY=parseInt(e.clientY-correctTop);
-      // set the drag flag
-        isDragging=true;
-      }
-    };
-    el.onmousemove = function(e) {
-      if (isDrawing) {
-        if(action == 'draw'){
-                  ctx.globalCompositeOperation = "source-over";
-                  ctxMain.globalCompositeOperation = "source-over";
-        }else if(action == 'erase'){
-          ctx.globalCompositeOperation = "destination-out";
-          ctxMain.globalCompositeOperation = "destination-out";
-        }else {
-          console.log("invalid ops");
-        }
-        if(brushType!=='spray'){
-          ctxMain.lineTo(e.clientX-correctLeft, e.clientY-correctTop);
-          ctxMain.stroke();
-        }else{
-          clientX = e.clientX-correctLeft;
-          clientY = e.clientY-correctTop;
-        }
-      }else if(isDragging){
-        moveXAmount = parseInt(e.clientX-correctLeft) - canMouseX;// prevX -canMouseX;
-        moveYAmount = parseInt(e.clientY-correctTop) - canMouseY;// prevX -canMouseX;
+  cvRef.on("mousemove",function(e){
+    if(!isDrawing) return;
 
-          ctxMain.clearRect(0,0,$("#Canvas0").width(),$("#Canvas0").height());
-          ctxMain.drawImage(layers[currentIndex],moveXAmount,moveYAmount);
-          layers[currentIndex].t = moveYAmount;
-          layers[currentIndex].l = moveXAmount;
-          //console.log(layers[currentIndex].t + " assign at move "+layers[currentIndex].l)
-        }
-    };
-    el.onmouseup = function(e) {
-      isDrawing = false;
-      isDragging= false;
-      if(action=='move'){
-        canMouseX=parseInt(e.clientX-correctLeft);
-        canMouseY=parseInt(e.clientY-correctTop);
-      // clear the drag flag
-        isDragging=false;
-      }
-      if(action!='move'){
-        console.log("Brush type in mouse up not move"+brushType);
-        if(brushType == 'spray'){
-          //console.log("spray called from mouseup")
-          clearTimeout(timeout);
-        }
-        saveState();
-        setTimeout(function(){
-          draw(elementId,action);
-        },500);
-      }else if(action == 'move'){
-        $(".containerMain").append("<button id='moveButton' class='actionButton' onclick='saveState()' style='position:fixed'>Save</button>");
-        $("#moveButton").css('top',e.clientY +"px").css('left',e.clientX -50+"px").css('z-index',1000);
-        $(".tools").removeClass("active");
-        toolSelected = '';
-        //console.log(layers[currentIndex].l+" "+layers[currentIndex].t+" "+layers[currentIndex].w+" "+layers[currentIndex].h+" this from move");
-      }
-    };
+    points.push({ x :  e.pageX - corL, y: e.pageY - corT });
+    sketch.prototype.render(points,action, cnv, ctx);
+  });
+
+  cvRef.on("mouseup",function(e){
+    isDrawing = false;
+    points.length = 0;
+    
+  });
 
 
-}
 
-function getRandomFloat(min, max) {
-        return Math.random() * (max - min) + min;
+  sketch.prototype.render = function(points,action,cnv,ctx) {
+    
+    var len = points.length;
+    ctx.lineWidth = 20;
+    ctx.lineJoin = ctx.lineCap = 'round';
+    ctx.shadowBlur = 10;
+    ctx.shadowColor = foregroundColor;
+    ctx.strokeStyle = foregroundColor;
+    if(action == "eraser")
+      ctx.globalCompositeOperation = "destination-out";
+    ctx.beginPath();
+    ctx.moveTo(points[len-2].x, points[len-2].y);
+    //for (var i = len-1; i < points.length; i++) {
+    ctx.lineTo(points[len-1].x, points[len-1].y);
+    //}
+    ctx.stroke();
+  };
 }
