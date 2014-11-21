@@ -32,7 +32,10 @@ function sketch(action){
 
     cvRef.on("mouseup",function(e){
       isDrawing = false;
-      points.length = 0;
+      if(action !== "eraser")
+        sketch.prototype.createNewLayer();
+      else
+        points.length = 0;
       init.prototype.history("push",state);
     });
   };
@@ -50,6 +53,15 @@ function sketch(action){
     cursorUrl = cursorCnv.toDataURL();
     sketch.prototype.updatePointer();
   };
+
+  sketch.prototype.createNewLayer = function() {
+    var minMax = sketch.prototype.minMax(points);
+    var minX   = minMax[0];
+    var minY   = minMax[1];
+    var maxX   = minMax[2];
+    var maxY   = minMax[3];
+    console.log("Todo");
+  };
   
   sketch.prototype.render = function(points,action,cnv,ctx) {
     
@@ -59,13 +71,15 @@ function sketch(action){
     ctx.shadowBlur = featherWidth;
     ctx.shadowColor = foregroundColor;
     ctx.strokeStyle = foregroundColor;
+
     if(action == "eraser")
       ctx.globalCompositeOperation = "destination-out";
+    else
+      ctx.globalCompositeOperation = "source-over";
+
     ctx.beginPath();
     ctx.moveTo(points[len-2].x, points[len-2].y);
-    
     ctx.lineTo(points[len-1].x, points[len-1].y);
-    
     ctx.stroke();
   };
 
@@ -103,21 +117,48 @@ function sketch(action){
       });
   };
 
-  sketch.prototype.secondPanel(action);
 
-  cnv = document.getElementById('Canvas'+currentIndex);
+  sketch.prototype.minMax = function(points) {
+  
+    var minX = points[0].x, minY = points[0].y;
+    var maxX = points[points.length - 1].x, maxY = points[points.length - 1].y;
+    $.each(points,function(k,v){
+      if(points[k].x < minX){
+        minX = points[k].x;
+      }
+      if(points[k].y < minY){
+        minY = points[k].y
+      }
+      if(points[k].x > maxX){
+        maxX = points[k].x;
+      }
+      if(points[k].y > maxY){
+        maxY = points[k].y;
+      }
+    });
+    var minMaxArray = [minX,minY,maxX,maxY];
+    return minMaxArray;
+  };
+
+  sketch.prototype.secondPanel(action);
   cvRef = $("#temp_canvas");
 
   if(action == "eraser"){
-    ctx = cnv.getContext('2d');
-    corL= cvRef.offset().left;
-    corT= cvRef.offset().top;
-    sketch.prototype.bindEvents();
-    if(cursorUrl != ''){
-      sketch.prototype.updatePointer();
-    }else{
-      sketch.prototype.prepareMousePointer();
-    }
+    cnv = document.getElementById('Canvas'+currentIndex);  
+    corL= $("#Canvas"+currentIndex).offset().left;
+    corT= $("#Canvas"+currentIndex).offset().top;
     state = "Erase";
+  }else if(action == "brush"){
+    cnv = document.getElementById("temp_canvas");
+    corL= $("#temp_canvas").offset().left;
+    corT= $("#temp_canvas").offset().top;
+    state= "Brush"
+  }
+  ctx = cnv.getContext('2d');
+  sketch.prototype.bindEvents();
+  if(cursorUrl != ''){
+    sketch.prototype.updatePointer();
+  }else{
+    sketch.prototype.prepareMousePointer();
   }
 }

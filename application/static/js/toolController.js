@@ -49,6 +49,9 @@ toolController.prototype.toolSelection = function(navElem){
 			case "eraser":
 				sketch(toolSelected);
 			break;
+			case "brush":
+				sketch(toolSelected);
+			break;
 			default:
 				console.log("to integrate "+toolSelected);
 			break;
