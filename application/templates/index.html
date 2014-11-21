@@ -219,7 +219,7 @@
 		<div class="brushDetails">
 			<div class="row-fluid">
 				<label class="left" id='brushHeading' style="font-size:11px">Brush Details</label>
-				<div class="close" onclick='closeBrush()' style="margin:0" title='Close Brush Panel'>x</div>
+				<div class="close" style="margin:0" title='Close Brush Panel'>x</div>
 			</div>
 			<div class="row-fluid">
 				<div class="row-fluid">
@@ -241,10 +241,10 @@
 					<label id='brushType' class="right">Circle</label>
 				</div>
 				<div class="row-fluid  brushType">
-					<div class="brushThumb" id='roundsoftbrush'><img src='{{url_for('static',filename='img/roundsoft.png')}}'/></div>
-					<div class="brushThumb" id='roundhardbrush'><img src='{{url_for('static',filename='img/roundhard.png')}}'/></div>
-					<div class="brushThumb" id='buttbrush'><img src='{{url_for('static',filename='img/block.png')}}'/></div>
-					<div class="brushThumb" id='spraybrush'><img src='{{url_for('static',filename='img/spray.png')}}'/></div>	
+					<!--div class="brushThumb" id='roundsoftbrush'><img src='{{url_for('static',filename='img/roundsoft.png')}}'/></div-->
+					<div class="brushThumb" id='round'><img src='{{url_for('static',filename='img/roundhard.png')}}'/></div>
+					<div class="brushThumb" id='square'><img src='{{url_for('static',filename='img/block.png')}}'/></div>
+					<div class="brushThumb" id='spray'><img src='{{url_for('static',filename='img/spray.png')}}'/></div>	
 				</div>
 			</div>
 		</div>

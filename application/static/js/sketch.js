@@ -10,101 +10,114 @@ Catch: tried separating move but somee conflict with event handelling
 ****************/
 
 function sketch(action){
-  /*
+ 
+  var points = [], isDrawing = false, ctx, cnv, corL, corT, cvRef, oldln= 0, newln = 0, cursorUrl = '', state, brush = 'round';
+  $("Canvas").off("mousedown").off("mouseup").off("mousemove");
+  $("#temp_canvas").remove();
+  $(".containerMain").append("<canvas id='temp_canvas' width="+$("#Canvas0").width()+" height="+$("#Canvas0").height()+" style='z-index:600;position:fixed;top:"+$("#Canvas0").offset().top+"px;left:"+$("#Canvas0").offset().left+"px;'></canvas>");
 
-  sketch.prototype.distanceBetween = function(point1, point2) {
-    return Math.sqrt(Math.pow(point2.x - point1.x, 2) + Math.pow(point2.y - point1.y, 2));
-  }
-  sketch.prototype.angleBetween = function(point1, point2) {
-    return Math.atan2( point2.x - point1.x, point2.y - point1.y );
-  }
+  sketch.prototype.bindEvents = function() {
+    cvRef.on("mousedown",function(e){
+      isDrawing = true;
+      $(".brushDetails").css('display','none');
+      points.push({ x: e.pageX - corL, y: e.pageY - corT });
+    });
 
-  var el = document.getElementById('Canvas'+currentIndex);
-  var ctx = el.getContext('2d');
-  ctx.lineJoin = ctx.lineCap = 'round';
-  var cObj = $("#Canvas"+currentIndex); 
-  var corT = cObj.offset().top;
-  var corL = cObj.offset().left;
-  var isDrawing, lastPoint;
-  var brW = 10, sW = 20;
-  var colorStop = (foregroundColor.replace("rgba(","")).replace(")","");
-  colorStop     = colorStop.split(",");
+    cvRef.on("mousemove",function(e){
+      if(!isDrawing) return;
 
-  cObj.on("mousedown",function(e) {
-    isDrawing = true;
-    lastPoint = { x: e.pageX - corL, y: e.pageY - corT };
-  });
+      points.push({ x :  e.pageX - corL, y: e.pageY - corT });
+      sketch.prototype.render(points,action, cnv, ctx);
+    });
 
-  cObj.on("mousemove",function(e) {
-    if (!isDrawing) return;
+    cvRef.on("mouseup",function(e){
+      isDrawing = false;
+      points.length = 0;
+      init.prototype.history("push",state);
+    });
+  };
+
+  sketch.prototype.prepareMousePointer = function() {
     
-    var currentPoint = { x: e.pageX - corL, y: e.pageY - corT };
-    var dist = sketch.prototype.distanceBetween(lastPoint, currentPoint);
-    var angle = sketch.prototype.angleBetween(lastPoint, currentPoint);
-    
-    for (var i = 0; i < dist; i++) {
-      
-      x = lastPoint.x + (Math.sin(angle) * i);
-      y = lastPoint.y + (Math.cos(angle) * i);
-      
-      var radgrad = ctx.createRadialGradient(x,y,brW,x,y,sW);
-      radgrad.addColorStop(0, foregroundColor);
-      radgrad.addColorStop(0.5, 'rgba('+colorStop[0]+','+colorStop[1]+','+colorStop[2]+',0.5)');
-      radgrad.addColorStop(1, 'rgba('+colorStop[0]+','+colorStop[1]+','+colorStop[2]+',0)');
-      
-      ctx.fillStyle = radgrad;
-      ctx.fillRect(x-sW, y-sW, sW*2, sW*2);
-    }
-    
-    lastPoint = currentPoint;
-  });
+    $("#mousePointer").remove();
 
-  cObj.on("mouseup",function(){
-    isDrawing = false;
-  });*/
-  var points = [], isDrawing = false, ctx, cnv, corL, corT, cvRef, oldln= 0, newln = 0;
-  cnv = document.getElementById('Canvas'+currentIndex);
-  cvRef = $("#Canvas"+currentIndex)
-  ctx = cnv.getContext('2d');
-  corL= cvRef.offset().left;
-  corT= cvRef.offset().top;
+    $("body").append("<canvas id='mousePointer' width="+brushWidth+" height="+brushWidth+" hidden></canvas>");
+    var cursorCnv = document.getElementById("mousePointer");
+    var cursorCtx = cursorCnv.getContext('2d');
+    cursorCtx.strokeStyle = "#ccc";
+    cursorCtx.lineWidth = 1;
+    cursorCtx.strokeRect(0,0,brushWidth,brushWidth);
+    cursorUrl = cursorCnv.toDataURL();
+    sketch.prototype.updatePointer();
+  };
   
-  cvRef.on("mousedown",function(e){
-    isDrawing = true;
-    points.push({ x: e.pageX - corL, y: e.pageY - corT });
-    //sketch.prototype.render(points,action, cnv, ctx);
-  });
-
-  cvRef.on("mousemove",function(e){
-    if(!isDrawing) return;
-
-    points.push({ x :  e.pageX - corL, y: e.pageY - corT });
-    sketch.prototype.render(points,action, cnv, ctx);
-  });
-
-  cvRef.on("mouseup",function(e){
-    isDrawing = false;
-    points.length = 0;
-    
-  });
-
-
-
   sketch.prototype.render = function(points,action,cnv,ctx) {
     
     var len = points.length;
-    ctx.lineWidth = 20;
-    ctx.lineJoin = ctx.lineCap = 'round';
-    ctx.shadowBlur = 10;
+    ctx.lineWidth = brushWidth;
+    ctx.lineJoin = ctx.lineCap = brush;
+    ctx.shadowBlur = featherWidth;
     ctx.shadowColor = foregroundColor;
     ctx.strokeStyle = foregroundColor;
     if(action == "eraser")
       ctx.globalCompositeOperation = "destination-out";
     ctx.beginPath();
     ctx.moveTo(points[len-2].x, points[len-2].y);
-    //for (var i = len-1; i < points.length; i++) {
+    
     ctx.lineTo(points[len-1].x, points[len-1].y);
-    //}
+    
     ctx.stroke();
   };
+
+  sketch.prototype.secondPanel = function(action) {
+    $("#thumbActions").html("<div class='left thumbAct'></div>");
+
+    /*if(action == "eraser"){*/
+    $("#thumbActions .thumbAct").html("<img src='static/img/eraser.png'/>");
+    $("#thumbActions").on("click",".thumbAct",function(){
+      if($(".brushDetails").css('display') == 'none'){
+        $(".brushDetails").css('display','block');
+        $("#brushHeading").html('Eraser Details - '+brush);
+      }else{
+        $(".brushDetails").css('display','none');
+      }
+    });
+
+    $(".brushType").on("click",".brushThumb",function(){
+      brush = this.id;
+      $("#brushHeading").html('Eraser Details - '+brush);
+    });
+    
+    $(".brushDetails .close").on("click",function(){
+      $(".brushDetails").css('display','none');
+    });
+
+
+
+  };
+
+  sketch.prototype.updatePointer = function(first_argument) {
+    var crvRef = $("#temp_canvas");
+    crvRef.css({
+        "cursor":"url("+cursorUrl+")"+(brushWidth/2)+" "+(brushWidth/2)+", auto"
+      });
+  };
+
+  sketch.prototype.secondPanel(action);
+
+  cnv = document.getElementById('Canvas'+currentIndex);
+  cvRef = $("#temp_canvas");
+
+  if(action == "eraser"){
+    ctx = cnv.getContext('2d');
+    corL= cvRef.offset().left;
+    corT= cvRef.offset().top;
+    sketch.prototype.bindEvents();
+    if(cursorUrl != ''){
+      sketch.prototype.updatePointer();
+    }else{
+      sketch.prototype.prepareMousePointer();
+    }
+    state = "Erase";
+  }
 }

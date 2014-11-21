@@ -7,7 +7,7 @@ var canvaslist    = 0;
 var shiftKey      = false;
 var toolSelected  = '';
 var states        = [];
-
+var brushWidth = 10,featherWidth = 10; //TODO CHANGE TO CUSTOM SLIDER
 
 
 $(function(){
@@ -133,6 +133,28 @@ init.prototype.globalEvents = function(){
 			//console.log(foregroundColor);
 		}
 	});
+
+	$("#brushSize[data-slider]").each(function () {
+		      var input = $(this);
+		      //console.log(input);
+		    }).bind("slider:ready slider:changed", function (event, data) {
+		      $(this).nextAll(".output:first").html(data.value.toFixed(3));
+		      brushWidth = data.value.toFixed(0);
+		      $("#sizeLabel").html(brushWidth+"px");
+		      try{
+		      	sketch.prototype.prepareMousePointer();
+		      }catch(error){
+
+		      }
+    });
+	$("#blurRadius[data-slider]").each(function () {
+		      var input = $(this);
+		      //console.log(input);
+		    }).bind("slider:ready slider:changed", function (event, data) {
+		      $(this).nextAll(".output:first").html(data.value.toFixed(3));
+		      featherWidth = data.value.toFixed(0);
+		      $("#featherLabel").html(featherWidth+"px");
+    });
 
 	init.prototype.panel4Adjustments();
 	init.prototype.panel3Adjustments();
