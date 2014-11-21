@@ -64,23 +64,24 @@ function sketch(action){
   };
   
   sketch.prototype.render = function(points,action,cnv,ctx) {
-    
-    var len = points.length;
-    ctx.lineWidth = brushWidth;
-    ctx.lineJoin = ctx.lineCap = brush;
-    ctx.shadowBlur = featherWidth;
-    ctx.shadowColor = foregroundColor;
-    ctx.strokeStyle = foregroundColor;
-
     if(action == "eraser")
       ctx.globalCompositeOperation = "destination-out";
     else
       ctx.globalCompositeOperation = "source-over";
 
-    ctx.beginPath();
-    ctx.moveTo(points[len-2].x, points[len-2].y);
-    ctx.lineTo(points[len-1].x, points[len-1].y);
-    ctx.stroke();
+    if(brush != "spray"){
+      var len = points.length;
+      ctx.lineWidth = brushWidth;
+      ctx.lineJoin = ctx.lineCap = brush;
+      ctx.shadowBlur = featherWidth;
+      ctx.shadowColor = foregroundColor;
+      ctx.strokeStyle = foregroundColor;
+
+      ctx.beginPath();
+      ctx.moveTo(points[len-2].x, points[len-2].y);
+      ctx.lineTo(points[len-1].x, points[len-1].y);
+      ctx.stroke();
+    }
   };
 
   sketch.prototype.secondPanel = function(action) {
@@ -105,8 +106,6 @@ function sketch(action){
     $(".brushDetails .close").on("click",function(){
       $(".brushDetails").css('display','none');
     });
-
-
 
   };
 
