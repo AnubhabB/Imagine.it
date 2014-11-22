@@ -55,12 +55,51 @@ function sketch(action){
   };
 
   sketch.prototype.createNewLayer = function() {
+
     var minMax = sketch.prototype.minMax(points);
     var minX   = minMax[0];
     var minY   = minMax[1];
     var maxX   = minMax[2];
-    var maxY   = minMax[3];
-    console.log("Todo");
+    var maxY   = minMax[3];    
+
+    var curX0   = $("#Canvas"+currentIndex).offset().left - $("#Canvas0").offset().left;
+    var curY0   = $("#Canvas"+currentIndex).offset().top - $("#Canvas0").offset().top;
+    var curX1    = curX0 + parseInt($("#Canvas"+currentIndex).attr("width"));
+    var curY1    = curY0 + parseInt($("#Canvas"+currentIndex).attr("height"));
+    /*console.log(curX0,curY0,parseInt($("#Canvas"+currentIndex).attr("width")),parseInt($("#Canvas"+currentIndex).attr("height")),curX1,curY1);*/
+    var newX0, newY0, newX1, newY1;
+    if(minX < curX0){
+      console.log("Left overspill");
+      newX0 = minX;
+    }else{
+      newX0 = curX0;
+    }
+    if(minY < curY0){
+      console.log("Top overspill");
+      newY0 = minY;
+    }else{
+      newY0 = curY0;
+    }
+    if(curX1 < maxX){
+      console.log("right overspill");
+      newX1 = maxX;
+    }else{
+      newX1 = curX1;
+    }
+    if(curY1 < maxY){
+      console.log("Bottom overspill");
+      newY1 = maxY;
+    }else{
+      newY1 = curY1;
+    }
+
+    var calcL = $("#Canvas0").offset().left + newX0;
+    var calcT = $("#Canvas0").offset().top + newY0;
+    var calcW = newX1 + newX0;
+    var calcH = newY1 + newY0;
+    $(".containerMain").append("<canvas id='t_cnv' style='position:fixed;z-index:1000;border:1px solid #fc0;left:"+calcL+"px;top:"+calcT+"px' width="+calcW+" height="+calcH+"></canvas>");
+
+
   };
   
   sketch.prototype.render = function(points,action,cnv,ctx) {
@@ -87,7 +126,6 @@ function sketch(action){
   sketch.prototype.secondPanel = function(action) {
     $("#thumbActions").html("<div class='left thumbAct'></div>");
 
-    /*if(action == "eraser"){*/
     $("#thumbActions .thumbAct").html("<img src='static/img/eraser.png'/>");
     $("#thumbActions").on("click",".thumbAct",function(){
       if($(".brushDetails").css('display') == 'none'){
