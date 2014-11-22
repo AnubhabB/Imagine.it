@@ -27,7 +27,7 @@ function sketch(action){
       if(!isDrawing) return;
 
       points.push({ x :  e.pageX - corL, y: e.pageY - corT });
-      sketch.prototype.render(points,action, cnv, ctx);
+      sketch.prototype.render(points,action, ctx);
     });
 
     cvRef.on("mouseup",function(e){
@@ -66,7 +66,7 @@ function sketch(action){
     var curY0   = $("#Canvas"+currentIndex).offset().top - $("#Canvas0").offset().top;
     var curX1    = curX0 + parseInt($("#Canvas"+currentIndex).attr("width"));
     var curY1    = curY0 + parseInt($("#Canvas"+currentIndex).attr("height"));
-    /*console.log(curX0,curY0,parseInt($("#Canvas"+currentIndex).attr("width")),parseInt($("#Canvas"+currentIndex).attr("height")),curX1,curY1);*/
+    
     var newX0, newY0, newX1, newY1;
     if(minX < curX0){
       console.log("Left overspill");
@@ -93,16 +93,12 @@ function sketch(action){
       newY1 = curY1;
     }
 
-    var calcL = $("#Canvas0").offset().left + newX0;
-    var calcT = $("#Canvas0").offset().top + newY0;
-    var calcW = newX1 + newX0;
-    var calcH = newY1 + newY0;
-    $(".containerMain").append("<canvas id='t_cnv' style='position:fixed;z-index:1000;border:1px solid #fc0;left:"+calcL+"px;top:"+calcT+"px' width="+calcW+" height="+calcH+"></canvas>");
-
-
+    sketch.prototype.newLayerRedraw(newX0,newY0,newX1,newY1);
   };
   
-  sketch.prototype.render = function(points,action,cnv,ctx) {
+
+  
+  sketch.prototype.render = function(points,action,ctx) {
     if(action == "eraser")
       ctx.globalCompositeOperation = "destination-out";
     else
@@ -122,6 +118,50 @@ function sketch(action){
       ctx.stroke();
     }
   };
+
+
+  sketch.prototype.newLayerRedraw = function(newX0,newY0,newX1,newY1) {
+
+    var calcL = $("#Canvas0").offset().left + newX0;
+    var calcT = $("#Canvas0").offset().top + newY0;
+    var calcW = newX1 - newX0;
+    var calcH = newY1 - newY0;
+    $(".containerMain").append("<canvas id='t_cnv' style='position:fixed;z-index:1000;left:"+calcL+"px;top:"+calcT+"px' width="+calcW+" height="+calcH+"></canvas>");
+    //GET ALL VALUES OF CURRENT CANVAS - image, z-index and draw it on to t_cnv
+    var cv = document.getElementById("Canvas"+currentIndex);
+    var z  = $("#Canvas"+currentIndex).css("z-index");
+    var ctx = document.getElementById("t_cnv").getContext("2d");
+
+    //GET TOP LEFT for draw
+    var t_left= parseInt($("#Canvas"+currentIndex).offset().left) - parseInt($("#t_cnv").offset().left);
+    var t_top = parseInt($("#Canvas"+currentIndex).offset().top) -  parseInt($("#t_cnv").offset().top);
+    ctx.drawImage(cv,t_left,t_top);
+/*
+
+    if(brush != "spray"){
+      var len = points.length;
+      ctx.lineWidth = brushWidth;
+      ctx.lineJoin = ctx.lineCap = brush;
+      ctx.shadowBlur = featherWidth;
+      ctx.shadowColor = foregroundColor;
+      ctx.strokeStyle = foregroundColor;
+      
+      var temp_l = $("#t_cnv").offset().left - $("#temp_canvas").offset().left;
+      var temp_t = $("#t_cnv").offset().top  - $("#temp_canvas").offset().top;
+      
+      ctx.beginPath();
+      ctx.moveTo(points[0].x - temp_l, points[0].y - temp_t);
+      for(i=0;i<points.length;i++){
+        ctx.lineTo(points[i].x - temp_l, points[i].y - temp_t);
+      }
+      ctx.stroke();
+    }*/
+
+    $("#Canvas"+currentIndex).remove();
+    $("#temp_canvas").remove();
+    $("#t_cnv").css("z-index",z).attr("id","Canvas"+currentIndex);
+  };
+
 
   sketch.prototype.secondPanel = function(action) {
     $("#thumbActions").html("<div class='left thumbAct'></div>");
