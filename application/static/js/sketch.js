@@ -69,26 +69,22 @@ function sketch(action){
     
     var newX0, newY0, newX1, newY1;
     if(minX < curX0){
-      console.log("Left overspill");
-      newX0 = minX;
+      newX0 = minX - brushWidth;
     }else{
       newX0 = curX0;
     }
     if(minY < curY0){
-      console.log("Top overspill");
-      newY0 = minY;
+      newY0 = minY - brushWidth;
     }else{
       newY0 = curY0;
     }
     if(curX1 < maxX){
-      console.log("right overspill");
-      newX1 = maxX;
+      newX1 = maxX + brushWidth;
     }else{
       newX1 = curX1;
     }
     if(curY1 < maxY){
-      console.log("Bottom overspill");
-      newY1 = maxY;
+      newY1 = maxY + brushWidth;
     }else{
       newY1 = curY1;
     }
@@ -136,26 +132,11 @@ function sketch(action){
     var t_left= parseInt($("#Canvas"+currentIndex).offset().left) - parseInt($("#t_cnv").offset().left);
     var t_top = parseInt($("#Canvas"+currentIndex).offset().top) -  parseInt($("#t_cnv").offset().top);
     ctx.drawImage(cv,t_left,t_top);
-/*
 
-    if(brush != "spray"){
-      var len = points.length;
-      ctx.lineWidth = brushWidth;
-      ctx.lineJoin = ctx.lineCap = brush;
-      ctx.shadowBlur = featherWidth;
-      ctx.shadowColor = foregroundColor;
-      ctx.strokeStyle = foregroundColor;
-      
-      var temp_l = $("#t_cnv").offset().left - $("#temp_canvas").offset().left;
-      var temp_t = $("#t_cnv").offset().top  - $("#temp_canvas").offset().top;
-      
-      ctx.beginPath();
-      ctx.moveTo(points[0].x - temp_l, points[0].y - temp_t);
-      for(i=0;i<points.length;i++){
-        ctx.lineTo(points[i].x - temp_l, points[i].y - temp_t);
-      }
-      ctx.stroke();
-    }*/
+    t_left= parseInt($("#temp_canvas").offset().left) - parseInt($("#t_cnv").offset().left);
+    t_top = parseInt($("#temp_canvas").offset().top) -  parseInt($("#t_cnv").offset().top);
+    cv = document.getElementById("temp_canvas");
+    ctx.drawImage(cv,t_left,t_top);
 
     $("#Canvas"+currentIndex).remove();
     $("#temp_canvas").remove();
