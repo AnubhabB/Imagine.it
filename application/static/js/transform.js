@@ -21,23 +21,28 @@ function transform(){
 	transform.prototype.renderTransform = function() {
 		zIndX = $("#Canvas"+currentIndex).css('z-index');
 		if(transformType == 'resize'){
-
 			var cnv = $("#Canvas"+currentIndex);
-			var w = cnv.css("width");/*attr("width")*/;
-	        var h = cnv.css("height");
-	        console.log("before",w,h);
-			cnv.css("border","1px dashed wheat");
-			cnv.resizable({
-				start: function(event,ui){
-					//$("#Canvas"+currentIndex).remove();
 
+			var w = cnv.css("width");
+	        var h = cnv.css("height");
+
+			$(".containerMain").append("<canvas id='t_canvas' width="+cnv.attr("width")+" height="+cnv.attr("height")+" style='z-index:700;width:"+w+"px;height:"+h+"px;position:fixed;left:"+cnv.offset().left+"px;top:"+cnv.offset().top+"px;border:1px solid #ccc'></canvas>");
+
+	        cnv = $("#t_canvas");
+			//cnv.css("border","1px dashed wheat");
+			cnv.resizable({
+	            alsoResize: "#Canvas"+currentIndex,
+				start: function(event,ui){
+					$("#doTransform").off("click").remove();
 				},
 				stop: function(event, ui) {
 	                    var w = cnv.css("width");/*attr("width")*/;
 	                    var h = cnv.css("height");/*cnv.attr("height")*/;
-	                	console.log(w,h);
-	                    self.compileResize(w,h);
-	                }
+	                	$(".containerMain").append("<button id='doTransform' style='position:fixed;z-index:1000;top:"+event.pageY+"px;left:"+event.pageX+"px'>Apply</button>");
+	                	$("#doTransform").on("click",function(){
+	                		self.compileResize(w,h);
+	                	});	
+	            }
 			});
 		}else if(transformType == 'perspective'){
 
@@ -171,25 +176,44 @@ function transform(){
 	
 	
 	transform.prototype.compileResize = function(w,h) {
+
+		$("#doTransform").remove();
+		$("#temp_canvas").remove();
+		$("#t_canvas").remove();
 		$("#savePerspective").remove();
-		console.log("called",w,h);
+		
+
+		w = parseInt(w.replace("px",""));
+		h = parseInt(h.replace("px",""));
+
 		if(transformType == "perspective"){
 			$("#Canvas"+currentIndex).remove();
 		}
+
+
 		var cnvTmp = document.getElementById("Canvas"+currentIndex);
 		var ctxTmp = cnvTmp.getContext('2d');
-		//var dataImage = cnvTmp.toDataURL();
-		ctxTmp.drawImage(cnvTmp,0,0,w,h);
+		
+		var imageData = cnvTmp.toDataURL();
+		//$(".containerMain").append("<canvas>")
+		var img = new Image();
+		img.onload = function(){
+			$("#Canvas"+currentIndex).attr("width",w).attr("height",h);
+			ctxTmp.drawImage(img,0,0,w,h);
+		}
+		img.src = imageData;
+		
 		try{
-			$("#Canvas"+currentIndex).resizable('destroy');
+			$("#temp_canvas").resizable('destroy');
+			$("#t_canvas").resizable('destroy');
 		}catch(error){
 			console.log(error);
-		}finally{
-
 		}
 		toolSelected = '';
 		$(".tools").removeClass("active");
-		$("#temp_canvas").remove();
+		
 		actionComplete = true;
+		fileOps.prototype.layerInfoUpdate(currentIndex,w,h,1,$("#Canvas"+currentIndex).offset().top,$("#Canvas"+currentIndex).offset().left,"source-over",'');
+		init.prototype.history("push","Transform");
 	};
 }

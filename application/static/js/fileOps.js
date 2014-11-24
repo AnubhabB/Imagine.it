@@ -199,7 +199,7 @@ fileOps.prototype.DeleteLayers = function(first_argument) {
 	
 	init.prototype.history("push","Delete");
 	fileOps.prototype.composeLayers();
-	console.log(imageLayers);
+	//console.log(imageLayers);
 };
 
 fileOps.prototype.layerInfoUpdate = function(index,width,height,alpha,top,left,composite,src){
