@@ -52,6 +52,17 @@ toolController.prototype.toolSelection = function(navElem){
 			case "brush":
 				sketch(toolSelected);
 			break;
+			case "transform":
+				if($("#transformPanel").css("display") == 'none'){
+					$("#transformPanel").css("display","block").css("top",$("#transform").offset().top - 15 +"px");
+					var t = new transform();
+					t.composeTransform();
+				}
+				else if($("#transformPanel").css("display") == 'block'){
+					$("#transformPanel").css("display","none");
+					$(".tools").removeClass('active');
+				}
+			break;
 			default:
 				console.log("to integrate "+toolSelected);
 			break;
