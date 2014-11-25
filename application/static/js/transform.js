@@ -108,12 +108,12 @@ function transform(){
 						points[drag][0] = p.x;
 						points[drag][1] = p.y;
 						ctx.clearRect(0, 0, canvas.width, canvas.height);
-						//ctxOriginal.clearRect(0, 0, canvas.width, canvas.height);
+						
 						ctx1.clearRect(0, 0, canvas.width, canvas.height);
 						op.draw(points);
 						prepare_lines(ctx2, points);
 						draw_canvas(ctx, ctx1, ctx2);
-						//draw_canvas(ctxOriginal, ctx1, ctx2);
+						
 					}, false);
 					canvas.addEventListener("mouseup", function(event) {
 						event.preventDefault();
@@ -123,7 +123,7 @@ function transform(){
 						points[drag][1] = p.y;
 						prepare_lines(ctx2, points);
 						draw_canvas(ctx, ctx1, ctx2);
-						//draw_canvas(ctxOriginal, ctx1, ctx2);
+						
 						$(".containerMain").append("<button onclick='compileResize(baseWidth,baseHeight,zIndX)' id='savePerspective' style='position:fixed;z-index:5001'>Save Perspective</button>");
 						$("#savePerspective").css("top",event.clientY+"px").css("left",event.clientX+"px");
 						drag = null;
@@ -139,16 +139,13 @@ function transform(){
 
 				function prepare_lines(ctx, p) {
 					ctx.save();
-					//ctxOriginal.save();
 					ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-					//ctxOriginal.clearRect(0, 0, ctxOriginal.canvas.width, ctxOriginal.canvas.height);
+					
 					ctx.fillStyle = "wheat";
-					//ctxOriginal.fillStyle = "rgba(0,0,0,0)";
+					
 					for( var i=0; i<4; i++ ) {
 						ctx.beginPath();
-						//ctxOriginal.beginPath();
 						ctx.arc(p[i][0], p[i][1], 2, 0, Math.PI*2, true);
-						//ctxOriginal.arc(p[i][0], p[i][1], 4, 0, Math.PI*2, true);
 						ctx.fill();
 					}
 					//
@@ -159,9 +156,9 @@ function transform(){
 				function draw_canvas(ctx, ctx1, ctx2) {
 					ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 					ctx.drawImage(ctx1.canvas, 0, 0);
-					//ctxOriginal.drawImage(ctx1.canvas, 0, 0);
+					
 					ctx.drawImage(ctx2.canvas, 0, 0);
-					//ctxOriginal.drawImage(ctx2.canvas, 0, 0);
+					
 				}
 
 				function get_mouse_position(event) {
@@ -195,14 +192,14 @@ function transform(){
 		var ctxTmp = cnvTmp.getContext('2d');
 		
 		var imageData = cnvTmp.toDataURL();
-		//$(".containerMain").append("<canvas>")
+		
 		var img = new Image();
 		img.onload = function(){
 			$("#Canvas"+currentIndex).attr("width",w).attr("height",h);
 			ctxTmp.drawImage(img,0,0,w,h);
 		}
 		img.src = imageData;
-		
+
 		try{
 			$("#temp_canvas").resizable('destroy');
 			$("#t_canvas").resizable('destroy');
