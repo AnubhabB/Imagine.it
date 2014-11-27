@@ -60,101 +60,6 @@ function transform(){
 	            }
 			});
 		}else if(transformType == 'perspective'){
-
-					/*// canvas
-					var canvasOriginal = document.getElementById("Canvas"+currentIndex);
-					var ctxOriginal = canvasOriginal.getContext('2d');
-					var tempImage = canvasOriginal.toDataURL();
-
-					$(".containerMain").append("<canvas id='temp_canvas' style='position:fixed;z-index:1000;display:block' width="+$("#Canvas"+currentIndex).width()+" height="+$("#Canvas"+currentIndex).height()+"></canvas>");
-					$("#temp_canvas").css({
-						'top':$("#Canvas"+currentIndex).offset().top+'px',
-						'left':$("#Canvas"+currentIndex).offset().left+'px'
-					});
-
-					var newImage= new Image();
-					var canvas = document.getElementById("temp_canvas");
-					var ctx    = canvas.getContext("2d");
-					newImage.onload  = function(){
-						ctx.drawImage(newImage,0,0);
-					}
-					newImage.src = tempImage;
-					//var zInd  = $("#Canvas"+currentIndex).css("z-index");
-					$("#Canvas"+currentIndex).css("display","none");
-					//Canvas
-					var canvas1 = document.createElement('canvas');
-					canvas1.width = canvas.width;
-					canvas1.height = canvas.height;
-					var ctx1 = canvas1.getContext('2d');
-					//Canvas
-					var canvas2 = document.createElement('canvas');
-					canvas2.width = canvas.width;
-					canvas2.height = canvas.height;
-					var ctx2 = canvas2.getContext('2d');
-					//
-					var op = null;
-					var points = [[3, 3], [($("#Canvas"+currentIndex).width()), 3], [($("#Canvas"+currentIndex).width()), ($("#Canvas"+currentIndex).height())], [3, ($("#Canvas"+currentIndex).height())]];
-					// img
-					var img = new Image();
-					
-					img.onload = function() {
-						op = new html5jp.perspective(ctx1, img);
-						op.draw(points);
-						self.prepare_lines(ctx2, points);
-						self.draw_canvas(ctx, ctx1, ctx2);
-						//draw_canvas(ctxOriginal, ctx1, ctx2);
-					};
-					img.src = document.getElementById("Canvas"+currentIndex).toDataURL();
-					// canvas
-					var drag = null;
-					canvas.addEventListener("mousedown", function(event) {
-						event.preventDefault();
-						var p = self.get_mouse_position(event);
-						for( var i=0; i<4; i++ ) {
-							var x = points[i][0];
-							var y = points[i][1];
-							if( p.x < x + 10 && p.x > x - 10 && p.y < y + 10 && p.y > y - 10 ) {
-								drag = i;
-								break;
-							}
-						}
-					}, false);
-					canvas.addEventListener("mousemove", function(event) {
-						event.preventDefault();
-						if(drag == null) { return; }
-						$("#savePerspective").remove();
-						var p = self.get_mouse_position(event);
-						points[drag][0] = p.x;
-						points[drag][1] = p.y;
-						ctx.clearRect(0, 0, canvas.width, canvas.height);
-						
-						ctx1.clearRect(0, 0, canvas.width, canvas.height);
-						op.draw(points);
-						self.prepare_lines(ctx2, points);
-						self.draw_canvas(ctx, ctx1, ctx2);
-						
-					}, false);
-					canvas.addEventListener("mouseup", function(event) {
-						event.preventDefault();
-						if(drag == null) { return; }
-						var p = self.get_mouse_position(event);
-						points[drag][0] = p.x;
-						points[drag][1] = p.y;
-						self.prepare_lines(ctx2, points);
-						self.draw_canvas(ctx, ctx1, ctx2);
-						
-						$(".containerMain").append("<button onclick='compileResize(baseWidth,baseHeight,zIndX)' id='savePerspective' style='position:fixed;z-index:5001'>Save Perspective</button>");
-						$("#savePerspective").css("top",event.clientY+"px").css("left",event.clientX+"px");
-						drag = null;
-					}, false);
-					canvas.addEventListener("mouseout", function(event) {
-						event.preventDefault();
-						drag = null;
-					}, false);
-					canvas.addEventListener("mouseenter", function(event) {
-						event.preventDefault();
-						drag = null;
-					}, false);*/
 			self.perspective();
 		}
 	};
@@ -329,6 +234,7 @@ function transform(){
 		img.onload = function(){
 			$("#Canvas"+currentIndex).attr("width",w).attr("height",h);
 			ctxTmp.drawImage(img,0,0,w,h);
+			ctxTmp.save();
 		}
 		img.src = imageData;
 

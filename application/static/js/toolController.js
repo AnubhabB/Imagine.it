@@ -1,5 +1,4 @@
 function toolController(navElem,navType){
-
 	switch(navType){
 		case "navText":
 			toolController.prototype.composeSecondMenu(navElem);
@@ -82,6 +81,13 @@ toolController.prototype.editorAction = function(navElem) {
 		case "openFile":
 			fileOps("open");
 		break;
+		case "imageAdjustments":
+			toolController.prototype.composeThirdMenu(navElem);
+		break;
+		case "brightnessContrast":
+			var adj = new Adjustments();
+			adj.loadpreviewBrightnessContrast();
+		break;
 		default:
 			console.log("To do "+navElem);
 		break;
@@ -118,4 +124,22 @@ toolController.prototype.composeSecondMenu = function(navElem){
 	else{
 		$(".navList").css("display","none");
 	}
+}
+
+toolController.prototype.composeThirdMenu = function(navElem) {
+	$(".thirdPanel").off("click");
+	$("body").append("<div class='navList' id='Tertiary'></div>");
+	$("#Tertiary").css({
+		"left":($("#Primary").offset().left+$("#Primary").width()+12)+"px",
+		"top":$("#imageAdjustments").offset().top+"px",
+		"display":"block"
+	});
+	switch(navElem){
+		case "imageAdjustments":
+			$("#Tertiary").html("<ul><li class='thirdPanel' id='brightnessContrast'>Brightness/ Contrast</li><li class='thirdPanel' id='hueSaturtion' onclick='loadpreviewHueSaturation()'>Hue/ Saturation</li><li id='brightnessContrast' onclick='loadpreviewCurves()'>Curves</li><li id='brightnessContrast' onclick='loadpreviewBrightnessContrast()'>Levels</li><li id='brightnessContrast' onclick='loadpreviewBrightnessContrast()'>Color Balance</li></ul>");
+		break;
+	}
+	$(".thirdPanel").on("click",function(event){
+		toolController.prototype.editorAction(this.id);
+	});
 }
