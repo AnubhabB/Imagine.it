@@ -140,6 +140,8 @@ toolController.prototype.composeThirdMenu = function(navElem) {
 		break;
 	}
 	$(".thirdPanel").on("click",function(event){
-		toolController.prototype.editorAction(this.id);
+		var elem = this.id;
+		$("#Tertiary").remove();
+		toolController.prototype.editorAction(elem);
 	});
 }
