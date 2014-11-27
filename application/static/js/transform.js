@@ -252,7 +252,7 @@ function transform(){
 
 		transform.prototype.prepare_lines = function(ctx, p, with_line) {
 			ctx.save();
-			//ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+			
 			ctx.clearRect(0, 0, canvas.width, canvas.height);
 			//
 			if( with_line == true ) {
@@ -291,6 +291,7 @@ function transform(){
 				$("#savePerspective").remove();
 				$(".tools").removeClass("active");
 				toolSelected = "";
+				cntx.save();
 			}
 		}
 
