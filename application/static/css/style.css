@@ -154,7 +154,7 @@ nav.panel3 .shrinkblock{
 	font-weight:bold;
 	background: #333;line-height: 16px;font-weight:bold;text-align: center;float: right;cursor: pointer;
 }
-nav.panel3 .tools, nav.panel3 #transformPanel .tools{
+nav.panel3 .tools, nav.panel3 #transformPanel .tools, nav.panel3 #transformPanel .toolsSecondary{
 	width:20px;
 	height: 20px;
 	margin:0 auto;
@@ -168,7 +168,7 @@ nav.panel3 .tools, nav.panel3 #transformPanel .tools{
 nav.panel3 .tools:hover,nav.panel3 .tools.active{
 	background:#333;
 }
-nav.panel3 .tools img{
+nav.panel3 .tools img,nav.panel3 #transformPanel .toolsSecondary img{
 	width:80%;
 	height:auto;
 	margin-top:5%;

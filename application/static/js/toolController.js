@@ -14,7 +14,6 @@ function toolController(navElem,navType){
 }
 
 toolController.prototype.toolSelection = function(navElem){
-
 	$("#temp_canvas").remove();
 	if($(".selected").length != 0){
 		$(".tools").removeClass("active");
