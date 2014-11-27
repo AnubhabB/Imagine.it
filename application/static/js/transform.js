@@ -161,35 +161,42 @@ function transform(){
 
 	transform.prototype.perspective = function() {
 
-			// canvas要素
-			var canvas = document.getElementById("Canvas"+currentIndex);
+			//DRAW A TEMPORARY CANVAS
+			$(".containerMain").append("<canvas id='temp_canvas' width="+$("#Canvas"+currentIndex).attr("width")+" height="+$("#Canvas"+currentIndex).attr("height")+" style='width:"+$("#Canvas"+currentIndex).width()+"px;height:"+$("#Canvas"+currentIndex).height()+"px;position:fixed;left:"+$("#Canvas"+currentIndex).offset().left+"px;top:"+$("#Canvas"+currentIndex).offset().top+"px;z-index:1000'></canvas>");
+
+
+			var canvas = document.getElementById("temp_canvas");
 			var ctx = canvas.getContext('2d');
-			// 変形画像貼り付け用canvas要素
+
+			ctx.drawImage(document.getElementById('Canvas'+currentIndex),0,0);
+			
 			var canvas1 = document.createElement('canvas');
-			canvas1.width = canvas.width;
-			canvas1.height = canvas.height;
+			canvas1.width = $("#temp_canvas").width();
+			canvas1.height = $("#temp_canvas").height();
 			var ctx1 = canvas1.getContext('2d');
-			// 補助線貼り付け用canvas要素
+			
 			var canvas2 = document.createElement('canvas');
-			canvas2.width = canvas.width;
-			canvas2.height = canvas.height;
+			canvas2.width = $("#temp_canvas").width();
+			canvas2.height = $("#temp_canvas").height();
 			var ctx2 = canvas2.getContext('2d');
 			//
 			var op = null;
-			var points = [[50, 50], [550, 100], [300, 400], [100, 400]];
+			var points = [[6, 6], [$("#temp_canvas").width()-6, 6],[$("#temp_canvas").width()-6, $("#temp_canvas").height()-6],[6, $("#temp_canvas").height()-6]];
 			// img要素
 			var img = new Image();
 			img.src = document.getElementById("Canvas"+currentIndex).toDataURL();
 			img.onload = function() {
 				op = new html5jp.perspective(ctx1, img);
 				op.draw(points);
-				prepare_lines(ctx2, points);
-				draw_canvas(ctx, ctx1, ctx2);
+				self.prepare_lines(ctx2, points);
+				self.draw_canvas(ctx, ctx1, ctx2);
 			};
 			// canvas要素にマウス関連イベントのリスナーをセット
 			var drag = null;
+			$("#Canvas"+currentIndex).css("display","none");
 			canvas.addEventListener("mousedown", function(event) {
 				event.preventDefault();
+				$("#savePerspective").remove();
 				var p = get_mouse_position(event);
 				for( var i=0; i<4; i++ ) {
 					var x = points[i][0];
@@ -206,10 +213,11 @@ function transform(){
 				var p = get_mouse_position(event);
 				points[drag][0] = p.x;
 				points[drag][1] = p.y;
-				prepare_lines(ctx2, points, true);
-				draw_canvas(ctx, ctx1, ctx2);
+				self.prepare_lines(ctx2, points, true);
+				self.draw_canvas(ctx, ctx1, ctx2);
 			}, false);
 			canvas.addEventListener("mouseup", function(event) {
+				$("#savePerspective").off("click");
 				event.preventDefault();
 				if(drag == null) { return; }
 				var p = get_mouse_position(event);
@@ -217,11 +225,20 @@ function transform(){
 				points[drag][1] = p.y;
 				ctx.clearRect(0, 0, canvas.width, canvas.height);
 				ctx1.clearRect(0, 0, canvas.width, canvas.height);
+				ctx2.clearRect(0, 0, canvas.width, canvas.height);
 		
 				op.draw(points);
 		
-				prepare_lines(ctx2, points);
-				draw_canvas(ctx, ctx1, ctx2);
+				self.prepare_lines(ctx2, points);
+				self.draw_canvas(ctx, ctx1, ctx2);
+				$(".containerMain").append("<button id='savePerspective' style='position:fixed;z-index:5001'>Save Perspective</button>");
+				$("#savePerspective").css({
+					"top":event.clientY+"px",
+					"left":event.clientX+"px"
+				});
+				$("#savePerspective").on("click",function(){
+					self.draw_canvas(ctx, ctx1, ctx2, "compile");
+				});
 				drag = null;
 			}, false);
 			canvas.addEventListener("mouseout", function(event) {
@@ -233,10 +250,10 @@ function transform(){
 				drag = null;
 			}, false);
 
-		function prepare_lines(ctx, p, with_line) {
+		transform.prototype.prepare_lines = function(ctx, p, with_line) {
 			ctx.save();
 			//ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-			ctx.clearRect(0, 0, 600, 450);
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
 			//
 			if( with_line == true ) {
 				ctx.beginPath();
@@ -245,11 +262,11 @@ function transform(){
 					ctx.lineTo(p[i][0], p[i][1]);
 				}
 				ctx.closePath();
-				ctx.strokeStyle = "red";
+				ctx.strokeStyle = "#222";
 				ctx.stroke();
 			}
 			//
-			ctx.fillStyle = "red";
+			ctx.fillStyle = "#222";
 			for( var i=0; i<4; i++ ) {
 				ctx.beginPath();
 				ctx.arc(p[i][0], p[i][1], 4, 0, Math.PI*2, true);
@@ -259,10 +276,22 @@ function transform(){
 			ctx.restore();
 		}
 
-		function draw_canvas(ctx, ctx1, ctx2) {
-			ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-			ctx.drawImage(ctx1.canvas, 0, 0);
-			ctx.drawImage(ctx2.canvas, 0, 0);
+		transform.prototype.draw_canvas = function(ctx, ctx1, ctx2, actType) {
+			if(actType !== 'compile'){
+				ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+				ctx.drawImage(ctx1.canvas, 0, 0);
+				ctx.drawImage(ctx2.canvas, 0, 0);
+			}else{
+				var cnv  = document.getElementById("Canvas"+currentIndex);
+				var cntx = cnv.getContext("2d");
+				cntx.clearRect(0,0, ctx.canvas.width, ctx.canvas.height);
+				cntx.drawImage(ctx1.canvas, 0, 0);
+				$("#temp_canvas").remove();
+				$("#Canvas"+currentIndex).css("display","block");
+				$("#savePerspective").remove();
+				$(".tools").removeClass("active");
+				toolSelected = "";
+			}
 		}
 
 		function get_mouse_position(event) {
