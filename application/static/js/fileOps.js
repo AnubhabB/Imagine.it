@@ -34,7 +34,7 @@ fileOps.prototype.openFile = function() {
 				}
 				imageLayers[canvaslist].name = response.name;
 
-				imageLayers[canvaslist].imageObj.src = "static/img/uploads/"+response.name;
+				imageLayers[canvaslist].imageObj.src = "static/uploads/"+response.name;
 				imageLayers[canvaslist].identity = "Canvas"+canvaslist;
 
 		}
