@@ -18,7 +18,7 @@ def sync():
 	if request.method == 'POST':
 		f    = request.files['file[]']
 		rand = str(random.randrange(100000,999999))
-		f.save('/var/www/imagine/application/static/img/uploads/'+rand+"_"+secure_filename(f.filename))
+		f.save('/var/www/imagine/application/static/uploads/'+rand+"_"+secure_filename(f.filename))
 	return jsonify({'name':rand+"_"+secure_filename(f.filename),'session':rand})
 
 
@@ -29,7 +29,7 @@ def syncState():
 		tmpName = ''.join(e for e in str(tmpName) if e.isalnum())
 		imgData = (request.json).replace("data:image/png;base64","")
 		imgdata = base64.b64decode(imgData)
-		with open('/var/www/imagine/application/static/img/uploads/'+tmpName+'.png', 'wb') as f:
+		with open('/var/www/imagine/application/static/uploads/'+tmpName+'.png', 'wb') as f:
 			f.write(imgdata)
 		del imgData
 	return jsonify({'response':'success','name':tmpName+'.png'})
@@ -40,7 +40,7 @@ def processEnhance():
 	if request.method =='POST':
 		uploadLayer = datetime.now()
 		uploadLayer = ''.join(e for e in str(uploadLayer) if e.isalnum())
-		path = '/var/www/imagine/application/static/img/uploads/'+uploadLayer+'.png'
+		path = '/var/www/imagine/application/static/uploads/'+uploadLayer+'.png'
 		imageData = (request.json['imgData']).replace("data:image/png;base64","")
 
 		imagedata = base64.b64decode(imageData)
