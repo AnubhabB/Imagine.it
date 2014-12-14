@@ -8,6 +8,7 @@ function fileOps(action){
 }
 
 fileOps.prototype.openFile = function() {
+	var self = this;
 	// body...
 	var imagefile = $("#imageFile")[0].files[0];
 	formdata = false;
@@ -29,7 +30,7 @@ fileOps.prototype.openFile = function() {
 				imageLayers[canvaslist].imageObj = new Image();
 				imageLayers[canvaslist].imageObj.onload = function(){
 					if(createcanvas)
-						fileOps.prototype.drawCanvas(canvaslist,this.width,this.height);
+						self.drawCanvas(canvaslist,this.width,this.height);
 					createcanvas = false;
 				}
 				imageLayers[canvaslist].name = response.name;
@@ -50,6 +51,7 @@ Author: Anubhab
 *
 *******/
 fileOps.prototype.drawCanvas = function(index,width,height) {
+		var self = this;
 		var left,top;
 		left = top = 0;
 		
@@ -59,7 +61,7 @@ fileOps.prototype.drawCanvas = function(index,width,height) {
 		left = ($(window).innerWidth() - widthN)/3;
 		top =  ($(window).innerHeight() - heightN)/2;
 
-		fileOps.prototype.layerInfoUpdate(index,width,height,1,top,left,"source-over",'');
+		self.layerInfoUpdate(index,width,height,1,top,left,"source-over",'');
 
 		$(".containerMain").append("<canvas id='Canvas"+index+"' height='"+heightN+"' width='"+widthN+"' style='background:url(static/img/bg.jpg);z-index:"+(200+canvaslist)+"'></canvas>").css("display","block");
 		var mainC = document.getElementById("Canvas"+index);
@@ -78,7 +80,7 @@ fileOps.prototype.drawCanvas = function(index,width,height) {
 		ctx.drawImage(imageLayers[index].imageObj,0,0);
 		init.prototype.history("push","Open");
 		canvaslist++;
-		fileOps.prototype.composeLayers();
+		self.composeLayers();
 }
 /**************************END DRAW CANVAS************************/
 /*****************************************************************/
@@ -94,6 +96,7 @@ Composing layers, get layers array, go by index name and Canvas<index> as layer 
 *******/
 fileOps.prototype.composeLayers = function(){
 	var x = canvaslist;
+	var self = this;
 	
 	$("#LayersBody").html("");
 	for(var i=0;i<x;i++){
@@ -111,13 +114,13 @@ fileOps.prototype.composeLayers = function(){
 	$("#layer"+(canvaslist-1)).addClass('selected');
 	currentIndex = canvaslist-1;
 	$(".layerEach").click(function(){
-		fileOps.prototype.layerClick(this.id);
+		self.layerClick(this.id);
 	});
 	//LAYER REORDER
 	$('#LayersBody').sortable({
 	    items: ':not(#layer0)'
 	}).bind('sortupdate',function(e, ui){
-		fileOps.prototype.redoCanvasOrder();
+		self.redoCanvasOrder();
 	});
 
 	$(".layersBody .visible").click(function(){
@@ -146,6 +149,7 @@ fileOps.prototype.composeLayers = function(){
 /****************************************/
 
 fileOps.prototype.layerClick = function(id) {
+	var self = this;
 	if(shiftKey == false){
 			multiLayerSelect = false;
 			$(".layerEach").removeClass("selected");
@@ -159,6 +163,7 @@ fileOps.prototype.layerClick = function(id) {
 			}
 			//ACTIVATE ACTION
 			var tempAction = toolSelected;
+			
 			init.prototype.toolsActivate(tempAction);
 		}else{
 			cleanCanv();
@@ -188,17 +193,19 @@ fileOps.prototype.redoCanvasOrder = function() {
 		}
 		factor--;
 	}
-	init.prototype.history("push","Reorder");
+	init.history("push","Reorder");
  };
 /*****************END LAYER REORDER**************
 *************************************************/
 fileOps.prototype.DeleteLayers = function(first_argument) {
+
+	var self = this;
 	$("#Canvas"+currentIndex).remove();
 	$("#layer"+currentIndex).remove();
 	delete(imageLayers[currentIndex]);
 	
 	init.prototype.history("push","Delete");
-	fileOps.prototype.composeLayers();
+	self.composeLayers();
 	//console.log(imageLayers);
 };
 

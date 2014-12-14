@@ -79,7 +79,7 @@ toolController.prototype.editorAction = function(navElem) {
 			console.log("To Do");
 		break;
 		case "openFile":
-			fileOps("open");
+			new fileOps("open");
 		break;
 		case "imageAdjustments":
 			toolController.prototype.composeThirdMenu(navElem);
