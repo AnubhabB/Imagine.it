@@ -58,8 +58,19 @@ fileOps.prototype.drawCanvas = function(index,width,height) {
 		var widthN = width;
 		var heightN= height;
 		
-		left = ($(window).innerWidth() - widthN)/3;
-		top =  ($(window).innerHeight() - heightN)/2;
+		var diffW = $(window).innerWidth() - widthN;
+		var diffH = $(window).innerHeight() - heightN;
+
+		if(widthN > heightN){
+			console.log("Landscape");
+			if( diffW <= 30 ){
+				console.log("for larger than screen image");
+
+			}else{
+				left = diffW/3;
+				top =  diffH/2;
+			}
+		}
 
 		self.layerInfoUpdate(index,width,height,1,top,left,"source-over",'');
 
