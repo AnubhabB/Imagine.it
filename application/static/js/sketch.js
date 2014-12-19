@@ -36,7 +36,7 @@ function sketch(action){
         sketch.prototype.createNewLayer();
       else
         points.length = 0;
-      init.prototype.history("push",state);
+      init.history("push",state);
     });
   };
 

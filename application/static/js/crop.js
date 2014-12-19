@@ -286,15 +286,10 @@ crop.prototype.getResults = function(theSelectionX,theSelectionY,theSelectionW,t
                     "top"    : newY0,
                     "background": "url(static/img/bg.jpg)"
                 }).attr("id","Canvas0");
-            }else{
-                //To Do - Figure out which part of current canvas falls inside the cropped area, discard rest
-                /*$("#Canvas"+i).css({
-                    "left"  : (thisX0 + newX0)+"px",
-                    "top"   : (thisY0 + newY0)+"px"
-                });*/
             }
+            
             fileOps.prototype.layerInfoUpdate(i,$("#Canvas"+i).width(),$("#Canvas"+i).height(),'',$("#Canvas"+i).offset().top,$("#Canvas"+i).offset().left,'',cnv.toDataURL());
-            init.prototype.history("push","Crop");
+            init.history("push","Crop");
         }
     }
 }

@@ -51,17 +51,31 @@ Author: Anubhab
 *
 *******/
 fileOps.prototype.drawCanvas = function(index,width,height) {
-		var self = this;
-		var left,top;
-		left = top = 0;
+		var self  = this;
+		var left=0;var top = 0;
+		var diffW = diffH = widthCss = heightCss = 0;
 		
-		var widthN = width;
-		var heightN= height;
-		
-		var diffW = $(window).innerWidth() - widthN;
-		var diffH = $(window).innerHeight() - heightN;
+		var widthN  = width;
+		var heightN = height;
+		var windowW = $(window).innerWidth();
+		var windowH = $(window).innerHeight();
 
-		if(widthN > heightN){
+		if(widthN < windowW && heightN < windowH){
+			//image smaller than screen
+			console.log("image smaller than screen");
+			diffW = windowW - widthN;
+			diffH = windowH - heightN;
+			widthCss = widthN;
+			heightCss= heightN;
+			left = diffW/3;
+			top =  diffH/2;
+			zoom.zoomFactor = 1;
+		}
+		
+		/*var diffW = $(window).innerWidth() - widthN;
+		var diffH = $(window).innerHeight() - heightN;*/
+
+		/*if(widthN > heightN){
 			console.log("Landscape");
 			if( diffW <= 30 ){
 				console.log("for larger than screen image");
@@ -70,26 +84,32 @@ fileOps.prototype.drawCanvas = function(index,width,height) {
 				left = diffW/3;
 				top =  diffH/2;
 			}
-		}
+		}*/
+
+		//Get size, fit it in and create a zoom factor
+		console.log(diffH);
+		console.log(top);
 
 		self.layerInfoUpdate(index,width,height,1,top,left,"source-over",'');
 
-		$(".containerMain").append("<canvas id='Canvas"+index+"' height='"+heightN+"' width='"+widthN+"' style='background:url(static/img/bg.jpg);z-index:"+(200+canvaslist)+"'></canvas>").css("display","block");
+		$(".containerMain").append("<canvas class='canvasClass' id='Canvas"+index+"' height='"+heightN+"' width='"+widthN+"' style='z-index:"+(200+canvaslist)+";width:"+widthCss+"px;height:"+heightCss+"px'></canvas>");
 		var mainC = document.getElementById("Canvas"+index);
 		var ctx = mainC.getContext("2d");
 		$("#Canvas"+canvaslist).css({
+			"display" :"block",
 			"position":"fixed",
 			"left"    :left+"px",
-			"top"     : top+"px",
-			"display":"block"
+			"top"     : top+"px"
 		});
 
-		if(index > 0){
-			$("#Canvas"+index).css("background","none");
+		if(index == 0){
+			$("#Canvas"+index).css({
+				"background":"url(static/img/bg.jpg)"
+			});
 		}
 		
 		ctx.drawImage(imageLayers[index].imageObj,0,0);
-		init.prototype.history("push","Open");
+		init.history("push","Open");
 		canvaslist++;
 		self.composeLayers();
 }
@@ -221,6 +241,7 @@ fileOps.prototype.DeleteLayers = function(first_argument) {
 };
 
 fileOps.prototype.layerInfoUpdate = function(index,width,height,alpha,top,left,composite,src){
+	console.log(index,width,height,alpha,top,left,composite,src);
 	if(width !== '')
 		imageLayers[index]['width'] = width;
 	if(height !== '')

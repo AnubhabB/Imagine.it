@@ -10,16 +10,12 @@ var states        = [];
 var brushWidth = 10,featherWidth = 10; //TODO CHANGE TO CUSTOM SLIDER
 
 
-$(function(){
-	init();
-});
-
-function init(){
-	init.prototype.globalEvents();
+function Init(){
+	var self = this;
+	self.globalEvents();
 }
 
-
-init.prototype.panel3Adjustments = function() {
+Init.prototype.panel3Adjustments = function() {
 	/*******************************************************************
 	LEFT HAND SIDE TOOL WINDOW - Referred to as Panel3
 *******************************************************************/
@@ -45,7 +41,7 @@ init.prototype.panel3Adjustments = function() {
 	//END CLOSE-PANEL3
 };
 
-init.prototype.panel4Adjustments = function() {
+Init.prototype.panel4Adjustments = function() {
 	/*************************************************
 	LAYER - PANEL 4
 **************************************************/
@@ -96,7 +92,9 @@ init.prototype.panel4Adjustments = function() {
 	});
 };
 
-init.prototype.globalEvents = function(){
+Init.prototype.globalEvents = function(){
+	var self = this;
+
 	$("nav.panel1").on("click",".navText",function(el){
 		var id = this.id;
 		toolController(id,"navText");
@@ -156,29 +154,29 @@ init.prototype.globalEvents = function(){
 		      $("#featherLabel").html(featherWidth+"px");
     });
 
-	init.prototype.panel4Adjustments();
-	init.prototype.panel3Adjustments();
+	self.panel4Adjustments();
+	self.panel3Adjustments();
 
 }
 
-init.prototype.toolsActivate = function(tool) {
+Init.prototype.toolsActivate = function(tool) {
 	toolController.prototype.toolSelection(tool);
 };
 
-init.prototype.saveState = function() {
+Init.prototype.saveState = function() {
 	// body...
 };
 
-init.prototype.history = function(todo,action) {
+Init.prototype.history = function(todo,action) {
 	if(todo == "push"){
 		var data = {'action': action,'statedata':imageLayers};
 		states.push(data);
 	}
 
-	init.prototype.updateHistory();
+	init.updateHistory();
 };
 
-init.prototype.updateHistory = function() {
+Init.prototype.updateHistory = function() {
 	$("#history").html("");
 
 	$.each(states,function(k,v){
@@ -187,3 +185,8 @@ init.prototype.updateHistory = function() {
 
 	$("#history").scrollTop($("#history").prop('scrollHeight'));
 };
+
+
+$(function(){
+	window.init = new Init();
+});
