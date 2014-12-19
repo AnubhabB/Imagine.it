@@ -598,3 +598,14 @@ nav.panel4 .layersBlock .layersBody .layerEach .title{
 	overflow: hidden;
 	height: auto;
 }
+.canvasClass{
+	position: fixed;
+	opacity: 1;
+}
+
+
+.canvasClass#previewCanvas{
+	background: url("/static/img/bg.jpg");
+	display: block;
+	opacity: 0;
+}

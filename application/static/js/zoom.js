@@ -1,5 +1,5 @@
-function zoomInOut(){
-	if(toolSelected == 'zoom'){
+function Zoom(){
+	/*if(toolSelected == 'zoom'){
 		var widthOld   = $("#Canvas0").width();
 		var heightOld  = $("#Canvas0").height();
 		$("canvas").click(function(){
@@ -7,9 +7,9 @@ function zoomInOut(){
 				var widthNew  = Math.round(widthOld - (widthOld*0.1));
 				var heightNew = Math.round(heightOld/widthOld * widthNew);
 				/*alert(widthNew+" "+heightNew);*/
-				$(".layerEach").each(function(){
+				//$(".layerEach").each(function(){
 					/*console.log(this.id)*/
-					var id = (this.id).replace("layer","");
+				/*	var id = (this.id).replace("layer","");
 					$("#Canvas"+id).css({
 						"width" : widthNew,
 						"height": heightNew,
@@ -21,9 +21,9 @@ function zoomInOut(){
 				var widthNew  = Math.round(widthOld + (widthOld*0.1));
 				var heightNew = Math.round(heightOld/widthOld * widthNew);
 				/*alert(widthNew+" "+heightNew);*/
-				$(".layerEach").each(function(){
+				/*$(".layerEach").each(function(){
 					/*console.log(this.id)*/
-					var id = (this.id).replace("layer","");
+				/*	var id = (this.id).replace("layer","");
 					$("#Canvas"+id).css({
 						"width" : widthNew,
 						"height": heightNew,
@@ -36,5 +36,5 @@ function zoomInOut(){
 		});
 	}else{
 		alert("There is some error");
-	}
+	}*/
 }

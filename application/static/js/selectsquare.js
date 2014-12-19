@@ -224,7 +224,7 @@ function marqueue_square(){// variables
             }
             theSelection.px = 0;
             theSelection.py = 0;
-            init.prototype.history("push","Select-rectangle");
+            init.history("push","Select-rectangle");
         });
 
         var contxtC = document.getElementById('temp_canvas');

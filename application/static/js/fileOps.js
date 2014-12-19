@@ -60,52 +60,25 @@ fileOps.prototype.drawCanvas = function(index,width,height) {
 		var windowW = $(window).innerWidth();
 		var windowH = $(window).innerHeight();
 
-		if(widthN < windowW && heightN < windowH){
-			//image smaller than screen
-			console.log("image smaller than screen");
-			diffW = windowW - widthN;
-			diffH = windowH - heightN;
-			widthCss = widthN;
-			heightCss= heightN;
-			left = diffW/3;
-			top =  diffH/2;
-			zoom.zoomFactor = 1;
-		}
-		
-		/*var diffW = $(window).innerWidth() - widthN;
-		var diffH = $(window).innerHeight() - heightN;*/
-
-		/*if(widthN > heightN){
-			console.log("Landscape");
-			if( diffW <= 30 ){
-				console.log("for larger than screen image");
-
-			}else{
-				left = diffW/3;
-				top =  diffH/2;
-			}
-		}*/
-
-		//Get size, fit it in and create a zoom factor
-		console.log(diffH);
-		console.log(top);
-
+		//image smaller than screen
+		diffW = windowW - widthN;
+		diffH = windowH - heightN;
+		left = diffW/3;
+		top =  diffH/2;
+	
 		self.layerInfoUpdate(index,width,height,1,top,left,"source-over",'');
 
-		$(".containerMain").append("<canvas class='canvasClass' id='Canvas"+index+"' height='"+heightN+"' width='"+widthN+"' style='z-index:"+(200+canvaslist)+";width:"+widthCss+"px;height:"+heightCss+"px'></canvas>");
+		$(".containerMain").append("<canvas class='canvasClass' id='Canvas"+index+"' height='"+heightN+"' width='"+widthN+"' style='z-index:"+(200+canvaslist)+";'></canvas>");
 		var mainC = document.getElementById("Canvas"+index);
 		var ctx = mainC.getContext("2d");
 		$("#Canvas"+canvaslist).css({
 			"display" :"block",
-			"position":"fixed",
 			"left"    :left+"px",
 			"top"     : top+"px"
 		});
 
 		if(index == 0){
-			$("#Canvas"+index).css({
-				"background":"url(static/img/bg.jpg)"
-			});
+			$(".containerMain").append("<canvas class='canvasClass' id='previewCanvas' height='"+heightN+"' width='"+widthN+"' style='z-index:199;border:1px solid #ff0;top:"+top+"px;left:"+left+"px;'></canvas>");
 		}
 		
 		ctx.drawImage(imageLayers[index].imageObj,0,0);

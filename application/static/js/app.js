@@ -13,6 +13,7 @@ var brushWidth = 10,featherWidth = 10; //TODO CHANGE TO CUSTOM SLIDER
 function Init(){
 	var self = this;
 	self.globalEvents();
+	window.preview = new drawPreview();
 }
 
 Init.prototype.panel3Adjustments = function() {
@@ -95,6 +96,19 @@ Init.prototype.panel4Adjustments = function() {
 Init.prototype.globalEvents = function(){
 	var self = this;
 
+	//$(window).on("mousemove",function(){
+	//	preview.draw("preview");
+	//});
+
+	/*var mtp = function(){
+			setTimeout(function(){
+				preview.draw("preview");
+				mtp();
+			},100);
+	}*/
+
+	//mtp();
+
 	$("nav.panel1").on("click",".navText",function(el){
 		var id = this.id;
 		toolController(id,"navText");
@@ -168,6 +182,7 @@ Init.prototype.saveState = function() {
 };
 
 Init.prototype.history = function(todo,action) {
+	preview.draw("preview");
 	if(todo == "push"){
 		var data = {'action': action,'statedata':imageLayers};
 		states.push(data);
