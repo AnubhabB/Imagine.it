@@ -1,0 +1,16 @@
+sudo apt-get install python-setuptools 
+sudo apt-get install python-pip
+sudo pip install virtualenv
+
+cd /var/www/
+
+git clone name@repository.com
+
+cd imagine/
+virtualenv venv
+. ./venv/bin/activate
+
+sudo apt-get install build-essential autoconf libtool pkg-config python-opengl python-imaging python-pyrex python-pyside.qtopengl idle-python2.7 libgle3 python-dev
+
+pip install flask
+jkkkkkk
