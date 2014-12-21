@@ -14,6 +14,8 @@ function Init(){
 	var self = this;
 	self.globalEvents();
 	window.preview = new drawPreview();
+	window.zoom = new Zoom();
+	zoom.zoomfactor = 1;
 }
 
 Init.prototype.panel3Adjustments = function() {

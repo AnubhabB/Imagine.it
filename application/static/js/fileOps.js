@@ -78,7 +78,8 @@ fileOps.prototype.drawCanvas = function(index,width,height) {
 		});
 
 		if(index == 0){
-			$(".containerMain").append("<canvas class='canvasClass' id='previewCanvas' height='"+heightN+"' width='"+widthN+"' style='z-index:199;border:1px solid #ff0;top:"+top+"px;left:"+left+"px;'></canvas>");
+			//$(".containerMain").append("<canvas class='canvasClass' id='previewCanvas' height='"+heightN+"' width='"+widthN+"' style='z-index:199;border:1px solid #ff0;top:"+top+"px;left:"+left+"px;'></canvas>");
+			///zoom.fitOnScreen();
 		}
 		
 		ctx.drawImage(imageLayers[index].imageObj,0,0);
@@ -168,7 +169,7 @@ fileOps.prototype.layerClick = function(id) {
 			//ACTIVATE ACTION
 			var tempAction = toolSelected;
 			
-			init.prototype.toolsActivate(tempAction);
+			init.toolsActivate(tempAction);
 		}else{
 			cleanCanv();
 			multiLayerSelect = true;
