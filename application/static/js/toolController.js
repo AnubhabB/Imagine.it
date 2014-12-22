@@ -42,6 +42,10 @@ toolController.prototype.toolSelection = function(navElem){
 			case "eyedropper":
 				eyedropper();
 			break;
+			case "zoom":
+				var zoom = new Zoom();
+				zoom.renderZoom();
+			break;
 			case "preview":
 				if($(".previewOutput").is(":visible")){
 					$(".previewOutput").hide();
