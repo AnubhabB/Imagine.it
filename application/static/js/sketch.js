@@ -145,6 +145,11 @@ function sketch(action){
 
 
   sketch.prototype.secondPanel = function(action) {
+    $("#thumbActions").off("click");
+    $("#thumbActions").off("click",".thumbAct");
+    $(".brushType").off("click",".brushThumb");
+    $(".thumbAct").remove();
+
     $("#thumbActions").html("<div class='left thumbAct'></div>");
 
     $("#thumbActions .thumbAct").html("<img src='static/img/eraser.png'/>");

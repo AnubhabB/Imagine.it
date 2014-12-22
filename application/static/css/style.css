@@ -62,11 +62,29 @@ nav{
 	border-top: 1px solid #333;
 	z-index: 1000;
 }
+
+
 nav.panel2{
 	height:25px;
 	top:33px;
 	border-top: 1px solid #666
 }
+
+nav.panel2 #titleImage{
+	font-size: 10px;
+	font-style: italic;
+	margin-right: 20px;
+	color:#999;
+}
+
+nav.panel2 #titleImage #percentView{
+	padding-left:10px;
+	font-style: normal;
+	font-weight: bold;
+	color:#ccc;
+	font-size: 11px;
+}
+
 nav.panel3{
 	width:30px;
 	top:66px;

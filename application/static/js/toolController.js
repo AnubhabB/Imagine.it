@@ -13,8 +13,14 @@ function toolController(navElem,navType){
 }
 
 toolController.prototype.toolSelection = function(navElem){
+	
+	$("#thumbActions").off("click");
+    $("#thumbActions").off("click",".thumbAct");
+    $(".brushType").off("click",".brushThumb");
+    $(".thumbAct").remove();
 	$("#temp_canvas").remove();
 	$("#Canvas"+currentIndex).css("display","block");
+	
 	if($(".selected").length != 0){
 		$(".tools").removeClass("active");
 		toolSelected = navElem;
