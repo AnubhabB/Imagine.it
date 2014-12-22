@@ -94,7 +94,7 @@ lasso.prototype.contextmenu = function(xpos,ypos, points) {
       lasso.prototype.doLasso('clear', points);
   });
 
-  init.prototype.history("push","Select-custom");
+  init.history("push","Select-custom");
 };
 
 lasso.prototype.drawSelection = function(tempCtx, points, act){
@@ -267,7 +267,7 @@ lasso.prototype.lassoCopyCut = function(action, points) {
         img.src = url;
       }
     }
-    init.prototype.history("push",action);
+    init.history("push",action);
 };
 
 lasso.prototype.minMax = function(points) {
