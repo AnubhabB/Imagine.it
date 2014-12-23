@@ -27,7 +27,7 @@ fileOps.prototype.openFile = function() {
 		imageLayers[canvaslist].imageObj.src = fr.result;
 		imageLayers[canvaslist].identity = "Canvas"+canvaslist;
 	}
-	fr.readAsDataURL(imagefile);
+	fr.readAsDataURL(imagefile)
 };
 
 /********

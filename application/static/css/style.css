@@ -618,7 +618,7 @@ nav.panel4 .layersBlock .layersBody .layerEach .title{
 }
 .canvasClass{
 	position: fixed;
-	opacity: 1;
+	/*opacity: .01;*/
 }
 
 
