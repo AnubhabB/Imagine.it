@@ -34,6 +34,7 @@ Zoom.prototype.creteZoomSlider = function() {
 		change = false;
 	});
 	$("#verticalHandle").on("mousemove",function(evt){
+		console.log(change);
 		if(!change) return;
 
 		if(evt.clientY != startEvt){
@@ -41,9 +42,11 @@ Zoom.prototype.creteZoomSlider = function() {
 			//console.log(startEvt,evt.clientY,del);
 			var mTop = parseInt(($("#verticalHandle").css("margin-top")).replace("px",""))+del;
 			//console.log(del,mTop);
+			//var x += del;
+			//console.log(x);
 			$("#verticalHandle").animate({
-				"margin-top": +mTop,
-			},200)
+				marginTop: mTop,
+			},100)
 			//css("margin-top",mTop+"px");
 		}
 
