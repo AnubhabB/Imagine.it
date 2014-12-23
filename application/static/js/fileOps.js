@@ -69,6 +69,7 @@ fileOps.prototype.drawCanvas = function(index,width,height) {
 			//$(".containerMain").append("<canvas class='canvasClass' id='previewCanvas' height='"+heightN+"' width='"+widthN+"' style='z-index:199;border:1px solid #ff0;top:"+top+"px;left:"+left+"px;'></canvas>");
 			///zoom.fitOnScreen();
 			$("#titleImage").html(imageLayers[0].name+" <span id='percentView'>100%</span>");
+			zoom.zoomfactor = 1;
 		}
 		
 		ctx.drawImage(imageLayers[index].imageObj,0,0);

@@ -19,6 +19,9 @@ toolController.prototype.toolSelection = function(navElem){
     $(".brushType").off("click",".brushThumb");
     $(".thumbAct").remove();
 	$("#temp_canvas").remove();
+	$("#transformPanel").remove();
+	zoom.cleanThis();
+
 	$("#Canvas"+currentIndex).css("display","block");
 	
 	if($(".selected").length != 0){
@@ -43,7 +46,6 @@ toolController.prototype.toolSelection = function(navElem){
 				eyedropper();
 			break;
 			case "zoom":
-				var zoom = new Zoom();
 				zoom.renderZoom();
 			break;
 			case "preview":
