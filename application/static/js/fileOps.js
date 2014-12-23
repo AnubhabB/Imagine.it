@@ -11,35 +11,23 @@ fileOps.prototype.openFile = function() {
 	var self = this;
 	// body...
 	var imagefile = $("#imageFile")[0].files[0];
-	formdata = false;
-	if(window.FormData){
-		formdata = new FormData();
-	}
-	//LOADER
-	formdata.append("file[]",imagefile);
-	$.ajax({
-		type: 'POST',
-		url : '/sync',
-		data: formdata,
-		processData: false,
-		contentType: false,
-		success:function(response){
-				createcanvas = true;
-				session      = response.session;
-				imageLayers[canvaslist] = {};
-				imageLayers[canvaslist].imageObj = new Image();
-				imageLayers[canvaslist].imageObj.onload = function(){
-					if(createcanvas)
-						self.drawCanvas(canvaslist,this.width,this.height);
-					createcanvas = false;
-				}
-				imageLayers[canvaslist].name = response.name;
+	var fr = new FileReader();
 
-				imageLayers[canvaslist].imageObj.src = "static/uploads/"+response.name;
-				imageLayers[canvaslist].identity = "Canvas"+canvaslist;
-
+	fr.onload = function(){
+		createcanvas = true;
+		imageLayers[canvaslist] = {};
+		imageLayers[canvaslist].imageObj = new Image();
+		imageLayers[canvaslist].imageObj.onload = function(){
+			if(createcanvas)
+				self.drawCanvas(canvaslist,this.width,this.height);
+			createcanvas = false;
 		}
-	});
+		imageLayers[canvaslist].name = imagefile.name;
+
+		imageLayers[canvaslist].imageObj.src = fr.result;
+		imageLayers[canvaslist].identity = "Canvas"+canvaslist;
+	}
+	fr.readAsDataURL(imagefile);
 };
 
 /********
