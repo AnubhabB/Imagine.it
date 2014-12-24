@@ -8,7 +8,8 @@ Zoom.prototype.creteZoomSlider = function() {
 	var self = this;
 	var change = false, startEvt = 0;
 
-	$(".panel3").append("<div class='sliderVeritcal' id='sliderVeritcal'><h5 style='margin-bottom:2px;'>300%</h5><div style='height:180px;display:block;margin:0'><div class='chanelVertical'><div id='verticalHandle' title='"+self.zoomfactor * 100+"%'></div></div></div><h5 style='margin-top:2px'>1%</h5></div>");
+	//$(".panel3").append("<div class='sliderVeritcal' id='sliderVeritcal'><h5 style='margin-bottom:2px;'>300%</h5><div style='height:180px;display:block;margin:0'><div class='chanelVertical'><div id='verticalHandle' title='"+self.zoomfactor * 100+"%'></div></div></div><h5 style='margin-top:2px'>1%</h5></div>");
+	$(".panel3").append("<div class='sliderVeritcal' id='sliderVeritcal'><h5 style='margin-bottom:2px;'>300%</h5><div style='height:180px;display:block;margin:0'><div class='chanelVertical' id='verticalSlider'></div></div><h5 style='margin-top:2px'>1%</h5></div>");
 	var setHeight = $("#zoom").offset().top + 12 - 100;
 	var setWidth  = $(".panel3").outerWidth() +3;
 	$("#sliderVeritcal").css({
@@ -16,9 +17,23 @@ Zoom.prototype.creteZoomSlider = function() {
 		left: setWidth+"px"
 	});
 
+	Zoom.prototype.setZoom = function() {
+		console.log($("#verticalSlider").slider("value"));
+	};
+
+	$("#verticalSlider").slider({
+		orientation: "vertical",
+		animate: true,
+		value: self.zoomfactor * 100,
+		max:300,
+		min:1,
+		change: self.setZoom,
+		slide:self.setZoom	
+	});
+
 	//convert percentage zoom to scale
-	var scale = 60;
-	$("#verticalHandle").css({
+	//var scale = 60;
+	/*$("#verticalHandle").css({
 		"margin-top": 180 - scale*self.zoomfactor +"px"
 	});
 
@@ -50,7 +65,7 @@ Zoom.prototype.creteZoomSlider = function() {
 			//css("margin-top",mTop+"px");
 		}
 
-	});
+	});*/
 };
 
 Zoom.prototype.cleanThis = function() {
