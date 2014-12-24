@@ -30,42 +30,6 @@ Zoom.prototype.creteZoomSlider = function() {
 		change: self.setZoom,
 		slide:self.setZoom	
 	});
-
-	//convert percentage zoom to scale
-	//var scale = 60;
-	/*$("#verticalHandle").css({
-		"margin-top": 180 - scale*self.zoomfactor +"px"
-	});
-
-	$("#verticalHandle").on("mousedown",function(evt){
-		change = true;
-		startEvt = evt.clientY;
-		//console.log(startEvt,$("#verticalHandle").css("margin-top"));
-	});
-	$("#verticalHandle").on("mouseup",function(evt){
-		change = false;
-	});
-	$("#sliderVeritcal").on("mouseup",function(evt){
-		change = false;
-	});
-	$("#verticalHandle").on("mousemove",function(evt){
-		console.log(change);
-		if(!change) return;
-
-		if(evt.clientY != startEvt){
-			var del  = evt.clientY-startEvt;
-			//console.log(startEvt,evt.clientY,del);
-			var mTop = parseInt(($("#verticalHandle").css("margin-top")).replace("px",""))+del;
-			//console.log(del,mTop);
-			//var x += del;
-			//console.log(x);
-			$("#verticalHandle").animate({
-				marginTop: mTop,
-			},100)
-			//css("margin-top",mTop+"px");
-		}
-
-	});*/
 };
 
 Zoom.prototype.cleanThis = function() {
@@ -78,6 +42,7 @@ Zoom.prototype.renderZoom = function() {
 	if($("#sliderVeritcal").length == 0)
 		self.creteZoomSlider();
 	else{
+		console.log("clean this");
 		self.cleanThis();
 	}
 };	
