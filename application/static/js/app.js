@@ -7,7 +7,7 @@ var canvaslist    = 0;
 var shiftKey      = false;
 var toolSelected  = '';
 var states        = [];
-var brushWidth = 10,featherWidth = 10; //TODO CHANGE TO CUSTOM SLIDER
+var brushWidth = 10,featherWidth = 10;
 
 
 function Init(){
@@ -144,7 +144,6 @@ Init.prototype.globalEvents = function(){
 		onChange: function (hsb, hex, rgb) {
 			$('#colorPicker span').css('backgroundColor', 'rgba('+rgb.r+','+rgb.g+','+rgb.b+',1)');
 			foregroundColor = 'rgba('+rgb.r+','+rgb.g+','+rgb.b+',1)';
-			//console.log(foregroundColor);
 		}
 	});
 	self.panel4Adjustments();
