@@ -11,7 +11,7 @@ Catch: tried separating move but somee conflict with event handelling
 
 function sketch(action){
  
-  var points = [], isDrawing = false, ctx, cnv, corL, corT, cvRef, oldln= 0, newln = 0, cursorUrl = '', state, brush = 'round';
+  var points = [], isDrawing = false, ctx, cnv, corL, corT, cvRef, oldln= 0, newln = 0, cursorUrl = '', state;
   $("Canvas").off("mousedown").off("mouseup").off("mousemove");
   $("#temp_canvas").remove();
   $(".containerMain").append("<canvas id='temp_canvas' width="+$("#Canvas0").width()+" height="+$("#Canvas0").height()+" style='z-index:600;position:fixed;top:"+$("#Canvas0").offset().top+"px;left:"+$("#Canvas0").offset().left+"px;'></canvas>");
@@ -43,13 +43,22 @@ function sketch(action){
   sketch.prototype.prepareMousePointer = function() {
     
     $("#mousePointer").remove();
-
+    
     $("body").append("<canvas id='mousePointer' width="+brushWidth+" height="+brushWidth+" hidden></canvas>");
     var cursorCnv = document.getElementById("mousePointer");
     var cursorCtx = cursorCnv.getContext('2d');
     cursorCtx.strokeStyle = "#ccc";
     cursorCtx.lineWidth = 1;
-    cursorCtx.strokeRect(0,0,brushWidth,brushWidth);
+    if(brush == "square"){
+      cursorCtx.strokeRect(0,0,brushWidth,brushWidth);
+    }else if(brush == "round"){
+      cursorCtx.beginPath();
+      var val = brushWidth/2;
+      cursorCtx.arc(val,val,val,0,2*Math.PI);
+      cursorCtx.stroke();
+    }else{
+      cursorCtx.strokeRect(0,0,brushWidth,brushWidth); //Todo: spray and other brush types
+    }
     cursorUrl = cursorCnv.toDataURL();
     sketch.prototype.updatePointer();
   };
@@ -163,6 +172,7 @@ function sketch(action){
     $(".brushType").on("click",".brushThumb",function(){
       brush = this.id;
       $("#brushHeading").html('Eraser Details - '+brush);
+      sketch.prototype.prepareMousePointer();
     });
     
     $(".brushDetails .close").on("click",function(){
@@ -206,7 +216,7 @@ function sketch(action){
     $("#thumbActions").on("click",".thumbAct",function(){
       if($(".brushDetails").css('display') == 'none'){
         $(".brushDetails").css('display','block');
-        $(".brushDetails").html('<div class="row-fluid"><label class="left" id="brushHeading" style="font-size:11px">Brush Details</label><div class="close" style="margin:0" title="Close Brush Panel">x</div></div><div class="row-fluid"><div class="row-fluid"><label class="left">Size:</label><label id="sizeLabel" class="right">'+brushWidth+'px</label></div><div class="row-fluid" style="height:16px"><div class="sliderGroove"><div id="brushSize"></div></div></div></div><div class="row-fluid"><div class="row-fluid"><label class="left">Feather:</label><label id="featherLabel" class="right">'+featherWidth+'px</label></div><div class="row-fluid" style="height:16px"><div class="sliderGroove"><div id="blurRadius"></div></div></div></div><div class="row-fluid" style="border-top:1px solid #444;margin-top:10px"><div class="row-fluid"><label class="left">Brush Type:</label><label id="brushType" class="right">Circle</label></div><div class="row-fluid  brushType"><div class="brushThumb" id="round"><img src="static/img/roundhard.png"/></div><div class="brushThumb" id="square"><img src="static/img/block.png"/></div><div class="brushThumb" id="spray"><img src="static/img/spray.png"/></div></div></div>');
+        $(".brushDetails").html('<div class="row-fluid"><label class="left" id="brushHeading" style="font-size:11px">Brush Details</label><div class="close" style="margin:0" title="Close Brush Panel">x</div></div><div class="row-fluid"><div class="row-fluid"><label class="left">Size:</label><label id="sizeLabel" class="right">'+brushWidth+'px</label></div><div class="row-fluid" style="height:16px"><div class="sliderGroove"><div id="brushSize"></div></div></div></div><div class="row-fluid"><div class="row-fluid"><label class="left">Feather:</label><label id="featherLabel" class="right">'+featherWidth+'px</label></div><div class="row-fluid" style="height:16px"><div class="sliderGroove"><div id="blurRadius"></div></div></div></div><div class="row-fluid" style="border-top:1px solid #444;margin-top:10px"><div class="row-fluid"><label class="left">Brush Type:</label><label id="brushType" class="right">'+brush+'</label></div><div class="row-fluid  brushType"><div class="brushThumb" id="round"><img src="static/img/roundhard.png"/></div><div class="brushThumb" id="square"><img src="static/img/block.png"/></div><div class="brushThumb" id="spray"><img src="static/img/spray.png"/></div></div></div>');
         $("#brushHeading").html(action+' Details - '+brush);
 
         self.brushOperations();
