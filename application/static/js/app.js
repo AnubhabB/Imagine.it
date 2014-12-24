@@ -147,29 +147,6 @@ Init.prototype.globalEvents = function(){
 			//console.log(foregroundColor);
 		}
 	});
-
-	/*$("#brushSize[data-slider]").each(function () {
-		      var input = $(this);
-		      //console.log(input);
-		    }).bind("slider:ready slider:changed", function (event, data) {
-		      $(this).nextAll(".output:first").html(data.value.toFixed(3));
-		      brushWidth = data.value.toFixed(0);
-		      $("#sizeLabel").html(brushWidth+"px");
-		      try{
-		      	sketch.prototype.prepareMousePointer();
-		      }catch(error){
-
-		      }
-    });
-	$("#blurRadius[data-slider]").each(function () {
-		      var input = $(this);
-		      //console.log(input);
-		    }).bind("slider:ready slider:changed", function (event, data) {
-		      $(this).nextAll(".output:first").html(data.value.toFixed(3));
-		      featherWidth = data.value.toFixed(0);
-		      $("#featherLabel").html(featherWidth+"px");
-    });*/
-
 	self.panel4Adjustments();
 	self.panel3Adjustments();
 
