@@ -143,24 +143,22 @@ function sketch(action){
     $("#t_cnv").css("z-index",z).attr("id","Canvas"+currentIndex);
   };
 
+  sketch.prototype.updateBrushSize = function() {
+    var self = this;
+    brushWidth = $("#brushSize").slider("value");
+    $("#sizeLabel").html(brushWidth+"px");
+    sketch.prototype.prepareMousePointer();
+  };
 
-  sketch.prototype.secondPanel = function(action) {
-    $("#thumbActions").off("click");
-    $("#thumbActions").off("click",".thumbAct");
-    $(".brushType").off("click",".brushThumb");
-    $(".thumbAct").remove();
 
-    $("#thumbActions").html("<div class='left thumbAct'></div>");
+  sketch.prototype.updateFeatherSize = function() {
+    var self = this;
+    featherWidth = $("#blurRadius").slider("value");
+    $("#featherLabel").html(featherWidth+"px");
+  };
 
-    $("#thumbActions .thumbAct").html("<img src='static/img/eraser.png'/>");
-    $("#thumbActions").on("click",".thumbAct",function(){
-      if($(".brushDetails").css('display') == 'none'){
-        $(".brushDetails").css('display','block');
-        $("#brushHeading").html('Eraser Details - '+brush);
-      }else{
-        $(".brushDetails").css('display','none');
-      }
-    });
+  sketch.prototype.brushOperations = function() {
+    var self = this;
 
     $(".brushType").on("click",".brushThumb",function(){
       brush = this.id;
@@ -168,12 +166,59 @@ function sketch(action){
     });
     
     $(".brushDetails .close").on("click",function(){
-      $(".brushDetails").css('display','none');
+      $(".brushDetails").empty().css('display','none');
+    });
+
+    //SLIDERS
+    $("#brushSize").slider({
+      value:brushWidth,
+      min:1,
+      max:500,
+      animate:true,
+      change:self.updateBrushSize,
+      slide:self.updateBrushSize
+    });
+
+
+    $("#blurRadius").slider({
+      value:featherWidth,
+      min:1,
+      max:100,
+      animate:true,
+      change:self.updateFeatherSize,
+      slide:self.updateFeatherSize
     });
 
   };
 
-  sketch.prototype.updatePointer = function(first_argument) {
+  sketch.prototype.secondPanel = function(action) {
+    var self = this;
+
+    $("#thumbActions").off("click");
+    $("#thumbActions").off("click",".thumbAct");
+    $(".brushType").off("click",".brushThumb");
+    $(".thumbAct").remove();
+
+    $("#thumbActions").html("<div class='left thumbAct'></div>");
+
+    $("#thumbActions .thumbAct").html("<img src='static/img/"+action+".png'/>");
+
+    $("#thumbActions").on("click",".thumbAct",function(){
+      if($(".brushDetails").css('display') == 'none'){
+        $(".brushDetails").css('display','block');
+        $(".brushDetails").html('<div class="row-fluid"><label class="left" id="brushHeading" style="font-size:11px">Brush Details</label><div class="close" style="margin:0" title="Close Brush Panel">x</div></div><div class="row-fluid"><div class="row-fluid"><label class="left">Size:</label><label id="sizeLabel" class="right">'+brushWidth+'px</label></div><div class="row-fluid" style="height:16px"><div class="sliderGroove"><div id="brushSize"></div></div></div></div><div class="row-fluid"><div class="row-fluid"><label class="left">Feather:</label><label id="featherLabel" class="right">'+featherWidth+'px</label></div><div class="row-fluid" style="height:16px"><div class="sliderGroove"><div id="blurRadius"></div></div></div></div><div class="row-fluid" style="border-top:1px solid #444;margin-top:10px"><div class="row-fluid"><label class="left">Brush Type:</label><label id="brushType" class="right">Circle</label></div><div class="row-fluid  brushType"><div class="brushThumb" id="round"><img src="static/img/roundhard.png"/></div><div class="brushThumb" id="square"><img src="static/img/block.png"/></div><div class="brushThumb" id="spray"><img src="static/img/spray.png"/></div></div></div>');
+        $("#brushHeading").html(action+' Details - '+brush);
+
+        self.brushOperations();
+
+      }else{
+        $(".brushDetails").empty().css('display','none');
+      }
+    });
+
+  };
+
+  sketch.prototype.updatePointer = function() {
     var crvRef = $("#temp_canvas");
     crvRef.css({
         "cursor":"url("+cursorUrl+")"+(brushWidth/2)+" "+(brushWidth/2)+", auto"

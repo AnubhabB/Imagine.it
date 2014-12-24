@@ -660,3 +660,16 @@ nav .sliderVeritcal .chanelVertical #verticalHandle{
 	margin-left:-4px;
 	cursor: move
 }
+.sliderGroove{
+	width: 90%;
+	margin: auto;
+	padding: 0 1%;
+	height: 3px;
+	overflow: visible;
+	position: absolute;
+	margin-top:4px;
+	background: #444;
+}
+.sliderGroove #brushSize,.sliderGroove #featherSize{
+	margin-top:-2px;
+}
