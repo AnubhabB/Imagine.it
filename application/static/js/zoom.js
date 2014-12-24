@@ -18,7 +18,7 @@ Zoom.prototype.creteZoomSlider = function() {
 	});
 
 	Zoom.prototype.setZoom = function() {
-		console.log($("#verticalSlider").slider("value"));
+		$("#percentView").html($("#verticalSlider").slider("value")+"%");
 	};
 
 	$("#verticalSlider").slider({
