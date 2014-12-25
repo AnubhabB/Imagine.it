@@ -4,12 +4,16 @@ function Zoom(){
 
 Zoom.prototype.zoomfactor = {};
 
+Zoom.prototype.Draw = function() {
+	var self = this;
+	console.log("To do zoom all: "+self.zoomfactor);
+};
+
 Zoom.prototype.creteZoomSlider = function() {
 	var self = this;
 	var change = false, startEvt = 0;
 
-	//$(".panel3").append("<div class='sliderVeritcal' id='sliderVeritcal'><h5 style='margin-bottom:2px;'>300%</h5><div style='height:180px;display:block;margin:0'><div class='chanelVertical'><div id='verticalHandle' title='"+self.zoomfactor * 100+"%'></div></div></div><h5 style='margin-top:2px'>1%</h5></div>");
-	$(".panel3").append("<div class='sliderVeritcal' id='sliderVeritcal'><h5 style='margin-bottom:2px;'>300%</h5><div style='height:180px;display:block;margin:0'><div class='chanelVertical' id='verticalSlider'></div></div><h5 style='margin-top:2px'>1%</h5></div>");
+	$(".panel3").append("<div class='sliderVeritcal' id='sliderVeritcal'><h5 id='currentZoom' style='margin-bottom:2px;'>"+(self.zoomfactor*100)+"%</h5><div style='height:180px;display:block;margin:0'><div class='chanelVertical' id='verticalSlider'></div></div></div>");
 	var setHeight = $("#zoom").offset().top + 12 - 100;
 	var setWidth  = $(".panel3").outerWidth() +3;
 	$("#sliderVeritcal").css({
@@ -18,7 +22,12 @@ Zoom.prototype.creteZoomSlider = function() {
 	});
 
 	Zoom.prototype.setZoom = function() {
+		var self = this;
+		self.zoomfactor = $("#verticalSlider").slider("value")/100;
 		$("#percentView").html($("#verticalSlider").slider("value")+"%");
+		$("#currentZoom").html($("#verticalSlider").slider("value")+"%");
+
+		self.Draw();
 	};
 
 	$("#verticalSlider").slider({
