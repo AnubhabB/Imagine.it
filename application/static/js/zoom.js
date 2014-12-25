@@ -4,7 +4,7 @@ function Zoom(){
 
 Zoom.prototype.zoomfactor = {};
 
-Zoom.prototype.Draw = function() {
+Zoom.prototype.drawZoom = function() {
 	var self = this;
 	console.log("To do zoom all: "+self.zoomfactor);
 };
@@ -22,12 +22,11 @@ Zoom.prototype.creteZoomSlider = function() {
 	});
 
 	Zoom.prototype.setZoom = function() {
-		var self = this;
 		self.zoomfactor = $("#verticalSlider").slider("value")/100;
 		$("#percentView").html($("#verticalSlider").slider("value")+"%");
 		$("#currentZoom").html($("#verticalSlider").slider("value")+"%");
 
-		self.Draw();
+		self.drawZoom();
 	};
 
 	$("#verticalSlider").slider({
