@@ -35,8 +35,8 @@ function AutoSelect(){
 	$("canvas").on("mouseup",function(ev){
 		if(toolSelected == "autoSelect"){
 			isDragging = false;
-			imageLayers[currentIndex].top = $("#"+id).offset().top;
-			imageLayers[currentIndex].left = $("#"+id).offset().left;
+			imageLayers[currentIndex].top  = $("#"+id).offset().top - globalTop;
+			imageLayers[currentIndex].left = $("#"+id).offset().left - globalLeft;
           	init.history("push","Nudge");
 		}
 	});

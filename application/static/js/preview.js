@@ -8,15 +8,13 @@ function drawPreview(){
 
 drawPreview.prototype.draw = function(action) {
 	try{
-		//cleanCanv();
 		toolSelected = "";
-		//var canvPreview = document.getElementById("previewCanvas");
 		var canvPreview = document.getElementById("previewOutput");
 		var ctxPreview  = canvPreview.getContext('2d');
 		var hFact    = $("#Canvas0").attr("height");
 		var wFact    = $("#Canvas0").attr("width");
-		var lFact    = $("#Canvas0").offset().left;
-		var tFact    = $("#Canvas0").offset().top;
+		var lFact    = globalLeft;
+		var tFact    = globalTop;
 		//$("#previewCanvas").attr("width",wFact).attr("height",hFact)
 		$("#previewOutput").attr("width",wFact).attr("height",hFact)
 		$(".previewOutput").css("left","60px").css("bottom","10px");
@@ -25,16 +23,15 @@ drawPreview.prototype.draw = function(action) {
 				if($("#layer"+(z-1)).length != 0){
 					try{
 						var id    = $(".layersBody li:nth-child("+z+")").attr("id");
-						console.log("Troubled Id: "+id);
-						id        = id.replace("layer","");
+						id = id.replace("layer","");
+
 						if($("#Canvas"+id).css("display")=='block'){
 							var canvas = document.getElementById("Canvas"+id);
 							var composite = imageLayers[id].blendmode;
 							var alpha     = imageLayers[id].alpha;
-							var correctLeft= imageLayers[id].left - lFact;
-							var correctTop =  imageLayers[id].top - tFact;
+							var correctLeft= imageLayers[id].left;
+							var correctTop =  imageLayers[id].top;
 
-							console.log(correctLeft,correctTop);
 							ctxPreview.globalCompositeOperation = composite;
 							ctxPreview.globalAlpha = alpha;
 							ctxPreview.drawImage(canvas,correctLeft,correctTop);

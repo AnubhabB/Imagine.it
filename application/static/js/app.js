@@ -9,6 +9,7 @@ var toolSelected  = '';
 var states        = [];
 var brushWidth = 10,featherWidth = 10;
 var brush = 'round';
+var globalLeft, globalTop;
 
 
 function Init(){

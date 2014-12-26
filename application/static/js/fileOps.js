@@ -51,11 +51,15 @@ fileOps.prototype.drawCanvas = function(index,width,height) {
 		//image smaller than screen
 		diffW = windowW - widthN;
 		diffH = windowH - heightN;
-		left = diffW/3;
-		top =  diffH/2;
-	
-		self.layerInfoUpdate(index,width,height,1,top,left,"source-over",'');
 
+		if(index == 0){
+			left = diffW/3;
+			top  =  diffH/2;
+		}else{
+			left = $("#Canvas0").offset().left;
+			top  = $("#Canvas0").offset().top;
+		}
+	
 		$(".containerMain").append("<canvas class='canvasClass' id='Canvas"+index+"' height='"+heightN+"' width='"+widthN+"' style='z-index:"+(200+canvaslist)+";'></canvas>");
 		var mainC = document.getElementById("Canvas"+index);
 		var ctx = mainC.getContext("2d");
@@ -64,15 +68,21 @@ fileOps.prototype.drawCanvas = function(index,width,height) {
 			"left"    :left+"px",
 			"top"     : top+"px"
 		});
+		
+		ctx.drawImage(imageLayers[index].imageObj,0,0);
 
 		if(index == 0){
 			//$(".containerMain").append("<canvas class='canvasClass' id='previewCanvas' height='"+heightN+"' width='"+widthN+"' style='z-index:199;border:1px solid #ff0;top:"+top+"px;left:"+left+"px;'></canvas>");
 			///zoom.fitOnScreen();
+			console.log($("#Canvas0").offset().left);
+			globalLeft = $("#Canvas0").offset().left;
+			globalTop  = $("#Canvas0").offset().top;
 			$("#titleImage").html(imageLayers[0].name+" <span id='percentView'>100%</span>");
 			zoom.zoomfactor = 1;
 		}
-		
-		ctx.drawImage(imageLayers[index].imageObj,0,0);
+
+		self.layerInfoUpdate(index,width,height,1,top,left,"source-over",'');
+
 		init.history("push","Open");
 		canvaslist++;
 		self.composeLayers();
@@ -205,15 +215,19 @@ fileOps.prototype.DeleteLayers = function(first_argument) {
 };
 
 fileOps.prototype.layerInfoUpdate = function(index,width,height,alpha,top,left,composite,src){
-	console.log(index,width,height,alpha,top,left,composite,src);
+	console.log("Layer info update",index,width,height,alpha,top,left,composite,src);
+
+	var tempLeft = globalLeft - left;
+	//console.log(globalLeft,left,tempLeft);
+
 	if(width !== '')
 		imageLayers[index]['width'] = width;
 	if(height !== '')
 		imageLayers[index]['height'] = height;
 	if(left !== '')
-		imageLayers[index]['left'] = left;
+		imageLayers[index]['left'] = Math.ceil(left - globalLeft);
 	if(top !== '')
-		imageLayers[index]['top'] = top;
+		imageLayers[index]['top'] = Math.ceil(top - globalTop);
 	if(composite !== '')
 		imageLayers[index]['blendmode'] = composite;
 	if(canvaslist !== '')
@@ -222,4 +236,6 @@ fileOps.prototype.layerInfoUpdate = function(index,width,height,alpha,top,left,c
 		imageLayers[index]['alpha'] = alpha;
 	if(src !== '')
 		imageLayers[index]['src'] = src;
+
+	console.log(imageLayers[index]['left'],imageLayers[index]['top']);
 }

@@ -53,7 +53,8 @@ toolController.prototype.toolSelection = function(navElem){
 					$(".previewOutput").hide();
 					$(".tools").removeClass("active");
 				}else{
-					drawPreview("preview");
+					var preview = new drawPreview();
+					preview.draw("preview");
 					$(".previewOutput").show();
 				}
 			break;

@@ -6,7 +6,22 @@ Zoom.prototype.zoomfactor = {};
 
 Zoom.prototype.drawZoom = function() {
 	var self = this;
+	var globLeft  = $("#Canvas0").offset().left;
+	var globTop   = $("#Canvas0").offset().top;
 	console.log("To do zoom all: "+self.zoomfactor);
+	$(".canvasClass").each(function(){
+		var cnvHeight = $(this).attr("height");
+		var cnvWidth  = $(this).attr("width");
+
+		var id = parseInt((this.id).replace("Canvas",""));
+
+		$(this).css({
+			"width" : (cnvWidth*self.zoomfactor)+"px",
+			"height": (cnvHeight*self.zoomfactor)+"px",
+			"left"  : globalLeft + (imageLayers[id].left*self.zoomfactor)+"px",
+			"top"  : globalTop + (imageLayers[id].top*self.zoomfactor)+"px"
+		});
+	});
 };
 
 Zoom.prototype.creteZoomSlider = function() {
