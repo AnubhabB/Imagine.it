@@ -100,19 +100,6 @@ Init.prototype.panel4Adjustments = function() {
 Init.prototype.globalEvents = function(){
 	var self = this;
 
-	//$(window).on("mousemove",function(){
-	//	preview.draw("preview");
-	//});
-
-	/*var mtp = function(){
-			setTimeout(function(){
-				preview.draw("preview");
-				mtp();
-			},100);
-	}*/
-
-	//mtp();
-
 	$("nav.panel1").on("click",".navText",function(el){
 		var id = this.id;
 		toolController(id,"navText");
