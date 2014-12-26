@@ -59,10 +59,10 @@ toolController.prototype.toolSelection = function(navElem){
 				}
 			break;
 			case "eraser":
-				sketch(toolSelected);
+				var Sketch = new sketch(toolSelected);
 			break;
 			case "brush":
-				sketch(toolSelected);
+				var Sketch = new sketch(toolSelected);
 			break;
 			case "transform":
 				if($("#transformPanel").css("display") == 'none'){

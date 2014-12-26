@@ -4,17 +4,15 @@
 Author Anubhab
 August 2015
 Developed Heavily on existing methods
-Function: Paint, Erase, Move
-Catch: tried separating move but somee conflict with event handelling
+Function: Paint, Erase
 *
 ****************/
 
 function sketch(action){
+
+  var self = this;
  
   var points = [], isDrawing = false, ctx, cnv, corL, corT, cvRef, oldln= 0, newln = 0, cursorUrl = '', state;
-  $("Canvas").off("mousedown").off("mouseup").off("mousemove");
-  $("#temp_canvas").remove();
-  $(".containerMain").append("<canvas id='temp_canvas' width="+$("#Canvas0").width()+" height="+$("#Canvas0").height()+" style='z-index:600;position:fixed;top:"+$("#Canvas0").offset().top+"px;left:"+$("#Canvas0").offset().left+"px;'></canvas>");
 
   sketch.prototype.bindEvents = function() {
     cvRef.on("mousedown",function(e){
@@ -259,6 +257,12 @@ function sketch(action){
   };
 
   sketch.prototype.secondPanel(action);
+
+
+  $("Canvas").off("mousedown").off("mouseup").off("mousemove");
+  $("#temp_canvas").remove();
+  $(".containerMain").append("<canvas id='temp_canvas' width="+$("#Canvas0").attr("width")+" height="+$("#Canvas0").attr("height")+" style='z-index:600;position:fixed;top:"+globalTop+"px;left:"+globalLeft+"px;height:"+$("#Canvas0").height()+"px;width:"+$("#Canvas0").width()+"px'></canvas>");
+
   cvRef = $("#temp_canvas");
 
   if(action == "eraser"){
@@ -273,10 +277,10 @@ function sketch(action){
     state= "Brush"
   }
   ctx = cnv.getContext('2d');
-  sketch.prototype.bindEvents();
+  self.bindEvents();
   if(cursorUrl != ''){
-    sketch.prototype.updatePointer();
+    self.updatePointer();
   }else{
-    sketch.prototype.prepareMousePointer();
+    self.prepareMousePointer();
   }
 }
