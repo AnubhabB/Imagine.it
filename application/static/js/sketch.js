@@ -14,12 +14,12 @@ function sketch(action){
   var points  = [], isDrawing = false, ctx, cnv, corL, corT, cvRef, oldln= 0, newln = 0, cursorUrl = '', state;
 
   brushWidth  = brushWidth * zoom.zoomfactor;
-  featherWidth= featherWidth * zoom.zoomfactor;
+  featherWidth= featherWidth;
 
   sketch.prototype.bindEvents = function() {
     cvRef.on("mousedown",function(e){
       isDrawing = true;
-      $(".brushDetails").css('display','none');
+      $(".brushDetails").css('display','none').empty();
       points.push({ x :  (e.pageX - corL)/zoom.zoomfactor, y: (e.pageY - corT)/zoom.zoomfactor });
     });
 
@@ -27,13 +27,13 @@ function sketch(action){
       if(!isDrawing) return;
 
       points.push({ x :  (e.pageX - corL)/zoom.zoomfactor, y: (e.pageY - corT)/zoom.zoomfactor });
-      sketch.prototype.render(points,action, ctx);
+      self.render(points,action, ctx);
     });
 
     cvRef.on("mouseup",function(e){
       isDrawing = false;
       if(action !== "eraser")
-        sketch.prototype.createNewLayer();
+        self.createNewLayer();
       else
         points.length = 0;
       init.history("push",state);
@@ -65,7 +65,11 @@ function sketch(action){
 
   sketch.prototype.createNewLayer = function() {
 
-    var minMax = sketch.prototype.minMax(points);
+    var self = this;
+    var minMax = this.minMax(points);
+    console.log(minMax);
+    alert("Minmax");
+
     var minX   = minMax[0];
     var minY   = minMax[1];
     var maxX   = minMax[2];
@@ -97,8 +101,7 @@ function sketch(action){
     }else{
       newY1 = curY1;
     }
-
-    sketch.prototype.newLayerRedraw(newX0,newY0,newX1,newY1);
+    self.newLayerRedraw(newX0,newY0,newX1,newY1);
   };
   
 
@@ -127,13 +130,15 @@ function sketch(action){
 
   sketch.prototype.newLayerRedraw = function(newX0,newY0,newX1,newY1) {
 
-    var calcL = globalLeft + (newX0*zoom.zoomfactor);
-    var calcT = globalTop + (newY0*zoom.zoomfactor);
+    console.log(newX0,newY0,newX1,newY1);
+
+    var calcL = globalLeft + newX0;
+    var calcT = globalTop + newY0;
     var calcW = newX1 - newX0;
     var calcH = newY1 - newY0;
 
-    $(".containerMain").append("<canvas id='t_cnv' style='position:fixed;z-index:1000;left:"+calcL+"px;top:"+calcT+"px;width:"+calcW*zoom.zoomfactor+"px;height:"+calcH*zoom.zoomfactor+"px;' width="+calcW+" height="+calcH+"></canvas>");
-    
+    $(".containerMain").append("<canvas id='t_cnv' style='position:fixed;z-index:1000;left:"+calcL+"px;top:"+calcT+"px;width:"+calcW+"px;height:"+calcH+"px;border:1px solid #ff0' width="+calcW+" height="+calcH+"></canvas>");
+    alert("Yello yello dirty fellow");/*
     //GET ALL VALUES OF CURRENT CANVAS - image, z-index and draw it on to t_cnv
     var cv = document.getElementById("Canvas"+currentIndex);
     var z  = $("#Canvas"+currentIndex).css("z-index");
@@ -151,7 +156,7 @@ function sketch(action){
 
     $("#Canvas"+currentIndex).remove();
     $("#temp_canvas").remove();
-    $("#t_cnv").css("z-index",z).addClass("canvasClass").attr("id","Canvas"+currentIndex);
+    $("#t_cnv").css("z-index",z).addClass("canvasClass").attr("id","Canvas"+currentIndex);*/
   };
 
   sketch.prototype.updateBrushSize = function() {
@@ -161,10 +166,9 @@ function sketch(action){
     sketch.prototype.prepareMousePointer();
   };
 
-
   sketch.prototype.updateFeatherSize = function() {
     var self = this;
-    featherWidth = $("#blurRadius").slider("value") * zoom.zoomfactor;
+    featherWidth = $("#blurRadius").slider("value");
     $("#featherLabel").html($("#blurRadius").slider("value")+"px");
   };
 
@@ -174,7 +178,7 @@ function sketch(action){
     $(".brushType").on("click",".brushThumb",function(){
       brush = this.id;
       $("#brushHeading").html('Eraser Details - '+brush);
-      sketch.prototype.prepareMousePointer();
+      self.prepareMousePointer();
     });
     
     $(".brushDetails .close").on("click",function(){
@@ -202,8 +206,8 @@ function sketch(action){
       slide:self.updateFeatherSize,
       step:1
     });
-
   };
+
 
   sketch.prototype.secondPanel = function(action) {
     var self = this;

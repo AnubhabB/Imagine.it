@@ -8,7 +8,7 @@ Zoom.prototype.drawZoom = function() {
 	var self = this;
 	var globLeft  = $("#Canvas0").offset().left;
 	var globTop   = $("#Canvas0").offset().top;
-	console.log("To do zoom all: "+self.zoomfactor);
+	
 	$(".canvasClass").each(function(){
 		var cnvHeight = $(this).attr("height");
 		var cnvWidth  = $(this).attr("width");
@@ -66,7 +66,6 @@ Zoom.prototype.renderZoom = function() {
 	if($("#sliderVeritcal").length == 0)
 		self.creteZoomSlider();
 	else{
-		console.log("clean this");
 		self.cleanThis();
 	}
 };	
