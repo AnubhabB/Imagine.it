@@ -19,13 +19,13 @@ function sketch(action){
     cvRef.on("mousedown",function(e){
       isDrawing = true;
       $(".brushDetails").css('display','none');
-      points.push({ x: e.pageX - corL, y: e.pageY - corT });
+      points.push({ x :  (e.pageX - corL)/zoom.zoomfactor, y: (e.pageY - corT)/zoom.zoomfactor });
     });
 
     cvRef.on("mousemove",function(e){
       if(!isDrawing) return;
 
-      points.push({ x :  e.pageX - corL, y: e.pageY - corT });
+      points.push({ x :  (e.pageX - corL)/zoom.zoomfactor, y: (e.pageY - corT)/zoom.zoomfactor });
       sketch.prototype.render(points,action, ctx);
     });
 
