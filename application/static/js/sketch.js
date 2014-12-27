@@ -133,11 +133,11 @@ function sketch(action){
     var calcH = newY1 - newY0;
 
     $(".containerMain").append("<canvas id='t_cnv' style='position:fixed;z-index:1000;left:"+calcL+"px;top:"+calcT+"px;width:"+calcW*zoom.zoomfactor+"px;height:"+calcH*zoom.zoomfactor+"px;' width="+calcW+" height="+calcH+"></canvas>");
+    
     //GET ALL VALUES OF CURRENT CANVAS - image, z-index and draw it on to t_cnv
     var cv = document.getElementById("Canvas"+currentIndex);
     var z  = $("#Canvas"+currentIndex).css("z-index");
     var ctx = document.getElementById("t_cnv").getContext("2d");
-    alert();
 
     //GET TOP LEFT for draw
     var t_left= parseInt($("#Canvas"+currentIndex).offset().left) - parseInt($("#t_cnv").offset().left);

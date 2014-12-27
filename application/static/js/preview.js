@@ -29,6 +29,7 @@ drawPreview.prototype.draw = function(action) {
 							var canvas = document.getElementById("Canvas"+id);
 							var composite = imageLayers[id].blendmode;
 							var alpha     = imageLayers[id].alpha;
+							
 							var correctLeft= imageLayers[id].left;
 							var correctTop =  imageLayers[id].top;
 
