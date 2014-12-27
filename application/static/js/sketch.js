@@ -13,8 +13,8 @@ function sketch(action){
   var self = this;
   var points  = [], isDrawing = false, ctx, cnv, corL, corT, cvRef, oldln= 0, newln = 0, cursorUrl = '', state;
 
-  brushWidth  = brushWidth * zoom.zoomfactor;
-  featherWidth= featherWidth;
+  var brushWidth  = window.brushWidth * zoom.zoomfactor;
+  var featherWidth= window.featherWidth;
 
   sketch.prototype.bindEvents = function() {
     cvRef.on("mousedown",function(e){
@@ -36,11 +36,14 @@ function sketch(action){
         self.createNewLayer();
       else
         points.length = 0;
+
       init.history("push",state);
     });
   };
 
   sketch.prototype.prepareMousePointer = function() {
+
+    var self = this;
     
     $("#mousePointer").remove();
     
@@ -60,7 +63,7 @@ function sketch(action){
       cursorCtx.strokeRect(0,0,brushWidth,brushWidth); //Todo: spray and other brush types
     }
     cursorUrl = cursorCnv.toDataURL();
-    sketch.prototype.updatePointer();
+    self.updatePointer();
   };
 
   sketch.prototype.createNewLayer = function() {
@@ -68,39 +71,42 @@ function sketch(action){
     var self = this;
     var minMax = this.minMax(points);
     console.log(minMax);
-    alert("Minmax");
 
     var minX   = minMax[0];
     var minY   = minMax[1];
     var maxX   = minMax[2];
     var maxY   = minMax[3];    
 
-    var curX0   = $("#Canvas"+currentIndex).offset().left - globalLeft;
-    var curY0   = $("#Canvas"+currentIndex).offset().top - globalTop;
+    var curX0   = ($("#Canvas"+currentIndex).offset().left - globalLeft)/zoom.zoomfactor;
+    var curY0   = ($("#Canvas"+currentIndex).offset().top - globalTop)/zoom.zoomfactor  ;
+
+
     var curX1    = curX0 + parseInt($("#Canvas"+currentIndex).attr("width"));
     var curY1    = curY0 + parseInt($("#Canvas"+currentIndex).attr("height"));
-    
+
     var newX0, newY0, newX1, newY1;
+
+    newX0 = curX0;
+    newX1 = curX1;
+    newY0 = curY0;
+    newY1 = curY1;
+
     if(minX < curX0){
-      newX0 = minX - brushWidth;
-    }else{
-      newX0 = curX0;
+      newX0 = minX - window.brushWidth;
     }
+
     if(minY < curY0){
-      newY0 = minY - brushWidth;
-    }else{
-      newY0 = curY0;
+      newY0 = minY - window.brushWidth;
     }
+
     if(curX1 < maxX){
-      newX1 = maxX + brushWidth;
-    }else{
-      newX1 = curX1;
+      newX1 = maxX + window.brushWidth;
     }
+
     if(curY1 < maxY){
-      newY1 = maxY + brushWidth;
-    }else{
-      newY1 = curY1;
+      newY1 = maxY + window.brushWidth;
     }
+
     self.newLayerRedraw(newX0,newY0,newX1,newY1);
   };
   
@@ -130,15 +136,23 @@ function sketch(action){
 
   sketch.prototype.newLayerRedraw = function(newX0,newY0,newX1,newY1) {
 
-    console.log(newX0,newY0,newX1,newY1);
+    var self = this;
+    //DRAW A FULL CANVAS, forget zoom n shit for now;
+    var calcL = newX0 + globalLeft;
+    var calcT = newY0 + globalTop;
+    var calcW = newX1 - newX0;
+    var calcH = newY1 - newY0;
 
-    var calcL = globalLeft + newX0;
+
+    $(".containerMain").append("<canvas id='t_cnv' style='position:fixed;z-index:1000;left:"+calcL+"px;top:"+calcT+"px;width:"+calcW+"px;height:"+calcH+"px;border:1px solid #ff0' width="+calcW+" height="+calcH+"></canvas>");
+    /*var calcL = globalLeft + newX0;
     var calcT = globalTop + newY0;
     var calcW = newX1 - newX0;
     var calcH = newY1 - newY0;
 
     $(".containerMain").append("<canvas id='t_cnv' style='position:fixed;z-index:1000;left:"+calcL+"px;top:"+calcT+"px;width:"+calcW+"px;height:"+calcH+"px;border:1px solid #ff0' width="+calcW+" height="+calcH+"></canvas>");
-    alert("Yello yello dirty fellow");/*
+
+    alert("Yellow");
     //GET ALL VALUES OF CURRENT CANVAS - image, z-index and draw it on to t_cnv
     var cv = document.getElementById("Canvas"+currentIndex);
     var z  = $("#Canvas"+currentIndex).css("z-index");
@@ -147,6 +161,8 @@ function sketch(action){
     //GET TOP LEFT for draw
     var t_left= parseInt($("#Canvas"+currentIndex).offset().left) - parseInt($("#t_cnv").offset().left);
     var t_top = parseInt($("#Canvas"+currentIndex).offset().top) -  parseInt($("#t_cnv").offset().top);
+    alert("Post Yellow");*/
+    /*
     ctx.drawImage(cv,t_left,t_top);
 
     t_left= parseInt($("#temp_canvas").offset().left) - parseInt($("#t_cnv").offset().left);
@@ -162,6 +178,7 @@ function sketch(action){
   sketch.prototype.updateBrushSize = function() {
     var self = this;
     brushWidth = $("#brushSize").slider("value") * zoom.zoomfactor;
+    window.brushWidth = $("#brushSize").slider("value");
     $("#sizeLabel").html($("#brushSize").slider("value")+"px");
     sketch.prototype.prepareMousePointer();
   };
@@ -249,6 +266,8 @@ function sketch(action){
     var minX = points[0].x, minY = points[0].y;
     var maxX = points[points.length - 1].x, maxY = points[points.length - 1].y;
     $.each(points,function(k,v){
+      points[k].x = points[k].x;
+      points[k].y = points[k].y;
       if(points[k].x < minX){
         minX = points[k].x;
       }
@@ -266,7 +285,7 @@ function sketch(action){
     return minMaxArray;
   };
 
-  sketch.prototype.secondPanel(action);
+  self.secondPanel(action);
 
 
   $("Canvas").off("mousedown").off("mouseup").off("mousemove");
