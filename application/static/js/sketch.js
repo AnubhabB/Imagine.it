@@ -11,8 +11,9 @@ Function: Paint, Erase
 function sketch(action){
 
   var self = this;
- 
-  var points = [], isDrawing = false, ctx, cnv, corL, corT, cvRef, oldln= 0, newln = 0, cursorUrl = '', state;
+  var points  = [], isDrawing = false, ctx, cnv, corL, corT, cvRef, oldln= 0, newln = 0, cursorUrl = '', state;
+  brushWidth  = brushWidth * zoom.zoomfactor;
+  featherWidth= featherWidth * zoom.zoomfactor;
 
   sketch.prototype.bindEvents = function() {
     cvRef.on("mousedown",function(e){
@@ -152,16 +153,16 @@ function sketch(action){
 
   sketch.prototype.updateBrushSize = function() {
     var self = this;
-    brushWidth = $("#brushSize").slider("value");
-    $("#sizeLabel").html(brushWidth+"px");
+    brushWidth = $("#brushSize").slider("value") * zoom.zoomfactor;
+    $("#sizeLabel").html($("#brushSize").slider("value")+"px");
     sketch.prototype.prepareMousePointer();
   };
 
 
   sketch.prototype.updateFeatherSize = function() {
     var self = this;
-    featherWidth = $("#blurRadius").slider("value");
-    $("#featherLabel").html(featherWidth+"px");
+    featherWidth = $("#blurRadius").slider("value") * zoom.zoomfactor;
+    $("#featherLabel").html($("#blurRadius").slider("value")+"px");
   };
 
   sketch.prototype.brushOperations = function() {
