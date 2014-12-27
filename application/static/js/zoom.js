@@ -51,7 +51,8 @@ Zoom.prototype.creteZoomSlider = function() {
 		max:300,
 		min:1,
 		change: self.setZoom,
-		slide:self.setZoom	
+		slide:self.setZoom,
+		step:1	
 	});
 };
 

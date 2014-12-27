@@ -12,6 +12,7 @@ function sketch(action){
 
   var self = this;
   var points  = [], isDrawing = false, ctx, cnv, corL, corT, cvRef, oldln= 0, newln = 0, cursorUrl = '', state;
+
   brushWidth  = brushWidth * zoom.zoomfactor;
   featherWidth= featherWidth * zoom.zoomfactor;
 
@@ -43,7 +44,7 @@ function sketch(action){
     
     $("#mousePointer").remove();
     
-    $("body").append("<canvas id='mousePointer' width="+brushWidth+" height="+brushWidth+" hidden></canvas>");
+    $("body").append("<canvas id='mousePointer' width="+brushWidth+" height="+brushWidth+" hidden style='padding:2px;'></canvas>");
     var cursorCnv = document.getElementById("mousePointer");
     var cursorCtx = cursorCnv.getContext('2d');
     cursorCtx.strokeStyle = "#ccc";
@@ -70,8 +71,8 @@ function sketch(action){
     var maxX   = minMax[2];
     var maxY   = minMax[3];    
 
-    var curX0   = $("#Canvas"+currentIndex).offset().left - $("#Canvas0").offset().left;
-    var curY0   = $("#Canvas"+currentIndex).offset().top - $("#Canvas0").offset().top;
+    var curX0   = $("#Canvas"+currentIndex).offset().left - globalLeft;
+    var curY0   = $("#Canvas"+currentIndex).offset().top - globalTop;
     var curX1    = curX0 + parseInt($("#Canvas"+currentIndex).attr("width"));
     var curY1    = curY0 + parseInt($("#Canvas"+currentIndex).attr("height"));
     
@@ -126,15 +127,17 @@ function sketch(action){
 
   sketch.prototype.newLayerRedraw = function(newX0,newY0,newX1,newY1) {
 
-    var calcL = $("#Canvas0").offset().left + newX0;
-    var calcT = $("#Canvas0").offset().top + newY0;
+    var calcL = globalLeft + (newX0*zoom.zoomfactor);
+    var calcT = globalTop + (newY0*zoom.zoomfactor);
     var calcW = newX1 - newX0;
     var calcH = newY1 - newY0;
-    $(".containerMain").append("<canvas id='t_cnv' style='position:fixed;z-index:1000;left:"+calcL+"px;top:"+calcT+"px' width="+calcW+" height="+calcH+"></canvas>");
+
+    $(".containerMain").append("<canvas id='t_cnv' style='position:fixed;z-index:1000;left:"+calcL+"px;top:"+calcT+"px;width:"+calcW*zoom.zoomfactor+"px;height:"+calcH*zoom.zoomfactor+"px;' width="+calcW+" height="+calcH+"></canvas>");
     //GET ALL VALUES OF CURRENT CANVAS - image, z-index and draw it on to t_cnv
     var cv = document.getElementById("Canvas"+currentIndex);
     var z  = $("#Canvas"+currentIndex).css("z-index");
     var ctx = document.getElementById("t_cnv").getContext("2d");
+    alert();
 
     //GET TOP LEFT for draw
     var t_left= parseInt($("#Canvas"+currentIndex).offset().left) - parseInt($("#t_cnv").offset().left);
@@ -148,7 +151,7 @@ function sketch(action){
 
     $("#Canvas"+currentIndex).remove();
     $("#temp_canvas").remove();
-    $("#t_cnv").css("z-index",z).attr("id","Canvas"+currentIndex);
+    $("#t_cnv").css("z-index",z).addClass("canvasClass").attr("id","Canvas"+currentIndex);
   };
 
   sketch.prototype.updateBrushSize = function() {
@@ -185,7 +188,8 @@ function sketch(action){
       max:500,
       animate:true,
       change:self.updateBrushSize,
-      slide:self.updateBrushSize
+      slide:self.updateBrushSize,
+      step:1
     });
 
 
@@ -195,7 +199,8 @@ function sketch(action){
       max:100,
       animate:true,
       change:self.updateFeatherSize,
-      slide:self.updateFeatherSize
+      slide:self.updateFeatherSize,
+      step:1
     });
 
   };
