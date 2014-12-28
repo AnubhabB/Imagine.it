@@ -65,18 +65,12 @@ toolController.prototype.toolSelection = function(navElem){
 				var Sketch = new sketch(toolSelected);
 			break;
 			case "transform":
-				if($("#transformPanel").css("display") == 'none'){
-					$("#transformPanel").css("display","block").css("top",$("#transform").offset().top - 15 +"px");
-					var t = new transform();
-					t.composeTransform();
-				}
-				else if($("#transformPanel").css("display") == 'block'){
-					$("#transformPanel").css("display","none");
-					$(".tools").removeClass('active');
-				}
+				var t = new transform();
+				t.composeTransform();
 			break;
 			default:
 				console.log("to integrate "+toolSelected);
+				$(".tools").removeClass("active");
 			break;
 		}
 		$("#"+navElem).addClass("active");

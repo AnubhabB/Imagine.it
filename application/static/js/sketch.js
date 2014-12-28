@@ -70,7 +70,7 @@ function sketch(action){
 
     var self = this;
     var minMax = this.minMax(points);
-    console.log(minMax);
+    //console.log(minMax);
 
     var minX   = minMax[0];
     var minY   = minMax[1];

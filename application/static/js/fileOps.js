@@ -215,10 +215,7 @@ fileOps.prototype.DeleteLayers = function(first_argument) {
 };
 
 fileOps.prototype.layerInfoUpdate = function(index,width,height,alpha,top,left,composite,src){
-	console.log("Layer info update",index,width,height,alpha,top,left,composite,src);
-
 	var tempLeft = globalLeft - left;
-	//console.log(globalLeft,left,tempLeft);
 
 	if(width !== '')
 		imageLayers[index]['width'] = width;

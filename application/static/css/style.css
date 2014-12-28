@@ -93,10 +93,10 @@ nav.panel3{
 	padding: 5px;
 }
 
-nav.panel3 #transformPanel{
+nav.panel3 .toolLayer2{
 	display: none;
 	z-index: 50000;
-	width: 30px;
+	width: auto;
 	height: auto;
 	left: 41px;
 	top:100px;
@@ -183,6 +183,17 @@ nav.panel3 .tools, nav.panel3 #transformPanel .tools, nav.panel3 #transformPanel
 	cursor: pointer;
 	padding:2px;
 }
+nav.panel3 #transformPanel .toolsSecondary{
+	width: 130px;
+}
+nav.panel3 #transformPanel .toolsSecondary:hover{
+	background: #333;
+}
+nav.panel3 #transformPanel .toolsSecondary span{
+	line-height: 22px;
+	font-size: 10px;
+	float: left;
+}
 nav.panel3 .tools:hover,nav.panel3 .tools.active{
 	background:#333;
 }
@@ -190,6 +201,11 @@ nav.panel3 .tools img,nav.panel3 #transformPanel .toolsSecondary img{
 	width:80%;
 	height:auto;
 	margin-top:5%;
+}
+nav.panel3 #transformPanel .toolsSecondary img{
+	width: 18px;
+	float: left;
+	margin-top: 3px;
 }
 nav .navText{
 	min-width: 30px;

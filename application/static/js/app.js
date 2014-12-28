@@ -119,7 +119,6 @@ Init.prototype.globalEvents = function(){
 		fileOps.prototype.openFile();
 	});
 
-	
 	$('#colorPicker').ColorPicker({
 		color: '#ffffff',
 		onShow: function (colpkr) {
@@ -135,6 +134,7 @@ Init.prototype.globalEvents = function(){
 			foregroundColor = 'rgba('+rgb.r+','+rgb.g+','+rgb.b+',1)';
 		}
 	});
+
 	self.panel4Adjustments();
 	self.panel3Adjustments();
 
@@ -154,7 +154,6 @@ Init.prototype.history = function(todo,action) {
 		var data = {'action': action,'statedata':imageLayers};
 		states.push(data);
 	}
-
 	init.updateHistory();
 };
 

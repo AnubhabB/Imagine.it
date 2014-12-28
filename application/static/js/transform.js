@@ -4,18 +4,37 @@ function transform(){
 
 	var transformType;
 	var self = this;
-	transform.prototype.composeTransform = function() {
-		$("#transformPanel").html("<div class='toolsSecondary' id='resize'><img src='static/img/transform.png' title='Resize'/></div><div class='toolsSecondary' id='perspective'><img src='static/img/transform.png' title='Perspective'/></div>");
-		$("#resize").click(function(){
+
+	transform.prototype.setTransformOptions = function() {
+		
+		var self = this;
+		$("#resize").off("click");
+		$("#perspective").off("click");
+
+		$("#transformPanel").css("display","block").css("top",$("#transform").offset().top - 15 +"px");
+
+		$("#transformPanel").html("<div class='toolsSecondary' id='resize'><img src='static/img/transform.png' title='Resize'/><span>Resize</span></div><div class='toolsSecondary' id='perspective'><img src='static/img/transform.png' title='Perspective'/><span>Perspective Transform</span></div>");
+
+		$("#resize").on("click",function(){
 			$("#transformPanel").css("display","none");
 			transformType = "resize";
 			self.renderTransform();
 		});
-		$("#perspective").click(function(){
+		$("#perspective").on("click",function(){
 			$("#transformPanel").css("display","none");
 			transformType = "perspective";
 			self.renderTransform();
 		});
+	};
+
+	transform.prototype.composeTransform = function() {
+		if($("#transformPanel").length == 0){
+			$("nav.panel3").append("<div id='transformPanel' class='toolLayer2'></div>");
+			self.setTransformOptions();
+		}else{
+			$("#transformPanel").remove();
+			toolSelected = '';
+		}
 	};
 
 	transform.prototype.drawGridlines = function(cnv) {
