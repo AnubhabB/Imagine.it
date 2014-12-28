@@ -37,7 +37,7 @@ toolController.prototype.toolSelection = function(navElem){
 				marqueue_square();
 			break;
 			case "lasso":
-				lasso();
+				var lasso = new Lasso();
 			break;
 			case "crop":
 				crop();
