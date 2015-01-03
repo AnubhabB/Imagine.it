@@ -39,7 +39,7 @@ function SaturateHue(action,type,hueConstant,saturationConstant){
 			        for(var i = 0; i < dA.length; i += 4)
 			        {
 			            
-			            var red = dA[i]; // Extract original red color [0 to 255]. Similarly for green and blue below
+			            var red = 	dA[i]; // Extract original red color [0 to 255]. Similarly for green and blue below
 			            var green = dA[i + 1];
 			            var blue = dA[i + 2];
 			            

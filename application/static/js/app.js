@@ -18,6 +18,7 @@ function Init(){
 	window.preview = new drawPreview();
 	window.zoom = new Zoom();
 	zoom.zoomfactor = 1;
+	window.tools = new Tools();
 }
 
 Init.prototype.panel3Adjustments = function() {

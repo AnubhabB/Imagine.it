@@ -26,10 +26,13 @@ function Lasso(){
       var points = [], startX, startY, endX, endY;
       var tempW = $("#Canvas0").attr("width");
       var tempH = $("#Canvas0").attr("height");
-      var tempL = $("#Canvas0").offset().left;
-      var tempT = $("#Canvas0").offset().top;
+      var tempCW= $("#Canvas0").css("width");
+      var tempCH= $("#Canvas0").css("height");
+      console.log(tempCW,tempCH);
+      var tempL = globalLeft;
+      var tempT = globalTop;
 
-      $(".containerMain").append("<canvas id='temp_canvas' style='position:fixed;z-index:500;display:block;left:"+tempL+"px;top:"+tempT+"px' width="+tempW+" height="+tempH+"></canvas>");
+      $(".containerMain").append("<canvas id='temp_canvas' style='position:fixed;z-index:500;display:block;left:"+tempL+"px;top:"+tempT+"px;width:"+tempCW+";height:"+tempCH+";' width="+tempW+" height="+tempH+"></canvas>");
       var tempCtx = document.getElementById("temp_canvas").getContext("2d");
       var correctLeft = $("#temp_canvas").offset().left;
       var correctTop = $("#temp_canvas").offset().top;
@@ -112,12 +115,12 @@ Lasso.prototype.drawSelection = function(tempCtx, points, act){
   ctx.setLineDash([4]);
 
   ctx.beginPath();
-  ctx.moveTo(points[0].x,points[0].y);
+  ctx.moveTo(points[0].x/zoom.zoomfactor,points[0].y/zoom.zoomfactor);
     for(var i=1;i<len;i++){
-        ctx.lineTo(points[i].x, points[i].y);
+        ctx.lineTo(points[i].x/zoom.zoomfactor, points[i].y/zoom.zoomfactor);
     }
     if(act == "end"){
-      ctx.lineTo(points[0].x,points[0].y);
+      ctx.lineTo(points[0].x/zoom.zoomfactor,points[0].y/zoom.zoomfactor);
       ctx.closePath();
     }
     ctx.stroke();
@@ -138,21 +141,22 @@ Lasso.prototype.lassoCopyCut = function(action, points) {
   var orgX1 = orgX0 + parseInt($("#Canvas"+currentIndex).attr("width"));
   var orgY1 = orgY0 + parseInt($("#Canvas"+currentIndex).attr("height"));
 
-  var minmax = self.minMax(points);
+  var minmax = tools.minMax(points);
 
   var minX = minmax[0]/zoom.zoomfactor;
   var minY = minmax[1]/zoom.zoomfactor;
   var maxX = minmax[2]/zoom.zoomfactor;
   var maxY = minmax[3]/zoom.zoomfactor;
 
-  if(maxY < orgY0 || maxX < orgX0 ){
+  console.log(orgX0,orgX1,orgY0,orgX1,minX,minY,maxX,maxY);
+
+  if(maxY < orgY0 || maxX < orgX0 || minX > orgX1 || minY > orgY1){
       alert("No Pixels Selected");
   }else {
-      
       if(action == "copy" || action == "cut"){
         //console.log("cp")
         var l = points.length;
-        for(var i=1;i<l;i++){
+        for(var i=1;i<=l;i++){
           points[i-1].x = points[i-1].x/zoom.zoomfactor;
           points[i-1].y = points[i-1].y/zoom.zoomfactor;
           if(points[i-1].x < orgX0 ){
@@ -166,8 +170,9 @@ Lasso.prototype.lassoCopyCut = function(action, points) {
             points[i-1].y = orgY1;
           }
         }
-
-        var newminmax = self.minMax(points);
+    
+        var newminmax = tools.minMax(points);
+       // console.log(newminmax);
         var newminX = newminmax[0];
         var newminY = newminmax[1];
         var newmaxX = newminmax[2];
@@ -176,10 +181,12 @@ Lasso.prototype.lassoCopyCut = function(action, points) {
         var newHeight= newmaxY - newminY;
         var zIndx   = $("#Canvas"+currentIndex).css("z-index"); 
         if($("#Canvas"+canvaslist).length == 0)
-          $(".containerMain").append("<canvas id='Canvas"+canvaslist+"' class='canvasClass' width="+newWidth+" height="+newHeight+" style='position:fixed;top:"+(newminY+globalTop)+"px;left:"+(newminX+globalLeft)+"px;z-index:"+(parseInt(zIndx)+1)+"'></canvas>");
+          $(".containerMain").append("<canvas id='Canvas"+canvaslist+"' class='canvasClass' width="+newWidth+" height="+newHeight+" style='position:fixed;top:"+(newminY+globalTop)+"px;left:"+(newminX+globalLeft)+"px;z-index:"+(parseInt(zIndx)+1)+";width:"+newWidth*zoom.zoomfactor+"px;height:"+newHeight*zoom.zoomfactor+"px;border:1px solid #ff0'></canvas>");
         else
           alert("WTF");
 
+
+        //Console.log Anubhab to do
         var ctx = document.getElementById("Canvas"+canvaslist).getContext('2d');
         var drawX = $("#Canvas"+currentIndex).offset().left - $("#Canvas"+canvaslist).offset().left;
         var drawY = $("#Canvas"+currentIndex).offset().top - $("#Canvas"+canvaslist).offset().top;
@@ -203,9 +210,8 @@ Lasso.prototype.lassoCopyCut = function(action, points) {
           $("#Canvas"+canvaslist).css({
             "top": (imageLayers[canvaslist].top*zoom.zoomfactor + globalTop) +"px",
             "left": (imageLayers[canvaslist].left*zoom.zoomfactor + globalLeft) +"px",
-/*            "width":imageLayers[canvaslist].width * zoom.zoomfactor +"px",
-            "height":imageLayers[canvaslist].height * zoom.zoomfactor +"px"*/
           });
+          //tools.zealousCrop(canvaslist);
           canvaslist++;
 
           if(action == "cut"){
@@ -285,28 +291,6 @@ Lasso.prototype.lassoCopyCut = function(action, points) {
       }
     }
     init.history("push",action);
-};
-
-Lasso.prototype.minMax = function(points) {
-  
-  var minX = points[0].x, minY = points[0].y;
-  var maxX = points[points.length - 1].x, maxY = points[points.length - 1].y;
-  $.each(points,function(k,v){
-    if(points[k].x < minX){
-      minX = points[k].x;
-    }
-    if(points[k].y < minY){
-      minY = points[k].y
-    }
-    if(points[k].x > maxX){
-      maxX = points[k].x;
-    }
-    if(points[k].y > maxY){
-      maxY = points[k].y;
-    }
-  });
-  var minMaxArray = [minX,minY,maxX,maxY];
-  return minMaxArray;
 };
 
 Lasso.prototype.doCanvasAction = function(ctx,points,correctLeft,correctTop,composite,callback, action) {
