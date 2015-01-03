@@ -172,7 +172,6 @@ Lasso.prototype.lassoCopyCut = function(action, points) {
         }
     
         var newminmax = tools.minMax(points);
-       // console.log(newminmax);
         var newminX = newminmax[0];
         var newminY = newminmax[1];
         var newmaxX = newminmax[2];
@@ -206,13 +205,7 @@ Lasso.prototype.lassoCopyCut = function(action, points) {
           imageLayers[canvaslist].identity = "Canvas"+canvaslist;
           imageLayers[canvaslist].left = ($("#Canvas"+canvaslist).offset().left - globalLeft)/zoom.zoomfactor;
           imageLayers[canvaslist].top = ($("#Canvas"+canvaslist).offset().top - globalTop)/zoom.zoomfactor;
-/*
-
-          $("#Canvas"+canvaslist).css({
-            "top": (imageLayers[canvaslist].top*zoom.zoomfactor + globalTop) +"px",
-            "left": (imageLayers[canvaslist].left*zoom.zoomfactor + globalLeft) +"px",
-          });*/
-          //tools.zealousCrop(canvaslist);
+          
           canvaslist++;
 
           if(action == "cut"){
