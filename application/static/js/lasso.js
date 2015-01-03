@@ -181,21 +181,22 @@ Lasso.prototype.lassoCopyCut = function(action, points) {
         var newHeight= newmaxY - newminY;
         var zIndx   = $("#Canvas"+currentIndex).css("z-index"); 
         if($("#Canvas"+canvaslist).length == 0)
-          $(".containerMain").append("<canvas id='Canvas"+canvaslist+"' class='canvasClass' width="+newWidth+" height="+newHeight+" style='position:fixed;top:"+(newminY+globalTop)+"px;left:"+(newminX+globalLeft)+"px;z-index:"+(parseInt(zIndx)+1)+";width:"+newWidth*zoom.zoomfactor+"px;height:"+newHeight*zoom.zoomfactor+"px;border:1px solid #ff0'></canvas>");
+          $(".containerMain").append("<canvas id='Canvas"+canvaslist+"' class='canvasClass' width="+newWidth+" height="+newHeight+" style='position:fixed;top:"+(newminY*zoom.zoomfactor+globalTop)+"px;left:"+(newminX*zoom.zoomfactor+globalLeft)+"px;z-index:"+(parseInt(zIndx)+1)+";width:"+newWidth*zoom.zoomfactor+"px;height:"+newHeight*zoom.zoomfactor+"px;'></canvas>");
         else
           alert("WTF");
-
 
         //Console.log Anubhab to do
         var ctx = document.getElementById("Canvas"+canvaslist).getContext('2d');
         var drawX = $("#Canvas"+currentIndex).offset().left - $("#Canvas"+canvaslist).offset().left;
         var drawY = $("#Canvas"+currentIndex).offset().top - $("#Canvas"+canvaslist).offset().top;
-
+        console.log(drawY,drawX);
         //
         var cnv = document.getElementById("Canvas"+currentIndex);
         ctx.drawImage(cnv,drawX,drawY);
-        var correctX = $("#Canvas"+canvaslist).offset().left - globalLeft;
-        var correctY = $("#Canvas"+canvaslist).offset().top - globalTop;
+
+        var correctX = ($("#Canvas"+canvaslist).offset().left - globalLeft)/zoom.zoomfactor;
+        var correctY = ($("#Canvas"+canvaslist).offset().top - globalTop)/zoom.zoomfactor;
+        console.log(correctX/zoom.zoomfactor,correctY/zoom.zoomfactor,points[0]);
         self.doCanvasAction(ctx,points,correctX,correctY,"destination-in",function(){
           
           imageLayers[canvaslist] = {};
@@ -203,21 +204,21 @@ Lasso.prototype.lassoCopyCut = function(action, points) {
           imageLayers[canvaslist].name = imageLayers[currentIndex].name+" Copy";
           imageLayers[canvaslist].imageObj.src = cnv.toDataURL();
           imageLayers[canvaslist].identity = "Canvas"+canvaslist;
-          imageLayers[canvaslist].left = $("#Canvas"+canvaslist).offset().left - globalLeft;
-          imageLayers[canvaslist].top = $("#Canvas"+canvaslist).offset().top - globalTop;
-
+          imageLayers[canvaslist].left = ($("#Canvas"+canvaslist).offset().left - globalLeft)/zoom.zoomfactor;
+          imageLayers[canvaslist].top = ($("#Canvas"+canvaslist).offset().top - globalTop)/zoom.zoomfactor;
+/*
 
           $("#Canvas"+canvaslist).css({
             "top": (imageLayers[canvaslist].top*zoom.zoomfactor + globalTop) +"px",
             "left": (imageLayers[canvaslist].left*zoom.zoomfactor + globalLeft) +"px",
-          });
+          });*/
           //tools.zealousCrop(canvaslist);
           canvaslist++;
 
           if(action == "cut"){
             var ctx = document.getElementById("Canvas"+currentIndex).getContext("2d");
-            var correctX = $("#Canvas"+currentIndex).offset().left - globalLeft;
-            var correctY = $("#Canvas"+currentIndex).offset().top - globalTop;
+            var correctX = ($("#Canvas"+currentIndex).offset().left - globalLeft)/zoom.zoomfactor;
+            var correctY = ($("#Canvas"+currentIndex).offset().top - globalTop)/zoom.zoomfactor;
             self.doCanvasAction(ctx,points,correctX,correctY,"destination-out",function(){});
           }
 
