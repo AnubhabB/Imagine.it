@@ -84,21 +84,10 @@ Lasso.prototype.contextmenu = function(xpos,ypos, points) {
 		"z-index": $("#temp_canvas").css("z-index") + 100
 	});
 
-	$("#layerViaCopy").click(function(){
-			self.doLasso('copy', points);
-	});
-	$("#layerViaCut").click(function(){
-			self.doLasso('cut', points);
-	});
-
-	$("#fillSelection").click(function(){
-			self.doLasso('fill', points);
-	});
-	$("#strokeSelection").click(function(){
-			self.doLasso('stroke', points);
-	});
-	$("#clearSelection").click(function(){
-			self.doLasso('clear', points);
+	$(".contextMenu ul li").off("click").on("click",function(){
+		var id = this.id;
+		id = (id.replace("layerVia","").replace("Selection","")).toLowerCase();
+		self.doLasso(id, points);
 	});
 
 	init.history("push","Select-custom");
