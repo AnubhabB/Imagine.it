@@ -111,7 +111,7 @@ Lasso.prototype.drawSelection = function(tempCtx, points, act){
   
   ctx.clearRect(0,0,$("#temp_canvas").width(),$("#temp_canvas").height());
   ctx.strokeStyle = "#fff";
-  ctx.lineWidth   = .6;
+  ctx.lineWidth   = 1;
   ctx.setLineDash([4]);
 
   ctx.beginPath();
@@ -217,7 +217,7 @@ Lasso.prototype.lassoCopyCut = function(action, points) {
           fileOps.prototype.composeLayers();
         });
       }else if(action == 'fill' || action == 'stroke'){
-        //console.log("fill stroke called");
+
         var img = new Image();
 
         if(minX < orgX0){
