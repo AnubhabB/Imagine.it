@@ -43,21 +43,21 @@ function sketch(action){
     var self = this;
     
     $("#mousePointer").remove();
-    
-    $("body").append("<canvas id='mousePointer' width="+brushWidth+" height="+brushWidth+" hidden style='padding:2px;'></canvas>");
+    var dimension = brushWidth+featherWidth;
+    $("body").append("<canvas id='mousePointer' width="+dimension+" height="+dimension+" hidden style='padding:4px;'></canvas>");
     var cursorCnv = document.getElementById("mousePointer");
     var cursorCtx = cursorCnv.getContext('2d');
     cursorCtx.strokeStyle = "#ccc";
     cursorCtx.lineWidth = 1;
     if(brush == "square"){
-      cursorCtx.strokeRect(0,0,brushWidth,brushWidth);
+      cursorCtx.strokeRect(0,0,dimension,dimension);
     }else if(brush == "round"){
       cursorCtx.beginPath();
-      var val = brushWidth/2;
+      var val = dimension/2;
       cursorCtx.arc(val,val,val,0,2*Math.PI);
       cursorCtx.stroke();
     }else{
-      cursorCtx.strokeRect(0,0,brushWidth,brushWidth); //Todo: spray and other brush types
+      cursorCtx.strokeRect(0,0,dimension,dimension); //Todo: spray and other brush types
     }
     cursorUrl = cursorCnv.toDataURL();
     self.updatePointer();
@@ -164,8 +164,9 @@ function sketch(action){
 
   sketch.prototype.updatePointer = function() {
     var crvRef = $("#temp_canvas");
+    var dimension = (brushWidth+featherWidth);
     crvRef.css({
-        "cursor":"url("+cursorUrl+")"+(brushWidth/2)+" "+(brushWidth/2)+", auto"
+        "cursor":"url("+cursorUrl+")"+(dimension/2)+" "+(dimension/2)+", auto"
       });
   };
 /*
