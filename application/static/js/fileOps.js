@@ -212,8 +212,6 @@ fileOps.prototype.DeleteLayers = function(first_argument) {
 };
 
 fileOps.prototype.layerInfoUpdate = function(index,width,height,alpha,top,left,composite,src){
-	var tempLeft = globalLeft - left;
-
 	if(width !== '')
 		imageLayers[index]['width'] = width;
 	if(height !== '')
