@@ -218,26 +218,21 @@ Lasso.prototype.lassoCopyCut = function(action, points) {
 			}else if(action == 'fill' || action == 'stroke'){
 
 				var img = new Image();
-
+				var newLeft = orgX0;
 				if(minX < orgX0){
-					var newLeft = minX;
-				}else{
-					var newLeft = orgX0;
+					newLeft = minX;
 				}
+				var newEndLeft = orgX1 ;
 				if(maxX > orgX1){
-					var newEndLeft = maxX ;
-				}else{
-					var newEndLeft = orgX1 ;
+					newEndLeft = maxX ;
 				}
+				var newTop = orgY0;
 				if(minY < orgY0){
-					var newTop = minY;
-				}else{
-					var newTop = orgY0;
+					newTop = minY;
 				}
+				var newEndTop = orgY1 ;
 				if(maxY > orgY1){
 					var newEndTop = maxY ;
-				}else{
-					var newEndTop = orgY1 ;
 				}
 
 				var newminX = newLeft;
