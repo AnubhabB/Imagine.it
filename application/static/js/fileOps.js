@@ -9,7 +9,6 @@ function fileOps(action){
 
 fileOps.prototype.openFile = function() {
 	var self = this;
-	// body...
 	var imagefile = $("#imageFile")[0].files[0];
 	var fr = new FileReader();
 
@@ -48,7 +47,6 @@ fileOps.prototype.drawCanvas = function(index,width,height) {
 		var windowW = $(window).innerWidth();
 		var windowH = $(window).innerHeight();
 
-		//image smaller than screen
 		diffW = windowW - widthN;
 		diffH = windowH - heightN;
 
@@ -143,8 +141,6 @@ fileOps.prototype.composeLayers = function(){
 			});
 		}
 	});
-
-	//$("#LayersBody").scrollTop($("#LayersBody").prop('scrollHeight'));
 }
 
 /***********END COMPOSE LAYERS***********/
@@ -208,7 +204,6 @@ fileOps.prototype.DeleteLayers = function(first_argument) {
 	
 	init.prototype.history("push","Delete");
 	self.composeLayers();
-	//console.log(imageLayers);
 };
 
 fileOps.prototype.layerInfoUpdate = function(index,width,height,alpha,top,left,composite,src){
