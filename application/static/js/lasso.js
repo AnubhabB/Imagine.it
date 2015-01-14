@@ -148,12 +148,10 @@ Lasso.prototype.lassoCopyCut = function(action, points) {
   var maxX = minmax[2]/zoom.zoomfactor;
   var maxY = minmax[3]/zoom.zoomfactor;
 
-  console.log(orgX0,orgX1,orgY0,orgX1,minX,minY,maxX,maxY);
-
   if(maxY < orgY0 || maxX < orgX0 || minX > orgX1 || minY > orgY1){
       alert("No Pixels Selected");
   }else {
-      if(action == "copy" || action == "cut"){
+      if(action == "copy" || action == "cut" || action == "clear"){
         var l = points.length;
         for(var i=1;i<=l;i++){
           points[i-1].x = points[i-1].x/zoom.zoomfactor;
@@ -179,15 +177,11 @@ Lasso.prototype.lassoCopyCut = function(action, points) {
         var zIndx   = $("#Canvas"+currentIndex).css("z-index"); 
         if($("#Canvas"+canvaslist).length == 0)
           $(".containerMain").append("<canvas id='Canvas"+canvaslist+"' class='canvasClass' width="+newWidth+" height="+newHeight+" style='position:fixed;top:"+(newminY*zoom.zoomfactor+globalTop)+"px;left:"+(newminX*zoom.zoomfactor+globalLeft)+"px;z-index:"+(parseInt(zIndx)+1)+";width:"+newWidth*zoom.zoomfactor+"px;height:"+newHeight*zoom.zoomfactor+"px;'></canvas>");
-        else
-          alert("WTF");
 
-        //Console.log Anubhab to do
         var ctx = document.getElementById("Canvas"+canvaslist).getContext('2d');
         var drawX = $("#Canvas"+currentIndex).offset().left - $("#Canvas"+canvaslist).offset().left;
         var drawY = $("#Canvas"+currentIndex).offset().top - $("#Canvas"+canvaslist).offset().top;
-        console.log(drawY,drawX);
-        //  
+
         var cnv = document.getElementById("Canvas"+currentIndex);
         ctx.drawImage(cnv,drawX/zoom.zoomfactor,drawY/zoom.zoomfactor);
 
@@ -206,22 +200,22 @@ Lasso.prototype.lassoCopyCut = function(action, points) {
           
           canvaslist++;
 
-          if(action == "cut"){
+          if(action == "cut" || action == "clear"){
+
             var ctx = document.getElementById("Canvas"+currentIndex).getContext("2d");
             var correctX = ($("#Canvas"+currentIndex).offset().left - globalLeft)/zoom.zoomfactor;
             var correctY = ($("#Canvas"+currentIndex).offset().top - globalTop)/zoom.zoomfactor;
             self.doCanvasAction(ctx,points,correctX,correctY,"destination-out",function(){});
+
+            if(action == "clear"){
+              canvaslist--;
+              $("#Canvas"+canvaslist).remove();
+              delete imageLayers[canvaslist];              
+            }
           }
 
           fileOps.prototype.composeLayers();
         });
-      }else if(action == 'clear'){
-
-        var ctx = document.getElementById("Canvas"+currentIndex).getContext("2d");
-        var correctX = $("#Canvas"+currentIndex).offset().left - $("#Canvas0").offset().left;
-        var correctY = $("#Canvas"+currentIndex).offset().top - $("#Canvas0").offset().top;
-        self.doCanvasAction(ctx,points,correctX,correctY,"destination-out",function(){});
-
       }else if(action == 'fill' || action == 'stroke'){
         //console.log("fill stroke called");
         var img = new Image();
