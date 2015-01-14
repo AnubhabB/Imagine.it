@@ -71,10 +71,7 @@ fileOps.prototype.drawCanvas = function(index,width,height) {
 		
 		ctx.drawImage(imageLayers[index].imageObj,0,0);
 
-		if(index == 0){
-			//$(".containerMain").append("<canvas class='canvasClass' id='previewCanvas' height='"+heightN+"' width='"+widthN+"' style='z-index:199;border:1px solid #ff0;top:"+top+"px;left:"+left+"px;'></canvas>");
-			///zoom.fitOnScreen();
-			console.log($("#Canvas0").offset().left);
+		if(index == 0){	
 			globalLeft = $("#Canvas0").offset().left;
 			globalTop  = $("#Canvas0").offset().top;
 			$("#titleImage").html(imageLayers[0].name+" <span id='percentView'>100%</span>");
@@ -233,6 +230,4 @@ fileOps.prototype.layerInfoUpdate = function(index,width,height,alpha,top,left,c
 		imageLayers[index]['alpha'] = alpha;
 	if(src !== '')
 		imageLayers[index]['src'] = src;
-
-	console.log(imageLayers[index]['left'],imageLayers[index]['top']);
 }

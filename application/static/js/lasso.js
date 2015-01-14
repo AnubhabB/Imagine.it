@@ -28,7 +28,6 @@ function Lasso(){
 			var tempH = $("#Canvas0").attr("height");
 			var tempCW= $("#Canvas0").css("width");
 			var tempCH= $("#Canvas0").css("height");
-			console.log(tempCW,tempCH);
 			var tempL = globalLeft;
 			var tempT = globalTop;
 
