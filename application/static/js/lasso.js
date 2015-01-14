@@ -154,7 +154,6 @@ Lasso.prototype.lassoCopyCut = function(action, points) {
       alert("No Pixels Selected");
   }else {
       if(action == "copy" || action == "cut"){
-        //console.log("cp")
         var l = points.length;
         for(var i=1;i<=l;i++){
           points[i-1].x = points[i-1].x/zoom.zoomfactor;
@@ -170,7 +169,6 @@ Lasso.prototype.lassoCopyCut = function(action, points) {
             points[i-1].y = orgY1;
           }
         }
-    
         var newminmax = tools.minMax(points);
         var newminX = newminmax[0];
         var newminY = newminmax[1];
@@ -189,9 +187,9 @@ Lasso.prototype.lassoCopyCut = function(action, points) {
         var drawX = $("#Canvas"+currentIndex).offset().left - $("#Canvas"+canvaslist).offset().left;
         var drawY = $("#Canvas"+currentIndex).offset().top - $("#Canvas"+canvaslist).offset().top;
         console.log(drawY,drawX);
-        //
+        //  
         var cnv = document.getElementById("Canvas"+currentIndex);
-        ctx.drawImage(cnv,drawX,drawY);
+        ctx.drawImage(cnv,drawX/zoom.zoomfactor,drawY/zoom.zoomfactor);
 
         var correctX = ($("#Canvas"+canvaslist).offset().left - globalLeft)/zoom.zoomfactor;
         var correctY = ($("#Canvas"+canvaslist).offset().top - globalTop)/zoom.zoomfactor;
