@@ -187,7 +187,6 @@ Lasso.prototype.lassoCopyCut = function(action, points) {
 
         var correctX = ($("#Canvas"+canvaslist).offset().left - globalLeft)/zoom.zoomfactor;
         var correctY = ($("#Canvas"+canvaslist).offset().top - globalTop)/zoom.zoomfactor;
-        console.log(correctX/zoom.zoomfactor,correctY/zoom.zoomfactor,points[0]);
         self.doCanvasAction(ctx,points,correctX,correctY,"destination-in",function(){
           
           imageLayers[canvaslist] = {};
@@ -241,39 +240,41 @@ Lasso.prototype.lassoCopyCut = function(action, points) {
           var newEndTop = orgY1 ;
         }
 
-        var dimenX = newLeft;
-        var dimenY = newTop;
-        var dimenW = newEndLeft - dimenX;
-        var dimenH = newEndTop - dimenY;
+        var newminX = newLeft;
+        var newminY = newTop;
+        var newWidth = newEndLeft - newminX;
+        var newHeight = newEndTop - newminY;
+        
+        var corImLeft = 0;
         if(minX < orgX0)
-          var corImLeft = orgX0 - minX;
-        else
-          var corImLeft = orgX0;
-
+          corImLeft = orgX0 - minX;
+        
+        var corImTop  = 0;
         if(minY < orgY0)
-          var corImTop  = orgY0 - minY;
-        else
-          var corImTop  = orgY0;
+          corImTop  = orgY0 - minY;
+        
+        var cnvt = document.getElementById("Canvas"+currentIndex);
+ 
+        $(".containerMain").append("<canvas id='temp2_canvas' class='canvasClass' width="+newWidth+" height="+newHeight+" style='position:fixed;top:"+(newminY*zoom.zoomfactor+globalTop)+"px;left:"+(newminX*zoom.zoomfactor+globalLeft)+"px;z-index:1000;width:"+newWidth*zoom.zoomfactor+"px;height:"+newHeight*zoom.zoomfactor+"px;'></canvas>");
 
-        //var ctx = document.getElementById("Canvas"+currentIndex).getContext("2d");
-        var url = document.getElementById("Canvas"+currentIndex).toDataURL();
+        var cntx = document.getElementById("temp2_canvas").getContext('2d');
+        cntx.drawImage(cnvt,corImLeft,corImTop);
 
-        img.onload = function(){
-          $(".containerMain").append("<canvas id='temp2_canvas' width="+dimenW+" height="+dimenH+" style='position:fixed;top:"+(dimenY+$("#Canvas0").offset().top)+"px;left:"+(dimenX + $("#Canvas0").offset().left)+"px;z-index:1000;'></canvas>");
-          var cntx = document.getElementById("temp2_canvas").getContext('2d');
-          cntx.drawImage(img,corImLeft,corImTop);
-
-          var correctX = $("#temp2_canvas").offset().left - $("#Canvas0").offset().left;
-          var correctY = $("#temp2_canvas").offset().top - $("#Canvas0").offset().top;
-
-          self.doCanvasAction(cntx,points,correctX,correctY,"source-over",function(){
-            var zIndx = $("#Canvas"+currentIndex).css("z-index");
-            $("#Canvas"+currentIndex).attr("id","interM");
-            $("#temp2_canvas").attr("id","Canvas"+currentIndex).css("z-index",zIndx);
-            $("#interM").remove();
-          },action);          
+        var l = points.length;
+        for(var i=1;i<=l;i++){
+          points[i-1].x = points[i-1].x/zoom.zoomfactor;
+          points[i-1].y = points[i-1].y/zoom.zoomfactor;
         }
-        img.src = url;
+        var correctX = ($("#temp2_canvas").offset().left - globalLeft)/zoom.zoomfactor;
+        var correctY = ($("#temp2_canvas").offset().top - globalTop)/zoom.zoomfactor;
+        //TO DO
+        alert("Updae imageLayers[currentIndex]");
+        self.doCanvasAction(cntx,points,correctX,correctY,"source-over",function(){
+          var zIndx = $("#Canvas"+currentIndex).css("z-index");
+          $("#Canvas"+currentIndex).attr("id","interM");
+          $("#temp2_canvas").attr("id","Canvas"+currentIndex).css("z-index",zIndx);
+          $("#interM").remove();
+        },action);
       }
     }
     init.history("push",action);
