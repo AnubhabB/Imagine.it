@@ -437,17 +437,17 @@ nav.panel4 .layersBlock .layersBody .layerEach .title{
 	min-width:100px;
 	min-height: 50px;
 	display: block;
-	padding: 5px;
 	position: fixed;
 	background: #eee;
 	color:#333;
 	cursor: pointer;
+	padding: 10px 0;
 }
 .contextMenu ul li{
 	line-height: 20px;
 	font-size: 11px;
-	border-bottom: 1px solid #ccc;
 	list-style: none;
+	padding:5px 15px;
 }
 .contextMenu ul li:hover{
 	background:#ccc;
