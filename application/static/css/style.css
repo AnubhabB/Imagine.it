@@ -323,9 +323,10 @@ nav.panel4 .layersBlock .layersBody .layerEach .title{
 	z-index:1200;
 	top:33px;
 	display: none;
-	padding:5px;
+	padding:10px 0;
 	box-shadow:2px 2px 3px #111;
 	border-radius:2px;
+	overflow: hidden;
 }
 #Secondary.navList {
 	width:180px;
@@ -337,20 +338,12 @@ nav.panel4 .layersBlock .layersBody .layerEach .title{
 	margin: auto;
 	text-align: left;
 	display: block;
-	padding:2px 0;
+	padding:5px 10px;
 	font-size: 11px;
 	cursor: pointer;
 }
 .navList ul li:hover{
-	list-style: none;
-	color: #fff;
-	width:90%;
-	margin: auto;
-	text-align: left;
-	display: block;
-	padding:2px 0;
-	font-size: 11px;
-	background: #999;
+	background: #fefefe;
 }
 .popupBlock{
 	display: none;
@@ -450,7 +443,7 @@ nav.panel4 .layersBlock .layersBody .layerEach .title{
 	padding:5px 15px;
 }
 .contextMenu ul li:hover{
-	background:#ccc;
+	background:#fefefe;
 }
 .contextMenu ul:lastChild {
 	border-bottom: none;
